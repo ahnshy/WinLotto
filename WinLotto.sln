@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinLotto", "WinLotto.vcproj", "{DF20E52A-3ED4-45B5-B0D1-F83D9C2CFCFE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DF20E52A-3ED4-45B5-B0D1-F83D9C2CFCFE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DF20E52A-3ED4-45B5-B0D1-F83D9C2CFCFE}.Debug|Win32.Build.0 = Debug|Win32
+		{DF20E52A-3ED4-45B5-B0D1-F83D9C2CFCFE}.Release|Win32.ActiveCfg = Release|Win32
+		{DF20E52A-3ED4-45B5-B0D1-F83D9C2CFCFE}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
