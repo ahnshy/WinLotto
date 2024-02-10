@@ -15,27 +15,36 @@
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
+/////////////////////////////////////////////////////////////////////////////
+// Korean resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+#ifdef _WIN32
+LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
+#pragma code_page(949)
+#endif //_WIN32
+
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
 //
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE
+1 TEXTINCLUDE 
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE
+2 TEXTINCLUDE 
 BEGIN
-	"#ifndef APSTUDIO_INVOKED\r\n"
+    "#ifndef APSTUDIO_INVOKED\r\n"
     "#include ""targetver.h""\r\n"
     "#endif\r\n"
     "#include ""afxres.h""\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE
+3 TEXTINCLUDE 
 BEGIN
     "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
     "#define _AFX_NO_OLE_RESOURCES\r\n"
@@ -46,12 +55,11 @@ BEGIN
     "LANGUAGE 9, 1\r\n"
     "#pragma code_page(1252)\r\n"
     "#include ""res\\WinLotto.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
-    "#include ""afxres.rc""  	// Standard components\r\n"
+    "#include ""afxres.rc""     // Standard components\r\n"
     "#endif\r\n"
     "\0"
 END
 
-/////////////////////////////////////////////////////////////////////////////
 #endif    // APSTUDIO_INVOKED
 
 
@@ -62,12 +70,52 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDR_MAINFRAME           ICON         "res\\WinLotto.ico"
+IDR_MAINFRAME           ICON                    "res\\WinLotto.ico"
 
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DIALOG_WINS DIALOGEX 0, 0, 316, 117
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 9, "Microsoft Sans Serif", 400, 0, 0x0
+BEGIN
+    CONTROL         "",IDC_LIST_WINS,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_TABSTOP,7,7,302,82
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_DIALOG_WINS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 309
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 110
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Korean resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-LANGUAGE 9, 1
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
+#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -77,7 +125,7 @@ LANGUAGE 9, 1
 IDD_ABOUTBOX DIALOGEX 0, 0, 170, 62
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "About WinLotto"
-FONT 8, "MS Shell Dlg"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,14,14,21,20
     LTEXT           "WinLotto, Version 1.0",IDC_STATIC,42,14,114,8,SS_NOPREFIX
@@ -85,27 +133,27 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,113,41,50,14,WS_GROUP
 END
 
-IDD_WINLOTTO_DIALOG DIALOGEX  0, 0, 320, 200
-STYLE DS_SHELLFONT | WS_POPUP | WS_VISIBLE | WS_CAPTION
- | WS_THICKFRAME
- | WS_SYSMENU
+IDD_WINLOTTO_DIALOG DIALOGEX 0, 0, 320, 234
+STYLE DS_SETFONT | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
 EXSTYLE WS_EX_APPWINDOW
 CAPTION "WinLotto"
-FONT 8, "MS Shell Dlg"
+FONT 9, "Microsoft Sans Serif", 400, 0, 0x0
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,209,179,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,263,179,50,14
-	CTEXT           "TODO: Place dialog controls here.",IDC_STATIC,10,96,300,8
+    DEFPUSHBUTTON   "OK",IDOK,209,213,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,263,213,50,14
+    CONTROL         "",IDC_TAB_MODE,"SysTabControl32",TCS_FIXEDWIDTH,7,7,306,184
+    CONTROL         "",IDC_STATIC_DELEMETER,"Static",SS_ETCHEDHORZ,7,201,306,0
 END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Version
 //
 
-VS_VERSION_INFO     VERSIONINFO
-  FILEVERSION       1,0,0,1
-  PRODUCTVERSION    1,0,0,1
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -116,25 +164,26 @@ VS_VERSION_INFO     VERSIONINFO
  FILETYPE 0x1L
  FILESUBTYPE 0x0L
 BEGIN
-	BLOCK "StringFileInfo"
-	BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
         BLOCK "040904e4"
-		BEGIN
+        BEGIN
             VALUE "CompanyName", "TODO: <Company name>"
             VALUE "FileDescription", "TODO: <File description>"
-			VALUE "FileVersion",     "1.0.0.1"
-			VALUE "InternalName",    "WinLotto.exe"
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "InternalName", "WinLotto.exe"
             VALUE "LegalCopyright", "TODO: (c) <Company name>.  All rights reserved."
-			VALUE "OriginalFilename","WinLotto.exe"
+            VALUE "OriginalFilename", "WinLotto.exe"
             VALUE "ProductName", "TODO: <Product name>"
-			VALUE "ProductVersion",  "1.0.0.1"
-		END
-	END
-	BLOCK "VarFileInfo"
-	BEGIN
-		VALUE "Translation", 0x0409, 1252
+            VALUE "ProductVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
     END
 END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -142,7 +191,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO
+GUIDELINES DESIGNINFO 
 BEGIN
     IDD_ABOUTBOX, DIALOG
     BEGIN
@@ -151,16 +200,16 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 55
     END
+
     IDD_WINLOTTO_DIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 313
         TOPMARGIN, 7
-        BOTTOMMARGIN, 193
+        BOTTOMMARGIN, 227
     END
 END
 #endif    // APSTUDIO_INVOKED
-
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -168,13 +217,15 @@ END
 // String Table
 //
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
     IDS_ABOUTBOX            "&About WinLotto..."
 END
 
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
 
-#endif
+
 
 #ifndef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -189,9 +240,10 @@ END
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE 9, 1
 #pragma code_page(1252)
-#include "res\\WinLotto.rc2"  // non-Microsoft Visual C++ edited resources
-#include "afxres.rc"  	// Standard components
+#include "res\WinLotto.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"     // Standard components
 #endif
+
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
 

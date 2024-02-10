@@ -186,6 +186,14 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\Dialog\DlgWins.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Helper\PaserUtil.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -219,6 +227,14 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\Dialog\DlgWins.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Helper\PaserUtil.h"
+				>
+			</File>
 			<File
 				RelativePath=".\Resource.h"
 				>
