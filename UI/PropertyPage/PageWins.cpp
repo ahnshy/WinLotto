@@ -1,4 +1,4 @@
-// DlgWins.cpp : implementation file
+// PageWins.cpp : implementation file
 //
 
 #include "stdafx.h"
@@ -6,9 +6,8 @@
 #include <shlwapi.h>
 #pragma comment(lib, "Shlwapi.lib")
 
-#include "DlgWins.h"
-#include "../Helper/PaserUtil.h"
-
+#include "PageWins.h"
+#include "../../Helper/PaserUtil.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -40,8 +39,8 @@ public:
 
 UINT TaskCountLineFunc(LPVOID pParam)
 {
-	CDlgWins* pDlg = NULL;
-	pDlg = (CDlgWins*)pParam;
+	CPageWins* pDlg = NULL;
+	pDlg = (CPageWins*)pParam;
 
 	if (pDlg == NULL)
 		return -1;
@@ -65,10 +64,14 @@ UINT TaskCountLineFunc(LPVOID pParam)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CDlgWins dialog
-CDlgWins::CDlgWins(CWnd* pParent /*=NULL*/)
-	: CDialog(CDlgWins::IDD, pParent)
+// CPageNote property page
+
+IMPLEMENT_DYNCREATE(CPageWins, CResizablePage)
+
+CPageWins::CPageWins()
+	: CResizablePage(CPageWins::IDD)
 {
+	m_pWins				= NULL;
 	m_dwTotalFiles		= 0;
 	m_bIncludeSubPath	= TRUE;
 	m_pNofityWnd		= NULL;
@@ -77,9 +80,14 @@ CDlgWins::CDlgWins(CWnd* pParent /*=NULL*/)
 	m_strFileExts.Empty();
 	m_strStaticMessage.Empty();
 	m_arFiles.RemoveAll();
+
+	m_psp.dwFlags &= (~PSP_HASHELP);
+	m_psp.dwFlags |= ( PSP_USEHICON );
+	HICON hIconTab = AfxGetApp()->LoadIcon( IDI_TELEPHONE );
+	m_psp.hIcon = hIconTab;
 }
 
-CDlgWins::~CDlgWins()
+CPageWins::~CPageWins()
 {
 	if (m_pThread)
 		m_pThread = NULL;
@@ -88,29 +96,33 @@ CDlgWins::~CDlgWins()
 	m_arFiles.RemoveAll();
 }
 
-void CDlgWins::DoDataExchange(CDataExchange* pDX)
+void CPageWins::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+	CResizablePage::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST_WINS, m_wndList);
 	//DDX_Control(pDX, IDC_PROGRESS, m_wndProgress);
 }
 
-BEGIN_MESSAGE_MAP(CDlgWins, CDialog)
+BEGIN_MESSAGE_MAP(CPageWins, CResizablePage)
 	ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST_WINS, OnItemchangedListRecord)
+	ON_WM_CTLCOLOR()
+	ON_WM_ENABLE()
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// CDlgWins message handlers
-BOOL CDlgWins::OnInitDialog() 
+// CPageWins message handlers
+BOOL CPageWins::OnInitDialog() 
 {
-	CDialog::OnInitDialog();
-	//SetBackgroundColor(RGB(255,255,255));
+	CResizablePage::OnInitDialog();
+
+	AddAnchor(IDC_LIST_WINS, TOP_LEFT, BOTTOM_RIGHT);
 
 	Initialize();
+
 	return TRUE;
 }
 
-void CDlgWins::Initialize()
+void CPageWins::Initialize()
 {
 	CRect rt;
 	GetParent()->GetClientRect(&rt);
@@ -123,51 +135,46 @@ void CDlgWins::Initialize()
 
 
 	item.fmt=LVCFMT_LEFT;
-	//item.cx=300;
-	item.cx=rt.Width() * 0.49;
-	item.pszText=_T("Column 1");
-	item.iSubItem=0;
-	m_wndList.InsertColumn(0,&item);
 
-	//item.fmt=LVCFMT_RIGHT;
-	//item.cx=120;
-	item.cx=rt.Width() * 0.23;
-	item.pszText=_T("Column 2");
-	item.iSubItem=1;
-	m_wndList.InsertColumn(1,&item);
+	CString strBuffer;
+	int nIndex = 0;
+	float const fWidthRatio = 0.11;
+	item.cx=rt.Width() * fWidthRatio ;
+	item.pszText = (_T("No."));
+	m_wndList.InsertColumn(nIndex++,&item);
 
-	//item.fmt=LVCFMT_RIGHT;
-	//item.cx=80;
-	item.cx=rt.Width() * 0.14;
-	item.pszText=_T("Column 3");
-	item.iSubItem=2;
-	m_wndList.InsertColumn(2,&item);
-
-	//item.fmt=LVCFMT_RIGHT;
-	//item.cx=60;
-	item.cx=rt.Width() * 0.12;
-	item.pszText=_T("Column 4");
-	item.iSubItem=3;
-	m_wndList.InsertColumn(3,&item);
+	for (; nIndex < 8 ; nIndex++)
+	{
+		item.cx=rt.Width() * fWidthRatio;
+		strBuffer.Format(_T("%02d"), nIndex);
+		item.pszText = ((LPTSTR)(LPCTSTR)strBuffer);
+		item.iSubItem = nIndex;
+		m_wndList.InsertColumn(nIndex,&item);
+	}
 
 	m_wndList.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_HEADERDRAGDROP);
 
 	m_arFiles.RemoveAll();
 
 	m_pNofityWnd = GetParent();
+
+	//m_strPath = _T("C:\\Temp");
+	//AddFiles();
+
+	SetList(*m_pWins);
 }
 
-void CDlgWins::AddFiles()
+void CPageWins::AddFiles()
 {
 	FindFiles(m_strPath);
 }
 
-DWORD CDlgWins::GetTargetFileCount()
+DWORD CPageWins::GetTargetFileCount()
 {
 	return m_dwTotalFiles;
 }
 
-void CDlgWins::FindFiles(CString strPath)
+void CPageWins::FindFiles(CString strPath)
 {
 	if (strPath.IsEmpty())
 		return;
@@ -198,10 +205,10 @@ void CDlgWins::FindFiles(CString strPath)
 			continue;
 
 		strExt = PathFindExtension(ff.GetFileName());
-		for (int nCnt = 0 ; nCnt < m_arFileExt.GetCount() ; nCnt++)
+		//for (int nCnt = 0 ; nCnt < m_arFileExt.GetCount() ; nCnt++)
 		{
-			if (m_arFileExt.ElementAt(nCnt).CompareNoCase(strExt))
-				continue;
+			//if (m_arFileExt.ElementAt(nCnt).CompareNoCase(strExt))
+				//continue;
 
 			pItem->m_strPath		= ff.GetFilePath();
 			pItem->m_strFileName	= ff.GetFileName();
@@ -214,7 +221,7 @@ void CDlgWins::FindFiles(CString strPath)
 	}
 }
 
-void CDlgWins::UpdateStatus()
+void CPageWins::UpdateStatus()
 {
 	if (m_pThread)
 	{
@@ -226,36 +233,36 @@ void CDlgWins::UpdateStatus()
 	}
 }
 
-void CDlgWins::UpdateStaticText(CString strText)
+void CPageWins::UpdateStaticText(CString strText)
 {
 	// to do...
 }
 
-void CDlgWins::UpdateStaticText(UINT uID)
+void CPageWins::UpdateStaticText(UINT uID)
 {
 	// to do...
 }
 
-BOOL CDlgWins::PreTranslateMessage(MSG* pMsg)
+BOOL CPageWins::PreTranslateMessage(MSG* pMsg)
 {
 	if ((pMsg->message == WM_KEYDOWN && pMsg->wParam == VK_ESCAPE) ||
 		(pMsg->message == WM_KEYDOWN && pMsg->wParam == VK_RETURN))
 		return TRUE;
 
-	return CDialog::PreTranslateMessage(pMsg);
+	return CResizablePage::PreTranslateMessage(pMsg);
 }
 
-CListCtrl* CDlgWins::GetListCtrl()
+CListCtrl* CPageWins::GetListCtrl()
 {
 	return &m_wndList;
 }
 
-CProgressCtrl*	CDlgWins::GetProgressCtrl()
+CProgressCtrl*	CPageWins::GetProgressCtrl()
 {
 	return &m_wndProgress;
 }
 
-BOOL CDlgWins::TaskCountLine(CString strPath)
+BOOL CPageWins::TaskCountLine(CString strPath)
 {
 	if (!strPath.IsEmpty())
 		m_strPath = strPath;
@@ -270,12 +277,12 @@ BOOL CDlgWins::TaskCountLine(CString strPath)
 	return TRUE;
 }
 
-void CDlgWins::ShowResult()
+void CPageWins::ShowResult()
 {
 	// to do...
 }
 
-BOOL CDlgWins::ParseFilter()
+BOOL CPageWins::ParseFilter()
 {
 	if (m_strFileExts.IsEmpty())
 		return FALSE;
@@ -288,7 +295,64 @@ BOOL CDlgWins::ParseFilter()
 	return TRUE;
 }
 
-void CDlgWins::OnItemchangedListRecord(NMHDR* pNMHDR, LRESULT* pResult)
+void CPageWins::SetData(MapWins* pMap)
+{
+	m_pWins = pMap;
+}
+
+void CPageWins::SetList(MapWins &wins)
+{
+	CString strBuffer;
+	LVITEM item;
+
+	try
+	{
+		for (MapWins::iterator itor = wins.begin() ; itor != wins.end() ; ++itor)
+		{
+			int nColumn = 0, nCnt = m_wndList.GetItemCount();
+
+			item.iItem		= nCnt;
+			item.iSubItem	= nColumn;
+			strBuffer.Format(_T("%d"), itor->first);
+			item.pszText	= (LPTSTR)(LPCTSTR)strBuffer;
+			item.mask		= LVIF_TEXT;
+			if (m_wndList.GetSafeHwnd())
+				m_wndList.InsertItem(&item);
+
+			//if (m_bTaskFinish)
+			//return;
+
+			item.iSubItem	= ++nColumn;
+			item.pszText	= (LPTSTR)(LPCTSTR)itor->second->GetDate();
+
+			if (m_wndList.GetSafeHwnd())
+				m_wndList.SetItem(&item);
+
+			//if (m_bTaskFinish)
+			//return;
+
+			for (INT32 nIndex = 0 ; nIndex < itor->second->GetNumberCount() ; nIndex++)
+			{
+				item.iSubItem	= ++nColumn;
+				strBuffer.Format(_T("%d"), itor->second->GetWinNumbers(nIndex));
+			
+				item.pszText	= (LPTSTR)(LPCTSTR)strBuffer;
+				if (m_wndList.GetSafeHwnd())
+					m_wndList.SetItem(&item);
+			}
+			
+			if (m_wndList.GetSafeHwnd())
+				m_wndList.SetItemData(nCnt, (DWORD)itor->second);
+
+			//nCnt++;
+		}
+	}
+	catch (...)
+	{
+	}
+}
+
+void CPageWins::OnItemchangedListRecord(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	NM_LISTVIEW* pNMListView = (NM_LISTVIEW*)pNMHDR;
 	if (pNMListView->uChanged == LVIF_STATE && pNMListView->uNewState == (LVIS_SELECTED | LVIS_FOCUSED))
@@ -300,4 +364,20 @@ void CDlgWins::OnItemchangedListRecord(NMHDR* pNMHDR, LRESULT* pResult)
 	}
 
 	*pResult = 0;
+}
+
+HBRUSH CPageWins::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) 
+{
+	if( HasWhiteBackground() )
+	{
+		pDC->SetBkMode(TRANSPARENT);
+		return ::GetSysColorBrush( COLOR_WINDOW );
+	}
+
+	return  CResizablePage::OnCtlColor(pDC, pWnd, nCtlColor);
+}
+
+void CPageWins::OnEnable(BOOL bEnable) 
+{
+	CResizablePage::OnEnable(bEnable);
 }

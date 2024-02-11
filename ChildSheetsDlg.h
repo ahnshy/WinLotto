@@ -1,4 +1,4 @@
-// TreePropSheetEx_DemoDlg.h : header file
+// ChildSheetsDlg.h : header file
 //
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -15,65 +15,69 @@
 //
 /////////////////////////////////////////////////////////////////////////////
 
-#ifndef _TREEPROPSHEETEX_DEMODLG_H__INCLUDED_
-#define _TREEPROPSHEETEX_DEMODLG_H__INCLUDED_
+#ifndef _TREEPROPSHEET_CHILDSHEETSDLG_H__INCLUDED_
+#define _TREEPROPSHEET_CHILDSHEETSDLG_H__INCLUDED_
 
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include <vector>
+#include "ResizableDialog.h"
+#include "UI/PropertySheet/TreePropSheetEx.h"
+#include "UI/PropertySheet/TreePropSheetBordered.h"
+#include "UI/PropertyPage/PageNote.h"
+#include "UI/PropertySheet/TreePropSheetSplitter.h"
 
 /////////////////////////////////////////////////////////////////////////////
-// CTreePropSheetEx_DemoDlg dialog
+// CChildSheetsDlg dialog
 
-class CTreePropSheetEx_DemoDlg : public CDialog
+class CChildSheetsDlg
+ : public CResizableDialog
 {
 // Construction
 public:
-	CTreePropSheetEx_DemoDlg(CWnd* pParent = NULL);	// standard constructor
-  ~CTreePropSheetEx_DemoDlg();
+	CChildSheetsDlg(CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
-	//{{AFX_DATA(CTreePropSheetEx_DemoDlg)
-	enum { IDD = IDD_TREEPROPSHEETEX_DEMO_DIALOG };
+	//{{AFX_DATA(CChildSheetsDlg)
+	enum { IDD = IDD_DLG_CHILD_SHEETS };
 		// NOTE: the ClassWizard will add data members here
 	//}}AFX_DATA
 
+
+// Overrides
 	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CTreePropSheetEx_DemoDlg)
+	//{{AFX_VIRTUAL(CChildSheetsDlg)
 	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
 // Implementation
 protected:
-	HICON m_hIcon;
 
 	// Generated message map functions
-	//{{AFX_MSG(CTreePropSheetEx_DemoDlg)
+	//{{AFX_MSG(CChildSheetsDlg)
 	virtual BOOL OnInitDialog();
-	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
-	afx_msg void OnPaint();
-	afx_msg HCURSOR OnQueryDragIcon();
-	afx_msg void OnShowTreepropsheet();
-	afx_msg void OnResizablePropertysheet();
-	afx_msg void OnResizableTreepropsheetex();
-	afx_msg void OnResizableTabbedTreepropsheetex();
-	afx_msg void OnResizableWizardTreepropsheetex();
-	afx_msg void OnChildTreepropsheetex();
-	afx_msg void OnModeless();
-	afx_msg void OnTreepropsheetoffice2003();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
+// Helpers
+private:
+  bool RegisterSheet(UINT nID,CPropertySheet& rSheet);
+
 // Members
 private:
-  //! Hold all created modeless dialog. 
-  std::vector<CPropertySheet*> m_contSheet;
+  TreePropSheet::CTreePropSheetEx m_sheetTop;
+  TreePropSheet::CTreePropSheetBordered m_sheetBottom;
+
+  CPageNote m_pageNoteTop;
+  CPageNote m_pageNoteBottom;
+
+  // Splitter control.
+  TreePropSheet::CTreePropSheetSplitter m_splitter;
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // _TREEPROPSHEETEX_DEMODLG_H__INCLUDED_
+#endif // _TREEPROPSHEET_CHILDSHEETSDLG_H__INCLUDED_

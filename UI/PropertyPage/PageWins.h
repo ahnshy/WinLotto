@@ -1,19 +1,29 @@
 #pragma once
 
-#include "../resource.h"
 #include "afxcmn.h"
+
+#include "ResizablePage.h"
+#include "../PropertySheet/TreePropSheetUtil.hpp"
+#include "../../Data/WinsItem.h"
 
 UINT TaskCountLineFunc(LPVOID pParam);
 void AddFiles(CString strPath);
 /////////////////////////////////////////////////////////////////////////////
-// CDlgWins dialog
-class CDlgWins : public CDialog
+// CPageWins dialog
+class CPageWins 
+	: public CResizablePage,
+	public TreePropSheet::CWhiteBackgroundProvider
 {
-public:
-	CDlgWins(CWnd* pParent = NULL);   // standard constructor
-	~CDlgWins();
+	DECLARE_DYNCREATE(CPageWins)
 
-	enum			{ IDD = IDC_LIST_WINS };
+public:
+	CPageWins();   // standard constructor
+	~CPageWins();
+
+	enum			{ IDD = IDD_PAGE_WINS };
+
+	void			SetData(MapWins* pMap);
+	void			SetList(MapWins &wins);
 
 	void			Initialize();
 	void			AddFiles();
@@ -38,6 +48,7 @@ public:
 	BOOL			GetIncludeSubDirectory()								{			return m_bIncludeSubPath;				}
 
 protected:
+	MapWins*		m_pWins;
 	CListCtrl		m_wndList;
 	CProgressCtrl	m_wndProgress;
 	DWORD			m_dwTotalFiles;
@@ -50,6 +61,8 @@ protected:
 	virtual BOOL	PreTranslateMessage(MSG* pMsg);
 
 	afx_msg void	OnItemchangedListRecord(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
+	afx_msg void OnEnable(BOOL bEnable);
 
 protected:
 	CWnd*			m_pNofityWnd;
@@ -60,6 +73,9 @@ protected:
 	CPtrArray		m_arFiles;
 	CStringArray	m_arFileExt;
 	BOOL			m_bIncludeSubPath;
+
+
+	CStringArray	m_arListColumn;
 
 	DECLARE_MESSAGE_MAP()
 };

@@ -7,22 +7,17 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#ifndef APSTUDIO_INVOKED
-#include "targetver.h"
-#endif
 #include "afxres.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Korean resources
+// English (United States) resources
 
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
-#ifdef _WIN32
-LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
-#pragma code_page(949)
-#endif //_WIN32
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -37,9 +32,6 @@ END
 
 2 TEXTINCLUDE 
 BEGIN
-    "#ifndef APSTUDIO_INVOKED\r\n"
-    "#include ""targetver.h""\r\n"
-    "#endif\r\n"
     "#include ""afxres.h""\r\n"
     "\0"
 END
@@ -52,10 +44,12 @@ BEGIN
     "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
     "\r\n"
     "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "#ifdef _WIN32\r\n"
     "LANGUAGE 9, 1\r\n"
     "#pragma code_page(1252)\r\n"
-    "#include ""res\\WinLotto.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
-    "#include ""afxres.rc""     // Standard components\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\TreePropSheetEx_Demo.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""         // Standard components\r\n"
     "#endif\r\n"
     "\0"
 END
@@ -70,79 +64,143 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDR_MAINFRAME           ICON                    "res\\WinLotto.ico"
+IDI_MAINFRAME           ICON                    "res\\WinLotto.ico"
+IDI_MAIL                ICON                    "res\\mail.ico"
+IDI_TELEPHONE           ICON                    "res\\mobilephone3.ico"
+IDI_NOTE                ICON                    "res\\note.ico"
+IDI_CONTACT             ICON                    "res\\user1.ico"
+IDI_DATE_TIME           ICON                    "res\\date-time.ico"
+IDI_PREFERENCES         ICON                    "res\\preferences.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Dialog
 //
 
-IDD_DIALOG_WINS DIALOGEX 0, 0, 316, 117
+IDD_ABOUTBOX DIALOGEX 0, 0, 235, 55
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Dialog"
-FONT 9, "Microsoft Sans Serif", 400, 0, 0x0
-BEGIN
-    CONTROL         "",IDC_LIST_WINS,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_TABSTOP,7,7,302,82
-END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// DESIGNINFO
-//
-
-#ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
-BEGIN
-    IDD_DIALOG_WINS, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 309
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 110
-    END
-END
-#endif    // APSTUDIO_INVOKED
-
-#endif    // Korean resources
-/////////////////////////////////////////////////////////////////////////////
-
-
-/////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-#ifdef _WIN32
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-#pragma code_page(1252)
-#endif //_WIN32
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Dialog
-//
-
-IDD_ABOUTBOX DIALOGEX 0, 0, 170, 62
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "About WinLotto"
-FONT 8, "MS Shell Dlg", 0, 0, 0x1
+FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
-    ICON            IDR_MAINFRAME,IDC_STATIC,14,14,21,20
-    LTEXT           "WinLotto, Version 1.0",IDC_STATIC,42,14,114,8,SS_NOPREFIX
-    LTEXT           "Copyright (C) 2024",IDC_STATIC,42,26,114,8
-    DEFPUSHBUTTON   "OK",IDOK,113,41,50,14,WS_GROUP
+    ICON            IDI_MAINFRAME,IDC_STATIC,11,17,20,20
+    LTEXT           "WinLotto Version 1.0",IDC_STATIC,40,10,119,8,SS_NOPREFIX
+    LTEXT           "ahnshy@naver.com Copyright (C) 2024 ",IDC_STATIC,40,25,127,8
+    DEFPUSHBUTTON   "OK",IDOK,178,7,50,14,WS_GROUP
 END
 
-IDD_WINLOTTO_DIALOG DIALOGEX 0, 0, 320, 234
-STYLE DS_SETFONT | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+IDD_TREEPROPSHEETEX_DEMO_DIALOG DIALOGEX 0, 0, 311, 163
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
-CAPTION "WinLotto"
-FONT 9, "Microsoft Sans Serif", 400, 0, 0x0
+CAPTION "TreePropSheetEx_Demo"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,209,213,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,263,213,50,14
-    CONTROL         "",IDC_TAB_MODE,"SysTabControl32",TCS_FIXEDWIDTH,7,7,306,184
-    CONTROL         "",IDC_STATIC_DELEMETER,"Static",SS_ETCHEDHORZ,7,201,306,0
+    DEFPUSHBUTTON   "OK",IDOK,254,142,50,14
+    PUSHBUTTON      "Tree, real-time resizable",IDC_RESIZABLE_TREEPROPSHEETEX,15,36,131,14
+    PUSHBUTTON      "Show classic TreePropSheet",IDC_CLASSIC_TREEPROPSHEET,15,7,131,14
+    PUSHBUTTON      "Show standard resible property sheet",IDC_RESIZABLE_PROPERTYSHEET,161,7,131,14
+    PUSHBUTTON      "Tabbed, resizable",IDC_RESIZABLE_TABBED_TREEPROPSHEETEX,161,36,131,14
+    PUSHBUTTON      "Wizard, resizable",IDC_RESIZABLE_WIZARD_TREEPROPSHEETEX,15,57,131,14
+    GROUPBOX        "TreePropSheetEx",IDC_STATIC,7,25,297,78
+    PUSHBUTTON      "Child window",IDC_CHILD_TREEPROPSHEETEX,161,57,131,14
+    PUSHBUTTON      "Tree, resizable, modeless",IDC_MODELESS,15,81,131,14
+    PUSHBUTTON      "Office 2003 look",IDC_TREEPROPSHEETOFFICE2003,161,81,131,14
+END
+
+IDD_PAGE_CONTACT DIALOG 0, 0, 235, 156
+STYLE DS_SETFONT | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Contact"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Name",IDC_LABEL_NAME,7,10,20,8
+    LTEXT           "Address",IDC_LABEL_ADDRESS,7,29,26,8
+    EDITTEXT        IDC_NAME,39,7,189,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_ADDRESS,39,26,189,108,ES_MULTILINE | ES_AUTOHSCROLL
+    CONTROL         "Has phone",IDC_CHECK_PHONE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,139,51,10
+    CONTROL         "Has email",IDC_CHECK_EMAIL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,67,139,47,10
+END
+
+IDD_PAGE_CONTACT_EMAIL DIALOG 0, 0, 235, 156
+STYLE DS_SETFONT | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Contact::Email"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Email 1",IDC_STATIC,7,10,24,8
+    LTEXT           "Email 2",IDC_STATIC,7,29,24,8
+    LTEXT           "Email 3",IDC_STATIC,7,49,24,8
+    EDITTEXT        IDC_EMAIL1,39,7,189,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EMAIL2,39,26,189,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EMAIL3,39,46,189,14,ES_AUTOHSCROLL
+    COMBOBOX        IDC_COMBO_DEFAULT_EMAIL,55,75,173,60,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Default email",IDC_STATIC,7,76,42,8
+END
+
+IDD_PAGE_CONTANCT_PHONE DIALOG 0, 0, 235, 156
+STYLE DS_SETFONT | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Contact::Phone"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Phone 1",IDC_STATIC,7,10,28,8
+    LTEXT           "Phone 2",IDC_STATIC,7,29,28,8
+    LTEXT           "Phone 3",IDC_STATIC,7,49,28,8
+    EDITTEXT        IDC_PHONE1,39,7,189,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_PHONE2,39,26,189,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_PHONE3,39,46,189,14,ES_AUTOHSCROLL
+    LTEXT           "Default phone",IDC_STATIC,7,76,46,8
+    COMBOBOX        IDC_COMBO_DEFAULT_PHONE,55,75,173,60,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_PAGE_MISC_NOTE DIALOG 0, 0, 235, 156
+STYLE DS_SETFONT | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Miscellaneous::Notes"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Note",IDC_STATIC,7,7,16,8
+    EDITTEXT        IDC_NOTE,31,7,197,142,ES_MULTILINE | ES_AUTOHSCROLL
+END
+
+IDD_PAGE_CUSTOMIZE_SHEET DIALOGEX 0, 0, 299, 156
+STYLE DS_SETFONT | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Customize sheet"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    GROUPBOX        "Tree resizing mode",IDC_RESIZING_FRAME,7,7,285,40,WS_GROUP
+    CONTROL         "Fixed",IDC_FIXED,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,14,19,33,10
+    CONTROL         "Proportional",IDC_PROPORTIONAL,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,14,32,53,10
+    GROUPBOX        "Splitter refresh mode",IDC_REFRESH_FRAME,7,53,285,28,WS_GROUP
+    CONTROL         "Real time mode",IDC_REAL_TIME_REFRESH_MODE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,64,64,10
+    GROUPBOX        "Empty property pages",IDC_EMPTY_PAGES_FRAME,7,87,285,28,WS_GROUP
+    CONTROL         "Skip empty pages",IDC_SKIP_EMPTY_PAGES,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,99,71,10
+    CONTROL         "Tree is resizable",IDC_CHK_TREE_RESIZABLE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,120,67,10,WS_EX_TRANSPARENT
+END
+
+IDD_PAGE_MISC_DATES DIALOG 0, 0, 235, 156
+STYLE DS_SETFONT | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Miscellaneous::Dates"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Birthday",IDC_STATIC,7,10,26,8
+    LTEXT           "Anniversary",IDC_STATIC,7,30,38,8
+    CONTROL         "DateTimePicker1",IDC_DATE_BIRTHDAY,"SysDateTimePick32",DTS_RIGHTALIGN | WS_TABSTOP,51,7,59,15
+    CONTROL         "DateTimePicker2",IDC_DATE_ANNIVERSARY,"SysDateTimePick32",DTS_RIGHTALIGN | WS_TABSTOP,51,27,59,15
+END
+
+IDD_DLG_CHILD_SHEETS DIALOG 0, 0, 440, 400
+STYLE DS_SETFONT | WS_MAXIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+CAPTION "Window with child sheets"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,329,379,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,383,379,50,14
+    CONTROL         "",IDC_TOP_SHEET,"Static",SS_BLACKFRAME | NOT WS_VISIBLE,7,7,426,179
+    CONTROL         "",IDC_BOTTOM_SHEET,"Static",SS_BLACKFRAME | NOT WS_VISIBLE,7,193,426,179
+END
+
+IDD_PAGE_WINS DIALOGEX 0, 0, 195, 117
+STYLE DS_SETFONT | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Win Numbers"
+FONT 9, "?? ??", 400, 0, 0x0
+BEGIN
+    CONTROL         "",IDC_LIST_WINS,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,7,182,103
 END
 
 
@@ -166,21 +224,20 @@ VS_VERSION_INFO VERSIONINFO
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
-        BLOCK "040904e4"
+        BLOCK "040904B0"
         BEGIN
-            VALUE "CompanyName", "TODO: <Company name>"
-            VALUE "FileDescription", "TODO: <File description>"
-            VALUE "FileVersion", "1.0.0.1"
-            VALUE "InternalName", "WinLotto.exe"
-            VALUE "LegalCopyright", "TODO: (c) <Company name>.  All rights reserved."
-            VALUE "OriginalFilename", "WinLotto.exe"
-            VALUE "ProductName", "TODO: <Product name>"
-            VALUE "ProductVersion", "1.0.0.1"
+            VALUE "FileDescription", "TreePropSheetEx_Demo MFC Application"
+            VALUE "FileVersion", "1, 0, 0, 1"
+            VALUE "InternalName", "TreePropSheetEx_Demo"
+            VALUE "LegalCopyright", "Copyright (C) 2004"
+            VALUE "OriginalFilename", "TreePropSheetEx_Demo.EXE"
+            VALUE "ProductName", "TreePropSheetEx_Demo Application"
+            VALUE "ProductVersion", "1, 0, 0, 1"
         END
     END
     BLOCK "VarFileInfo"
     BEGIN
-        VALUE "Translation", 0x409, 1252
+        VALUE "Translation", 0x409, 1200
     END
 END
 
@@ -191,22 +248,86 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_ABOUTBOX, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 163
+        RIGHTMARGIN, 228
         TOPMARGIN, 7
-        BOTTOMMARGIN, 55
+        BOTTOMMARGIN, 48
     END
 
-    IDD_WINLOTTO_DIALOG, DIALOG
+    IDD_TREEPROPSHEETEX_DEMO_DIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 313
+        RIGHTMARGIN, 304
         TOPMARGIN, 7
-        BOTTOMMARGIN, 227
+        BOTTOMMARGIN, 156
+    END
+
+    IDD_PAGE_CONTACT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 149
+    END
+
+    IDD_PAGE_CONTACT_EMAIL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 149
+    END
+
+    IDD_PAGE_CONTANCT_PHONE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 149
+    END
+
+    IDD_PAGE_MISC_NOTE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 149
+    END
+
+    IDD_PAGE_CUSTOMIZE_SHEET, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 292
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 149
+    END
+
+    IDD_PAGE_MISC_DATES, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 149
+    END
+
+    IDD_DLG_CHILD_SHEETS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 433
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 393
+    END
+
+    IDD_PAGE_WINS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 188
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 110
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -214,15 +335,51 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
+// Dialog Info
+//
+
+IDD_PAGE_CONTACT_EMAIL DLGINIT
+BEGIN
+    IDC_COMBO_DEFAULT_EMAIL, 0x403, 8, 0
+0x6d45, 0x6961, 0x206c, 0x0031, 
+    IDC_COMBO_DEFAULT_EMAIL, 0x403, 8, 0
+0x6d45, 0x6961, 0x206c, 0x0032, 
+    IDC_COMBO_DEFAULT_EMAIL, 0x403, 8, 0
+0x6d45, 0x6961, 0x206c, 0x0033, 
+    0
+END
+
+IDD_PAGE_CONTANCT_PHONE DLGINIT
+BEGIN
+    IDC_COMBO_DEFAULT_PHONE, 0x403, 8, 0
+0x6850, 0x6e6f, 0x2065, 0x0031, 
+    IDC_COMBO_DEFAULT_PHONE, 0x403, 8, 0
+0x6850, 0x6e6f, 0x2065, 0x0032, 
+    IDC_COMBO_DEFAULT_PHONE, 0x403, 8, 0
+0x6850, 0x6e6f, 0x2065, 0x0033, 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_EMPTY_IMAGE_LIST    BITMAP                  "res\\EmptyImageList.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
 // String Table
 //
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_ABOUTBOX            "&About WinLotto..."
+    IDS_STRING_PROJECT      "WinLotto"
 END
 
-#endif    // English (U.S.) resources
+#endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
@@ -238,10 +395,12 @@ END
 #define _AFX_NO_PROPERTY_RESOURCES
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
 LANGUAGE 9, 1
 #pragma code_page(1252)
-#include "res\WinLotto.rc2"  // non-Microsoft Visual C++ edited resources
-#include "afxres.rc"     // Standard components
+#endif //_WIN32
+#include "res\TreePropSheetEx_Demo.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"         // Standard components
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
