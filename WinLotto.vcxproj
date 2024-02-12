@@ -139,10 +139,11 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="Data\WinningNumberManager.cpp" />
     <ClCompile Include="Data\WinsItem.cpp" />
+    <ClCompile Include="Data\WinsNumberManager.cpp" />
     <ClCompile Include="Helper\HtmlParser.cpp" />
     <ClCompile Include="Helper\HttpHelper.cpp" />
+    <ClCompile Include="Helper\IniUtil.cpp" />
     <ClCompile Include="Helper\PaserUtil.cpp" />
     <ClCompile Include="ResizableDialog.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -208,10 +209,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ChildSheetsDlg.h" />
-    <ClInclude Include="Data\WinningNumberManager.h" />
     <ClInclude Include="Data\WinsItem.h" />
+    <ClInclude Include="Data\WinsNumberManager.h" />
     <ClInclude Include="Helper\HtmlParser.h" />
     <ClInclude Include="Helper\HttpHelper.h" />
+    <ClInclude Include="helper\iniutil.h" />
     <ClInclude Include="Helper\PaserUtil.h" />
     <ClInclude Include="ResizableDialog.h" />
     <ClInclude Include="Resource.h" />
