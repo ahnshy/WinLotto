@@ -52,7 +52,7 @@ UINT TaskCountLineFunc(LPVOID pParam)
 
 	pDlg->GetProgressCtrl()->SetRange(0, dwCount);
 	pDlg->GetProgressCtrl()->SetStep(1);
-	for (int nIndex=0 ; nIndex < dwCount; nIndex++)
+	for (DWORD dwIndex=0 ; dwIndex < dwCount; dwIndex++)
 	{
 		pDlg->GetProgressCtrl()->StepIt();
 		pDlg->UpdateStatus();
@@ -138,14 +138,14 @@ void CPageWins::Initialize()
 
 	CString strBuffer;
 	int nIndex = 0;
-	float const fWidthRatio = 0.11;
-	item.cx=rt.Width() * fWidthRatio ;
+	double const fWidthRatio = 0.11;
+	item.cx=(int)(rt.Width() * fWidthRatio);
 	item.pszText = (_T("No."));
 	m_wndList.InsertColumn(nIndex++,&item);
 
 	for (; nIndex < 8 ; nIndex++)
 	{
-		item.cx=rt.Width() * fWidthRatio;
+		item.cx=int(rt.Width() * fWidthRatio);
 		strBuffer.Format(_T("%02d"), nIndex);
 		item.pszText = ((LPTSTR)(LPCTSTR)strBuffer);
 		item.iSubItem = nIndex;
