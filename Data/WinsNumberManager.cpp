@@ -11,18 +11,11 @@
 #include "WinsNumberManager.h"
 
 #include "../Helper/IniUtil.h"
+#include "../Helper/PaserUtil.h"
 
 // FileInfo
 #define CONFIG_WINLOTTO_FILENAME							TEXT("WinLotto.ini")
 #define CONFIG_SECTION_CONFIG								TEXT("Config")
-
-#define CONFIG_WINLOTTO_PATH								TEXT("path")
-
-// About KeyString
-static const CString	PathName;
-
-// Static :: Magnify Init
-const CString CWinsNumberManager::PathName					= CONFIG_WINLOTTO_PATH;
 
 CWinsNumberManager*	CWinsNumberManager::m_pWinsNumberManager= NULL;
 /////////////////////////////////////////////////////////////////////////////
@@ -77,7 +70,17 @@ void CWinsNumberManager::SaveConfig()
 	// to do...
 }
 
-void CWinsNumberManager::Initialize()
-{	
-	// to do...
+INT32 CWinsNumberManager::Initialize(CString strRaw, CString strDelimeter)
+{
+	CStringArray arr;
+	CPaserUtil::ParseString(strRaw, strDelimeter, arr);
+
+	//INT32 nIndex = 0;
+	//m_dwRound = _ttol(arr.GetAt(nIndex++));
+	//m_strDate = arr.GetAt(nIndex++);
+
+	//for(INT32 nKey =  0 ; nIndex < arr.GetCount() ; nIndex++, nKey++)
+	//	m_mapRounds.insert(make_pair(nKey, _ttoi(arr.GetAt(nIndex))));
+
+	return 0;
 }
