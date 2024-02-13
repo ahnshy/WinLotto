@@ -32,5 +32,3 @@ private:
 	CString				m_strDate;
 	MapWinsNumber		m_mapNumbers;
 };
-
-typedef map<DWORD, CWinsItem*>			MapWins;

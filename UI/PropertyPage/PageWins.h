@@ -4,7 +4,7 @@
 
 #include "ResizablePage.h"
 #include "../PropertySheet/TreePropSheetUtil.hpp"
-#include "../../Data/WinsItem.h"
+#include "../../Data/WinsNumberManager.h"
 
 UINT TaskCountLineFunc(LPVOID pParam);
 void AddFiles(CString strPath);

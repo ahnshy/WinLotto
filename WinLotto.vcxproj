@@ -139,8 +139,10 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <ClCompile Include="Data\PathManager.cpp" />
     <ClCompile Include="Data\WinsItem.cpp" />
     <ClCompile Include="Data\WinsNumberManager.cpp" />
+    <ClCompile Include="Helper\DirectoryHelper.cpp" />
     <ClCompile Include="Helper\HtmlParser.cpp" />
     <ClCompile Include="Helper\HttpHelper.cpp" />
     <ClCompile Include="Helper\IniUtil.cpp" />
@@ -209,8 +211,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ChildSheetsDlg.h" />
+    <ClInclude Include="Data\PathManager.h" />
     <ClInclude Include="Data\WinsItem.h" />
     <ClInclude Include="Data\WinsNumberManager.h" />
+    <ClInclude Include="Helper\DirectoryHelper.h" />
     <ClInclude Include="Helper\HtmlParser.h" />
     <ClInclude Include="Helper\HttpHelper.h" />
     <ClInclude Include="helper\iniutil.h" />

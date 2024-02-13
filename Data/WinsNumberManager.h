@@ -4,6 +4,10 @@
 // #20160724 Work Ahnshy :: Winning Number Manage Class
 // CWinsNumberManager class
 
+#include "WinsItem.h"
+
+typedef map<DWORD, CWinsItem*>	MapWins;
+
 class CWinsNumberManager
 {
 public:

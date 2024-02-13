@@ -5,7 +5,7 @@
 // CHtmlParser class
 // Bug Report :: ahnshy@naver.com
 
-#include "../Data/WinsItem.h"
+#include "../Data/WinsNumberManager.h"
 
 class CHtmlParser
 {

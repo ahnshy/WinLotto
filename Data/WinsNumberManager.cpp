@@ -22,9 +22,9 @@
 static const CString	PathName;
 
 // Static :: Magnify Init
-const CString CWinsNumberManager::PathName						= CONFIG_WINLOTTO_PATH;
+const CString CWinsNumberManager::PathName					= CONFIG_WINLOTTO_PATH;
 
-CWinsNumberManager*	CWinsNumberManager::m_pWinsNumberManager	= NULL;
+CWinsNumberManager*	CWinsNumberManager::m_pWinsNumberManager= NULL;
 /////////////////////////////////////////////////////////////////////////////
 // Management Instance
 CWinsNumberManager* CWinsNumberManager::GetInstance()
