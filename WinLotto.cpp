@@ -37,6 +37,8 @@
 #include "Helper/HttpHelper.h"
 #include "Helper/HtmlParser.h"
 
+#include "Data/WinsNumberManager.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -96,16 +98,21 @@ BOOL CTreePropSheetEx_DemoApp::InitInstance()
 	//sheet.SetEmptyPageText(_T("Select a sub-page"));
 	//sheet.SetTreeDefaultImages( IDB_EMPTY_IMAGE_LIST, 16, RGB( 255, 255, 255 ) );
 
+	CStringArray strArray;
 	const CString strPath = _T("c:\\index.html");
 	CHttpHelper http;
 	http.GetHttpFile(_T("https://dhlottery.co.kr/gameResult.do?method=allWinExel&gubun=byWin&nowPage=&drwNoStart=1&drwNoEnd=9999"), strPath);
 
 	CHtmlParser dom;
-	MapWins wins;
-	dom.GetWinsNumber(strPath, wins);
+	//MapWins wins;
+	dom.GetRounds(strPath, strArray);
+
+	CWinsNumberManager* pManager = CWinsNumberManager::GetInstance();
+	if (pManager)
+		pManager->Initialize(strArray);
 
 	CPageWins pageWins;
-	pageWins.SetData(&wins);
+	//pageWins.SetData(&wins);
 	//CPagePhone pagePhone;
 	//CPageEmail pageEmail;
 	//CPageContact pageContact(&pagePhone, &pageEmail);
@@ -133,7 +140,7 @@ BOOL CTreePropSheetEx_DemoApp::InitInstance()
 	sheet.SetIsResizable(true);
 	sheet.SetTreeWidth(170);  
 	sheet.SetPaneMinimumSizes(100, 180);
-	sheet.SetMinSize(CSize( 300, 320 ));
+	sheet.SetMinSize(CSize( 480, 530 ));
 	sheet.SetAutoExpandTree(true);
 
 	int nResponse = sheet.DoModal();
@@ -148,11 +155,8 @@ BOOL CTreePropSheetEx_DemoApp::InitInstance()
 		//  dismissed with Cancel
 	}
 
-	
-	for (MapWins::iterator itor = wins.begin() ; itor != wins.end() ; ++itor)
-		delete itor->second;
-	
-	wins.clear();
+	if (pManager)
+		pManager->DestroyInstance();
 
 	return FALSE;
 }
