@@ -57,7 +57,10 @@ CWinsNumberManager::~CWinsNumberManager(void)
 
 void CWinsNumberManager::SetEmpty()
 {
-	// to do...
+	for (MapRounds::iterator itor = m_mapRounds.begin() ; itor != m_mapRounds.end() ; ++itor)
+		delete itor->second;
+
+	m_mapRounds.clear();
 }
 
 void CWinsNumberManager::ReadConfig()
@@ -70,17 +73,25 @@ void CWinsNumberManager::SaveConfig()
 	// to do...
 }
 
-INT32 CWinsNumberManager::Initialize(CString strRaw, CString strDelimeter)
+INT32 CWinsNumberManager::Initialize(CStringArray& arrRounds)
 {
+	CString strBuffer;
+	CWinsItem *pItem = NULL;
 	CStringArray arr;
-	CPaserUtil::ParseString(strRaw, strDelimeter, arr);
+	const CString strDelimeter = _T(",");
+	for(INT32 nIndex =  0 ; nIndex < arrRounds.GetCount() ; nIndex++)
+	{
+		strBuffer = arrRounds.GetAt(nIndex);
+		if (strBuffer.IsEmpty())
+			continue;
 
-	//INT32 nIndex = 0;
-	//m_dwRound = _ttol(arr.GetAt(nIndex++));
-	//m_strDate = arr.GetAt(nIndex++);
-
-	//for(INT32 nKey =  0 ; nIndex < arr.GetCount() ; nIndex++, nKey++)
-	//	m_mapRounds.insert(make_pair(nKey, _ttoi(arr.GetAt(nIndex))));
+		pItem = new CWinsItem();
+		if (pItem)
+		{
+			pItem->Parse(strBuffer, _T(","));
+			m_mapRounds.insert(make_pair(pItem->GetRound(), pItem));
+		}
+	}
 
 	return 0;
 }

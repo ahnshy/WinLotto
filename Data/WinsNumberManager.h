@@ -6,7 +6,6 @@
 
 #include "WinsItem.h"
 
-typedef map<DWORD, CWinsItem*>	MapWins;
 typedef map<DWORD, CWinsItem*>	MapRounds;
 
 class CWinsNumberManager
@@ -19,12 +18,13 @@ public:
 	static void					DestroyInstance();
 
 	// Init
-	INT32						Initialize(CString strRaw, CString strDelimeter);
+	INT32						Initialize(CStringArray& arrRounds);
 
 	void						SaveConfig();
 	void						ReadConfig();
 
 	// Getter / Setter
+	MapRounds&					GetRoundMap()			{		return m_mapRounds;		}
 	void						SetEmpty();
 
 protected:

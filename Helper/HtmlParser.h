@@ -5,15 +5,14 @@
 // CHtmlParser class
 // Bug Report :: ahnshy@naver.com
 
-#include "../Data/WinsNumberManager.h"
-
 class CHtmlParser
 {
 public:
     CHtmlParser();
     ~CHtmlParser();
 public:
-    long GetWinsNumber(CString strPath, MapWins& wins);
+    //long GetWinsNumber(CString strPath, MapWins& wins);
+	long GetRounds(CString strPath, OUT CStringArray& strOut);
 
 private:
     BOOL Initialize();

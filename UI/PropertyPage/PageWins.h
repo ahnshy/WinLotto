@@ -22,8 +22,8 @@ public:
 
 	enum			{ IDD = IDD_PAGE_WINS };
 
-	void			SetData(MapWins* pMap);
-	void			SetList(MapWins &wins);
+//	void			SetData(MapWins* pMap);
+	void			SetList();
 
 	void			Initialize();
 	void			AddFiles();
@@ -48,7 +48,7 @@ public:
 	BOOL			GetIncludeSubDirectory()								{			return m_bIncludeSubPath;				}
 
 protected:
-	MapWins*		m_pWins;
+	//MapWins*		m_pWins;
 	CListCtrl		m_wndList;
 	CProgressCtrl	m_wndProgress;
 	DWORD			m_dwTotalFiles;

@@ -27,6 +27,9 @@ public:
 
 	INT32	SetWinNumbers(CString strNumber);
 
+	DWORD	SetRound(DWORD dwRound)	{ m_dwRound = dwRound; }
+	CString	SetDate(CString strDate){ m_strDate = strDate; }
+
 private:
 	DWORD				m_dwRound;
 	CString				m_strDate;

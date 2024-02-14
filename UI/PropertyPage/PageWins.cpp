@@ -71,7 +71,7 @@ IMPLEMENT_DYNCREATE(CPageWins, CResizablePage)
 CPageWins::CPageWins()
 	: CResizablePage(CPageWins::IDD)
 {
-	m_pWins				= NULL;
+	//m_pWins				= NULL;
 	m_dwTotalFiles		= 0;
 	m_bIncludeSubPath	= TRUE;
 	m_pNofityWnd		= NULL;
@@ -138,19 +138,27 @@ void CPageWins::Initialize()
 
 	CString strBuffer;
 	int nIndex = 0;
-	double const fWidthRatio = 0.11;
+	double const fWidthRatio = 0.09;
 	item.cx=(int)(rt.Width() * fWidthRatio);
 	item.pszText = (_T("No."));
+	m_wndList.InsertColumn(nIndex++,&item);
+
+	item.cx=(int)(rt.Width() * fWidthRatio*2);
+	item.pszText = (_T("Date"));
 	m_wndList.InsertColumn(nIndex++,&item);
 
 	for (; nIndex < 8 ; nIndex++)
 	{
 		item.cx=int(rt.Width() * fWidthRatio);
-		strBuffer.Format(_T("%02d"), nIndex);
+		strBuffer.Format(_T("%02d"), nIndex-1);
 		item.pszText = ((LPTSTR)(LPCTSTR)strBuffer);
 		item.iSubItem = nIndex;
 		m_wndList.InsertColumn(nIndex,&item);
 	}
+
+	item.cx=(int)(rt.Width() * fWidthRatio*2);
+	item.pszText = (_T("Bonus"));
+	m_wndList.InsertColumn(++nIndex,&item);
 
 	m_wndList.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_HEADERDRAGDROP);
 
@@ -161,7 +169,7 @@ void CPageWins::Initialize()
 	//m_strPath = _T("C:\\Temp");
 	//AddFiles();
 
-	SetList(*m_pWins);
+	SetList();
 }
 
 void CPageWins::AddFiles()
@@ -295,19 +303,20 @@ BOOL CPageWins::ParseFilter()
 	return TRUE;
 }
 
-void CPageWins::SetData(MapWins* pMap)
-{
-	m_pWins = pMap;
-}
-
-void CPageWins::SetList(MapWins &wins)
+void CPageWins::SetList()
 {
 	CString strBuffer;
 	LVITEM item;
 
 	try
 	{
-		for (MapWins::iterator itor = wins.begin() ; itor != wins.end() ; ++itor)
+
+		CWinsNumberManager* pManager = CWinsNumberManager::GetInstance();
+		if (!pManager)
+			return;
+
+		MapRounds& m = pManager->GetRoundMap();
+		for (MapRounds::iterator itor = m.begin() ; itor != m.end() ; ++itor)
 		{
 			int nColumn = 0, nCnt = m_wndList.GetItemCount();
 
