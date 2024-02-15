@@ -156,7 +156,7 @@ void CPageWins::Initialize()
 		m_wndList.InsertColumn(nIndex,&item);
 	}
 
-	item.cx=(int)(rt.Width() * fWidthRatio*2);
+	item.cx=(int)(rt.Width() * fWidthRatio);
 	item.pszText = (_T("Bonus"));
 	m_wndList.InsertColumn(++nIndex,&item);
 
@@ -260,7 +260,7 @@ BOOL CPageWins::PreTranslateMessage(MSG* pMsg)
 	return CResizablePage::PreTranslateMessage(pMsg);
 }
 
-CListCtrl* CPageWins::GetListCtrl()
+CMFCListCtrl* CPageWins::GetListCtrl()
 {
 	return &m_wndList;
 }
