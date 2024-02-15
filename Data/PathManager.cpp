@@ -6,13 +6,19 @@
 #define PATH_LOG_FOLDERNAME							TEXT("log")
 #define PATH_IMAGES_FOLDERNAME						TEXT("images")
 #define PATH_CONFIG_FOLDERNAME						TEXT("config")
-#define PATH_COMPANYNAME							TEXT("");
-#define PATH_PROGRAMNAME							TEXT("WinLotto");
+#define PATH_STORAGE_FOLDERNAME						TEXT("storage")
+#define PATH_COMPANYNAME							TEXT("")
+#define PATH_PROGRAMNAME							TEXT("WinLotto")
+
+#define PATH_ROUND_FILENAME							TEXT("rounds.html")
 
 const CString CPathManager::LogForderName			= PATH_LOG_FOLDERNAME;
 const CString CPathManager::ConfigForderName		= PATH_CONFIG_FOLDERNAME;
+const CString CPathManager::StorageForderName		= PATH_STORAGE_FOLDERNAME;
 const CString CPathManager::ImageForderName			= PATH_IMAGES_FOLDERNAME;
 const CString CPathManager::CompanyName				= PATH_COMPANYNAME;
+
+const CString CPathManager::RoundFileName			= PATH_ROUND_FILENAME;
 
 CPathManager*	CPathManager::m_pPathManager		= NULL;
 
@@ -82,8 +88,19 @@ void CPathManager::Initialize()
 	m_strConfigPath.AppendChar(BACKSLASH);
 	CreateDirectory(m_strConfigPath, NULL);
 
+	// StoragePath => "BinPath\Storage\"
+	m_strStoragePath= m_strBinPath;
+	m_strStoragePath.Append(CPathManager::StorageForderName);
+	m_strStoragePath.AppendChar(BACKSLASH);
+	CreateDirectory(m_strStoragePath, NULL);
+
 	// TempPath => _T("%USERPROFILE%\AppData\Local\Temp\XXXXXXXX\")
 	m_strTempPath = CDirectoryHelper::GetTempPath();
 	m_strTempPath.TrimRight(BACKSLASH);
 	m_strTempPath.AppendChar(BACKSLASH);
+	CreateDirectory(m_strTempPath, NULL);
+
+	// Round File (static resource)
+	m_strRoundFile.Append(m_strStoragePath);
+	m_strRoundFile.Append(PATH_ROUND_FILENAME);
 }

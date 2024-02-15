@@ -37,6 +37,7 @@
 #include "Helper/HttpHelper.h"
 #include "Helper/HtmlParser.h"
 
+#include "Data/PathManager.h"
 #include "Data/WinsNumberManager.h"
 
 #ifdef _DEBUG
@@ -93,23 +94,33 @@ BOOL CTreePropSheetEx_DemoApp::InitInstance()
 	//CTreePropSheetEx_DemoDlg dlg;
 	//m_pMainWnd = &dlg;
 
+	CString strRoundFIle;
+	CPathManager* pPathManager = CPathManager::GetInstance();
+	if (pPathManager)
+	{
+		pPathManager->Initialize();
+		strRoundFIle = pPathManager->GetRoundFilePath();
+	}
+
+
 	TreePropSheet::CTreePropSheetOffice2003 sheet(IDS_STRING_PROJECT);
 	sheet.SetTreeViewMode(TRUE, TRUE, TRUE);
 	//sheet.SetEmptyPageText(_T("Select a sub-page"));
 	//sheet.SetTreeDefaultImages( IDB_EMPTY_IMAGE_LIST, 16, RGB( 255, 255, 255 ) );
 
-	CStringArray strArray;
-	const CString strPath = _T("c:\\index.html");
-	CHttpHelper http;
-	http.GetHttpFile(_T("https://dhlottery.co.kr/gameResult.do?method=allWinExel&gubun=byWin&nowPage=&drwNoStart=1&drwNoEnd=9999"), strPath);
+	if (!strRoundFIle.IsEmpty() && !PathFileExists(strRoundFIle))
+	{
+		CHttpHelper http;
+		http.GetHttpFile(_T("https://dhlottery.co.kr/gameResult.do?method=allWinExel&gubun=byWin&nowPage=&drwNoStart=1&drwNoEnd=9999"), strRoundFIle);
+	}
 
 	CHtmlParser dom;
-	//MapWins wins;
-	dom.GetRounds(strPath, strArray);
+	CStringArray strArray;
+	dom.GetRounds(strRoundFIle, strArray);
 
-	CWinsNumberManager* pManager = CWinsNumberManager::GetInstance();
-	if (pManager)
-		pManager->Initialize(strArray);
+	CWinsNumberManager* pNumberManager = CWinsNumberManager::GetInstance();
+	if (pNumberManager)
+		pNumberManager->Initialize(strArray);
 
 	CPageWins pageWins;
 	//pageWins.SetData(&wins);
@@ -155,8 +166,11 @@ BOOL CTreePropSheetEx_DemoApp::InitInstance()
 		//  dismissed with Cancel
 	}
 
-	if (pManager)
-		pManager->DestroyInstance();
+	if (pPathManager)
+		pPathManager->DestroyInstance();
+
+	if (pNumberManager)
+		pNumberManager->DestroyInstance();
 
 	return FALSE;
 }
