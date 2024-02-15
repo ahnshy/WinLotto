@@ -1,6 +1,7 @@
 #pragma once
 
-#include "afxcmn.h"
+#include <afxcmn.h>
+#include <afxlistctrl.h>
 
 #include "ResizablePage.h"
 #include "../PropertySheet/TreePropSheetUtil.hpp"
@@ -34,7 +35,7 @@ public:
 	void			UpdateStaticText(UINT uID);
 	void			UpdateStaticText(CString strText);
 
-	CListCtrl*		GetListCtrl();
+	CMFCListCtrl*	GetListCtrl();
 	CProgressCtrl*	GetProgressCtrl();
 	
 	void			TaskFinish()											{			m_pThread = NULL;						}
@@ -49,7 +50,7 @@ public:
 
 protected:
 	//MapWins*		m_pWins;
-	CListCtrl		m_wndList;
+	CMFCListCtrl	m_wndList;
 	CProgressCtrl	m_wndProgress;
 	DWORD			m_dwTotalFiles;
 
