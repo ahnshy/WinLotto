@@ -143,6 +143,7 @@
     <ClCompile Include="Data\WinsItem.cpp" />
     <ClCompile Include="Data\WinsNumberManager.cpp" />
     <ClCompile Include="Helper\DirectoryHelper.cpp" />
+    <ClCompile Include="Helper\GdiPlusHelper.cpp" />
     <ClCompile Include="Helper\HtmlParser.cpp" />
     <ClCompile Include="Helper\HttpHelper.cpp" />
     <ClCompile Include="Helper\IniUtil.cpp" />
@@ -176,6 +177,7 @@
     <ClCompile Include="UI\PropertyPage\PageEmail.cpp" />
     <ClCompile Include="UI\PropertyPage\PageNote.cpp" />
     <ClCompile Include="UI\PropertyPage\PagePhone.cpp" />
+    <ClCompile Include="UI\PropertyPage\PageSimulation.cpp" />
     <ClCompile Include="UI\PropertyPage\PageWins.cpp" />
     <ClCompile Include="UI\PropertyPage\ResizablePage.cpp" />
     <ClCompile Include="UI\PropertySheet\hookwnd.cpp" />
@@ -216,6 +218,7 @@
     <ClInclude Include="Data\WinsItem.h" />
     <ClInclude Include="Data\WinsNumberManager.h" />
     <ClInclude Include="Helper\DirectoryHelper.h" />
+    <ClInclude Include="Helper\GdiPlusHelper.h" />
     <ClInclude Include="Helper\HtmlParser.h" />
     <ClInclude Include="Helper\HttpHelper.h" />
     <ClInclude Include="helper\iniutil.h" />
@@ -237,6 +240,7 @@
     <ClInclude Include="UI\PropertyPage\PageEmail.h" />
     <ClInclude Include="UI\PropertyPage\PageNote.h" />
     <ClInclude Include="UI\PropertyPage\PagePhone.h" />
+    <ClInclude Include="UI\PropertyPage\PageSimulation.h" />
     <ClInclude Include="UI\PropertyPage\PageWins.h" />
     <ClInclude Include="UI\PropertyPage\ResizablePage.h" />
     <ClInclude Include="UI\PropertySheet\HighColorTab.hpp" />
