@@ -25,6 +25,8 @@
 #define IDD_DLG_CHILD_SHEETS            142
 #define IDI_PREFERENCES                 143
 #define IDD_PAGE_WINS                   146
+#define IDD_PAGE_MISC_DATES1            147
+#define IDD_PAGE_EMPTY                  147
 #define IDC_RESIZABLE_TREEPROPSHEETEX   1000
 #define IDC_CLASSIC_TREEPROPSHEET       1001
 #define IDC_RESIZABLE_TABBED_TREEPROPSHEETEX 1002
