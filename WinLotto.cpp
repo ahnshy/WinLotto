@@ -28,6 +28,7 @@
 //#include "UI/PropertyPage/PageContact.h"
 //#include "UI/PropertyPage/PageEmail.h"
 #include "UI/PropertyPage/PagePhone.h"
+#include "UI/PropertyPage/PageSimulation.h"
 //#include "UI/PropertyPage/PageNote.h"
 //#include "UI/PropertyPage/PageDates.h"
 //#include "UI/PropertyPage/PageCustomize.h"
@@ -122,7 +123,8 @@ BOOL CTreePropSheetEx_DemoApp::InitInstance()
 	if (pNumberManager)
 		pNumberManager->Initialize(strArray);
 
-	CPageWins pageWins;
+	CPageWins		pageWins;
+	CPageSimulation pageSimulation;
 	//pageWins.SetData(&wins);
 	//CPagePhone pagePhone;
 	//CPageEmail pageEmail;
@@ -132,6 +134,7 @@ BOOL CTreePropSheetEx_DemoApp::InitInstance()
 	//CPageCustomize pageCustomize( sheet );
 
 	pageWins.SetHasWhiteBackground(true);
+	pageSimulation.SetHasWhiteBackground(false);
 	//pagePhone.SetHasWhiteBackground(true);
 	//pageContact.SetHasWhiteBackground(true);
 	//pagePhone.SetHasWhiteBackground(true);
@@ -141,6 +144,9 @@ BOOL CTreePropSheetEx_DemoApp::InitInstance()
 	//pageCustomize.SetHasWhiteBackground(true);
 
 	sheet.AddPage(&pageWins);
+	sheet.AddPage(&pageSimulation);
+	
+	
 	//sheet.AddPage(&pageContact);
 	//sheet.AddPage(&pagePhone);
 	//sheet.AddPage(&pageEmail);
