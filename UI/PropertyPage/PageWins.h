@@ -3,12 +3,17 @@
 #include <afxcmn.h>
 #include <afxlistctrl.h>
 
+
 #include "ResizablePage.h"
+
+#include "../Controls/WinsListCtrl.h"
 #include "../PropertySheet/TreePropSheetUtil.hpp"
 #include "../../Data/WinsNumberManager.h"
 
 UINT TaskCountLineFunc(LPVOID pParam);
 void AddFiles(CString strPath);
+
+
 /////////////////////////////////////////////////////////////////////////////
 // CPageWins dialog
 class CPageWins 
@@ -50,7 +55,8 @@ public:
 
 protected:
 	//MapWins*		m_pWins;
-	CMFCListCtrl	m_wndList;
+	//CMFCListCtrl	m_wndList;
+	CWinsListCtrl	m_wndList;
 	CProgressCtrl	m_wndProgress;
 	DWORD			m_dwTotalFiles;
 

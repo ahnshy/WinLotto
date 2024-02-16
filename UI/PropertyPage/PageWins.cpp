@@ -125,9 +125,9 @@ BOOL CPageWins::OnInitDialog()
 void CPageWins::Initialize()
 {
 	CRect rt;
-	GetParent()->GetClientRect(&rt);
+	GetClientRect(&rt);
 
-	m_wndList.MoveWindow(&rt);
+	//m_wndList.MoveWindow(&rt);
 	//m_wndList.SetWindowPos(&wndTop, rt.left, rt.top, rt.right, rt.bottom, SWP_SHOWWINDOW);
 
 	LVCOLUMN item;
