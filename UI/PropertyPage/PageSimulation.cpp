@@ -4,6 +4,8 @@
 
 #include "stdafx.h"
 
+#include <math.h>
+
 #include "PageSimulation.h"
 
 #ifdef _DEBUG
@@ -11,11 +13,6 @@
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
-
-//  LOGIN DIALOG - Append Ahnshy
-#define		COLOR_PAGE_SIMULATION_DLG_BG_RGB						RGB(5, 36, 63)
-#define		COLOR_PAGE_SIMULATION_DLG_BG							Color(255, 5, 36, 63)
-#define		COLOR_PAGE_SIMULATION_DLG_BG_HIGHLIGHT_CIRCLE			Color(255, 20, 77, 126)
 
 /////////////////////////////////////////////////////////////////////////////
 // CPageSimulation property page
@@ -84,39 +81,16 @@ void CPageSimulation::OnPaint()
 	CRect rc;
 	GetClientRect(&rc);
 
-	COLORREF m_bkgndColor = RGB(5, 36, 63);
-	Graphics graphics(dc.GetSafeHdc());
-	Bitmap mBitmap(rc.Width(), rc.Height());
-	Graphics mGraphics(&mBitmap);
-	mGraphics.SetSmoothingMode(SmoothingModeHighQuality);
-	mGraphics.SetInterpolationMode(InterpolationModeHighQuality);
+	//  LOGIN DIALOG - Append Ahnshy
+	#define		COLOR_PAGE_SIMULATION_DLG_BG_RGB						RGB(5, 36, 63)
+	#define		COLOR_PAGE_SIMULATION_DLG_BG							Color(255, 5, 36, 63)
+	#define		COLOR_PAGE_SIMULATION_DLG_BG_HIGHLIGHT_CIRCLE			Color(255, 20, 77, 126)
 
-	float const nMargin = 2;
-	RectF rcTarget(-nMargin, -nMargin, (float)rc.Width() + nMargin, (float)rc.Height() + nMargin);
-
-	SolidBrush brushBk(COLOR_PAGE_SIMULATION_DLG_BG);
-	mGraphics.FillRectangle(&brushBk, rcTarget);
+	m_gdi.DrawGradientBackGound(dc.GetSafeHdc(), rc, COLOR_PAGE_SIMULATION_DLG_BG_RGB, COLOR_PAGE_SIMULATION_DLG_BG_HIGHLIGHT_CIRCLE, 10);
 
 	
-//	rcTarget.Inflate(m_nFeather, m_nFeather);
-	rcTarget.Inflate(25, 25);
-	Color colorBackGound(255, GetRValue(m_bkgndColor), GetGValue(m_bkgndColor), GetBValue(m_bkgndColor));
-	Color colorCenter(COLOR_PAGE_SIMULATION_DLG_BG_HIGHLIGHT_CIRCLE);
-	Color colorSurrounds[] = { colorBackGound };
-	INT nColorCnt = _countof(colorSurrounds);
-
-	GraphicsPath path;
-	path.AddEllipse(rcTarget);
-
-	PathGradientBrush brush(&path);
-	brush.SetSurroundColors(colorSurrounds, &nColorCnt);
-	brush.SetCenterPoint(PointF((rc.Width() / 2), (rc.Height() / 2)));
-	brush.SetCenterColor(colorCenter);
-
-	mGraphics.FillPath(&brush, &path);
-
-	CachedBitmap cachedBitmap(&mBitmap, &graphics);
-	graphics.DrawCachedBitmap(&cachedBitmap, 0, 0);
+	float fRadios = sqrt(sqrt(double(rc.Width() * rc.Height())));
+	m_gdi.DrawBall(dc.GetSafeHdc(), RectF(10, 10, fRadios, fRadios), RGB(255, 0, 0), TRUE);
 }
 
 BOOL CPageSimulation::OnEraseBkgnd(CDC* pDC) 
