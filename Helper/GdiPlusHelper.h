@@ -25,6 +25,9 @@ public:
 	~CGdiPlusHelper(void);
 
 	BOOL				Init();
+
+	INT32				DrawBall(HDC hDC, RectF& rcRect, COLORREF colorBall, BOOL bFlat);
+	INT32				DrawGradientBackGound(HDC hDC, CRect& rcRect, COLORREF colorBackGround, Color colorHighLight, INT32 nFeather);
 	
 	INT32				SetTransform(LPCTSTR lpszPath, Bitmap** ppBitmap);
 

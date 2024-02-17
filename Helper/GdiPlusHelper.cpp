@@ -27,6 +27,81 @@ BOOL CGdiPlusHelper::Init()
 	return TRUE;
 }
 
+INT32 CGdiPlusHelper::DrawGradientBackGound(HDC hDC, CRect& rcRect, COLORREF colorBackGround, Color colorHighLight, INT32 nFeather)
+{
+	if (hDC == NULL)
+		return -1;
+
+	Graphics graphics(hDC);
+	Bitmap mBitmap(rcRect.Width(), rcRect.Height());
+	Graphics mGraphics(&mBitmap);
+	mGraphics.SetSmoothingMode(SmoothingModeAntiAlias);
+	mGraphics.SetInterpolationMode(InterpolationModeHighQuality);
+
+	float const nMargin = 2;
+	RectF rcTarget(-nMargin, -nMargin, (float)rcRect.Width() + nMargin, (float)rcRect.Height() + nMargin);
+
+	SolidBrush brushBk(Color(255, GetRValue(colorBackGround), GetGValue(colorBackGround), GetBValue(colorBackGround)));
+	mGraphics.FillRectangle(&brushBk, rcTarget);
+
+	rcTarget.Inflate(nFeather, nFeather);
+	Color colorBackGound(255, GetRValue(colorBackGround), GetGValue(colorBackGround), GetBValue(colorBackGround));
+	Color colorCenter(colorHighLight);
+	Color colorSurrounds[] = { colorBackGround };
+	INT nColorCnt = _countof(colorSurrounds);
+
+	GraphicsPath path;
+	path.AddEllipse(rcTarget);
+
+	PathGradientBrush brush(&path);
+	brush.SetSurroundColors(colorSurrounds, &nColorCnt);
+	brush.SetCenterPoint(PointF((rcRect.Width() / 2), (rcRect.Height() / 2)));
+	brush.SetCenterColor(colorCenter);
+
+	mGraphics.FillPath(&brush, &path);
+
+	CachedBitmap cachedBitmap(&mBitmap, &graphics);
+	graphics.DrawCachedBitmap(&cachedBitmap, 0, 0);
+
+	return 0;
+}
+
+INT32 CGdiPlusHelper::DrawBall(HDC hDC, RectF& rcRect, COLORREF colorBall, BOOL bFlat)
+{
+	if (hDC == NULL)
+		return -1;
+
+	Graphics graphics(hDC);
+	graphics.SetSmoothingMode(SmoothingModeAntiAlias);
+	graphics.SetInterpolationMode(InterpolationModeHighQuality);
+
+	float const nMargin = 0;
+	RectF rcTarget(rcRect.X, rcRect.Y, (float)rcRect.Width + nMargin, (float)rcRect.Height + nMargin);
+	GraphicsPath path;
+	path.AddEllipse(rcTarget);
+
+	if (bFlat)
+	{
+		SolidBrush brush(Color(255, GetRValue(colorBall), GetGValue(colorBall), GetBValue(colorBall)));
+		graphics.FillPath(&brush, &path);
+	}
+	else
+	{
+		PathGradientBrush brush(&path);
+		Color colorBackGound(255, GetRValue(colorBall), GetGValue(colorBall), GetBValue(colorBall));
+
+		Color colorCenter(Color(255, 255, 255, 255));
+		Color colorSurrounds[] = { colorBackGound };
+		INT nColorCnt = _countof(colorSurrounds);
+
+		brush.SetSurroundColors(colorSurrounds, &nColorCnt);
+		brush.SetCenterPoint(PointF((rcRect.Width / 2), (rcRect.Height / 2)));
+		brush.SetCenterColor(colorCenter);
+		graphics.FillPath(&brush, &path);
+	}
+
+	return 0;
+}
 
 INT32 CGdiPlusHelper::SetTransform(LPCTSTR lpszPath, Bitmap** ppBitmap)
 {
