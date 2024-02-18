@@ -135,6 +135,7 @@ BOOL CTreePropSheetEx_DemoApp::InitInstance()
 
 	pageWins.SetHasWhiteBackground(true);
 	pageSimulation.SetHasWhiteBackground(false);
+	
 	//pagePhone.SetHasWhiteBackground(true);
 	//pageContact.SetHasWhiteBackground(true);
 	//pagePhone.SetHasWhiteBackground(true);
@@ -143,8 +144,9 @@ BOOL CTreePropSheetEx_DemoApp::InitInstance()
 	//pageDates.SetHasWhiteBackground(true);
 	//pageCustomize.SetHasWhiteBackground(true);
 
-	sheet.AddPage(&pageWins);
 	sheet.AddPage(&pageSimulation);
+	sheet.AddPage(&pageWins);
+	
 	
 	
 	//sheet.AddPage(&pageContact);

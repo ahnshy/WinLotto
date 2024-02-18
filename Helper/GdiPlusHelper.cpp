@@ -3,14 +3,23 @@
 #include "GdiPlusHelper.h"
 
 #pragma comment(lib, "gdiplus")
-
 CGdiPlusHelper::CGdiPlusHelper()
 {
+	m_pTextFont = NULL;
 	m_gdiToken = 0;
+	m_mapSize.clear();
 }
 
 CGdiPlusHelper::~CGdiPlusHelper()
 {
+	m_mapSize.clear();
+
+	if (m_pTextFont)
+	{
+		delete m_pTextFont;
+		m_pTextFont = NULL;
+	}
+
 	if (m_gdiToken != 0)
 	{
 		GdiplusShutdown(m_gdiToken);
@@ -24,7 +33,36 @@ BOOL CGdiPlusHelper::Init()
 	if (GdiplusStartup(&m_gdiToken, &input, NULL) != Ok)
 		return FALSE;
 
+	MeasureFontSize();
+
 	return TRUE;
+}
+
+void CGdiPlusHelper::MeasureFontSize()
+{
+	CPaintDC dc(CWnd::FromHandle(GetDesktopWindow()));
+
+	Graphics g(dc.GetSafeHdc());
+
+	TCHAR szStr[] = _T("50");
+	RectF layoutRect(0.0f, 0.0f, 32767.0f, 32767.0f);
+	StringFormat format;
+	format.SetAlignment(StringAlignmentCenter);
+	RectF boundRect;
+
+	for (INT32 nSize = 1 ; nSize <= 72 ; nSize++)
+	{
+		m_pTextFont = new Font(DEFAULT_FONT, nSize);
+		if (!m_pTextFont)
+			continue;
+
+		// Measure the string.
+		g.MeasureString(szStr, (INT32)_tcslen(szStr), m_pTextFont, layoutRect, &format, &boundRect);
+		m_mapSize.insert(make_pair(nSize, boundRect));
+
+		delete m_pTextFont;
+		m_pTextFont = NULL;
+	}
 }
 
 INT32 CGdiPlusHelper::DrawGradientBackGound(HDC hDC, CRect& rcRect, COLORREF colorBackGround, Color colorHighLight, INT32 nFeather)
@@ -66,7 +104,7 @@ INT32 CGdiPlusHelper::DrawGradientBackGound(HDC hDC, CRect& rcRect, COLORREF col
 	return 0;
 }
 
-INT32 CGdiPlusHelper::DrawBall(HDC hDC, RectF& rcRect, COLORREF colorBall, BOOL bFlat)
+INT32 CGdiPlusHelper::DrawBall(HDC hDC, RectF& rcRect, COLORREF colorBall, CString strText, BOOL bFlat)
 {
 	if (hDC == NULL)
 		return -1;
@@ -98,6 +136,30 @@ INT32 CGdiPlusHelper::DrawBall(HDC hDC, RectF& rcRect, COLORREF colorBall, BOOL 
 		brush.SetCenterPoint(PointF((rcRect.Width / 2), (rcRect.Height / 2)));
 		brush.SetCenterColor(colorCenter);
 		graphics.FillPath(&brush, &path);
+	}
+
+	
+	for (MapSize::const_reverse_iterator itor = m_mapSize.rbegin() ; itor != m_mapSize.rend() ; ++itor)
+	{
+		RectF rect = itor->second;
+
+		if (rect.Width < rcRect.Width && rect.Height < rcRect.Height)
+		{
+			m_pTextFont = new Font(DEFAULT_FONT, itor->first);
+			break;
+		}
+	}
+
+	if (m_pTextFont)
+	{
+		//RectF layoutRect(0.0f, 0.0f, 32767.0f, 32767.0f);
+		StringFormat format;
+		format.SetAlignment(StringAlignmentCenter);
+		//RectF boundRect;
+		//graphics.DrawString(strText)
+
+		SolidBrush  solidBrush(Color(255, 0, 0, 0));
+		graphics.DrawString(strText, strText.GetLength(), m_pTextFont, rcRect, &format, &solidBrush);
 	}
 
 	return 0;
