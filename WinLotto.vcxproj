@@ -139,7 +139,9 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <ClCompile Include="Data\BallItem.cpp" />
     <ClCompile Include="Data\PathManager.cpp" />
+    <ClCompile Include="Data\SimulationManager.cpp" />
     <ClCompile Include="Data\WinsItem.cpp" />
     <ClCompile Include="Data\WinsNumberManager.cpp" />
     <ClCompile Include="Helper\DirectoryHelper.cpp" />
@@ -214,7 +216,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ChildSheetsDlg.h" />
+    <ClInclude Include="Data\BallItem.h" />
     <ClInclude Include="Data\PathManager.h" />
+    <ClInclude Include="Data\SimulationManager.h" />
     <ClInclude Include="Data\WinsItem.h" />
     <ClInclude Include="Data\WinsNumberManager.h" />
     <ClInclude Include="Helper\DirectoryHelper.h" />
