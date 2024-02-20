@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include "PageSimulation.h"
 
+#include "../../Data/SimulationManager.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -59,6 +61,10 @@ BOOL CPageSimulation::OnInitDialog()
 	CResizablePage::OnInitDialog();
 	
 	m_gdi.Init();
+
+	CSimulationManager *pManager = CSimulationManager::GetInstance();
+	if (pManager)
+		pManager->Initialize();
 	
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
@@ -82,17 +88,30 @@ COLORREF CPageSimulation::GetRandomColor()
 
 void CPageSimulation::OnPaint() 
 {
+	CSimulationManager *pManager = CSimulationManager::GetInstance();
+	if (!pManager)
+		return;
+
 	CPaintDC dc(this);
 	CRect rc;
 	GetClientRect(&rc);
 
 	CString strText;
-	float fRadios = sqrt(sqrt(double(rc.Width() * rc.Height())));
-	for (INT32 nNumber = 1 ; nNumber < 50 ; nNumber++)
+	float fRadios = (sqrt(double(rc.Width() * rc.Height()))) * 0.06;
+
+	MapBalls m = pManager->GetBalls();
+	for (MapBalls::iterator itor = m.begin() ; itor != m.end() ; ++itor)
 	{
-		strText.Format(_T("%d"), nNumber);
-		m_gdi.DrawBall(dc.GetSafeHdc(), RectF(10 *nNumber, 10 * ((nNumber % 10) + 10), fRadios, fRadios), GetRandomColor(), strText, TRUE);
+		strText.Format(_T("%d"), itor->first);
+		m_gdi.DrawBall(dc.GetSafeHdc(), RectF(10 *itor->first, 10 * ((itor->first % 10) + 10), fRadios, fRadios), itor->second, strText, TRUE);
 	}
+	//delete itor->second;
+
+	//for (INT32 nNumber = 1 ; nNumber < 50 ; nNumber++)
+	//{
+		//strText.Format(_T("%d"), nNumber);
+		//m_gdi.DrawBall(dc.GetSafeHdc(), RectF(10 *nNumber, 10 * ((nNumber % 10) + 10), fRadios, fRadios), GetRandomColor(), strText, TRUE);
+	//}
 }
 
 BOOL CPageSimulation::OnEraseBkgnd(CDC* pDC) 
