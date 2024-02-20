@@ -6,7 +6,7 @@
 
 #include "BallItem.h"
 
-typedef map<DWORD, CBallItem*>	MapBalls;
+typedef map<DWORD, COLORREF>	MapBalls;
 
 class CSimulationManager
 {
@@ -20,15 +20,15 @@ public:
 	// Init
 	INT32						Initialize();
 
-	void						SaveConfig();
-	void						ReadConfig();
-
 	// Getter / Setter
-	MapBalls&					GetBalls()			{		return m_mapBalls;		}
+	MapBalls&					GetBalls()			{		return m_mapSimulationWinBalls;		}
 	void						SetEmpty();
 
 protected:
-	MapBalls					m_mapBalls;
+	MapBalls					m_mapRemainBalls;
+	MapBalls					m_mapSimulationWinBalls;
+
+	static const INT32			m_nMaxBalls;
 
 	static CSimulationManager*	m_pSimulationManager;
 };
