@@ -5,8 +5,10 @@
 // CSimulationManager class
 
 #include "BallItem.h"
+#include <map>
+using namespace std;
 
-typedef map<DWORD, COLORREF>	MapBalls;
+typedef map<DWORD, CBallItem>	MapBalls;
 
 class CSimulationManager
 {
