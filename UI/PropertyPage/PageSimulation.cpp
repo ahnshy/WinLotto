@@ -97,21 +97,15 @@ void CPageSimulation::OnPaint()
 	GetClientRect(&rc);
 
 	CString strText;
-	float fRadios = (sqrt(double(rc.Width() * rc.Height()))) * 0.06;
+	float fDiameter = (sqrt(double(rc.Width() * rc.Height()))) * 0.06;
+	float fMargin = fDiameter;
 
 	MapBalls m = pManager->GetBalls();
 	for (MapBalls::iterator itor = m.begin() ; itor != m.end() ; ++itor)
 	{
 		strText.Format(_T("%d"), itor->first);
-		m_gdi.DrawBall(dc.GetSafeHdc(), RectF(10 *itor->first, 10 * ((itor->first % 10) + 10), fRadios, fRadios), itor->second, strText, TRUE);
+		m_gdi.DrawBall(dc.GetSafeHdc(), RectF((((itor->first % 10)*fDiameter) +itor->first +fMargin), fMargin + (((itor->first / 10)) * fDiameter*2), fDiameter, fDiameter), itor->second, strText, TRUE);
 	}
-	//delete itor->second;
-
-	//for (INT32 nNumber = 1 ; nNumber < 50 ; nNumber++)
-	//{
-		//strText.Format(_T("%d"), nNumber);
-		//m_gdi.DrawBall(dc.GetSafeHdc(), RectF(10 *nNumber, 10 * ((nNumber % 10) + 10), fRadios, fRadios), GetRandomColor(), strText, TRUE);
-	//}
 }
 
 BOOL CPageSimulation::OnEraseBkgnd(CDC* pDC) 
