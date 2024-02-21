@@ -118,8 +118,12 @@ void CPageSimulation::OnPaint()
 	for (MapBalls::iterator itor = m.begin() ; itor != m.end() ; ++itor)
 	{
 		strText.Format(_T("%d"), itor->first);
+<<<<<<< HEAD
 		//itor->second.SetRect(RectF((((itor->first % 10)*fDiameter) +itor->first +fMargin), fMargin + (((itor->first / 10)) * fDiameter*2), fDiameter, fDiameter));
 		m_gdi.DrawBall(dc.GetSafeHdc(), itor->second.GetRect(), itor->second.GetColor(), strText, TRUE);
+=======
+		m_gdi.DrawBall(dc.GetSafeHdc(), RectF((((itor->first % 10)*fDiameter) +itor->first +fMargin), fMargin + (((itor->first / 10)) * fDiameter*2), fDiameter, fDiameter),itor->second.GetColor(), strText, TRUE);
+>>>>>>> 01af084 (<refactor> : Adding the RectF field in the Ball Item Class to display the movement of the ball)
 	}
 }
 

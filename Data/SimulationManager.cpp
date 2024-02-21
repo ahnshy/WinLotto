@@ -75,6 +75,7 @@ INT32 CSimulationManager::Initialize(CRect& rc)
 	{	
 		RectF rcInit((((nNumber % 10)*fDiameter) +nNumber +fMargin), fMargin + (((nNumber / 10)) * fDiameter*2), fDiameter, fDiameter);
 		if (nNumber / 10 == 0)
+<<<<<<< HEAD
 			m_mapSimulationWinBalls.insert(make_pair(nNumber, CBallItem(rcInit, RGB(251, 196, 0))));
 		else if (nNumber / 10 == 1)
 			m_mapSimulationWinBalls.insert(make_pair(nNumber, CBallItem(rcInit, RGB(105, 200, 242))));
@@ -84,6 +85,17 @@ INT32 CSimulationManager::Initialize(CRect& rc)
 			m_mapSimulationWinBalls.insert(make_pair(nNumber, CBallItem(rcInit, RGB(170, 170, 170))));
 		else if (nNumber / 10 == 4)
 			m_mapSimulationWinBalls.insert(make_pair(nNumber, CBallItem(rcInit, RGB(176, 216, 64))));
+=======
+			m_mapSimulationWinBalls.insert(make_pair(nNumber, CBallItem(RectF(0,0,0,0), RGB(251, 196, 0))));
+		else if (nNumber / 10 == 1)
+			m_mapSimulationWinBalls.insert(make_pair(nNumber, CBallItem(RectF(0,0,0,0), RGB(105, 200, 242))));
+		else if (nNumber / 10 == 2)
+			m_mapSimulationWinBalls.insert(make_pair(nNumber, CBallItem(RectF(0,0,0,0), RGB(255, 114, 114))));
+		else if (nNumber / 10 == 3)
+			m_mapSimulationWinBalls.insert(make_pair(nNumber, CBallItem(RectF(0,0,0,0), RGB(170, 170, 170))));
+		else if (nNumber / 10 == 4)
+			m_mapSimulationWinBalls.insert(make_pair(nNumber, CBallItem(RectF(0,0,0,0), RGB(176, 216, 64))));
+>>>>>>> 01af084 (<refactor> : Adding the RectF field in the Ball Item Class to display the movement of the ball)
 		else
 		{
 			// to do....
