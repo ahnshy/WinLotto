@@ -71,15 +71,15 @@ INT32 CSimulationManager::Initialize()
 	for (INT32 nNumber = 1 ; nNumber <= CSimulationManager::m_nMaxBalls ; nNumber++)
 	{
 		if (nNumber / 10 == 0)
-			m_mapSimulationWinBalls.insert(make_pair(nNumber, RGB(251, 196, 0)));
+			m_mapSimulationWinBalls.insert(make_pair(nNumber, CBallItem(RectF(0,0,0,0), RGB(251, 196, 0))));
 		else if (nNumber / 10 == 1)
-			m_mapSimulationWinBalls.insert(make_pair(nNumber, RGB(105, 200, 242)));
+			m_mapSimulationWinBalls.insert(make_pair(nNumber, CBallItem(RectF(0,0,0,0), RGB(105, 200, 242))));
 		else if (nNumber / 10 == 2)
-			m_mapSimulationWinBalls.insert(make_pair(nNumber, RGB(255, 114, 114)));
+			m_mapSimulationWinBalls.insert(make_pair(nNumber, CBallItem(RectF(0,0,0,0), RGB(255, 114, 114))));
 		else if (nNumber / 10 == 3)
-			m_mapSimulationWinBalls.insert(make_pair(nNumber, RGB(170, 170, 170)));
+			m_mapSimulationWinBalls.insert(make_pair(nNumber, CBallItem(RectF(0,0,0,0), RGB(170, 170, 170))));
 		else if (nNumber / 10 == 4)
-			m_mapSimulationWinBalls.insert(make_pair(nNumber, RGB(176, 216, 64)));
+			m_mapSimulationWinBalls.insert(make_pair(nNumber, CBallItem(RectF(0,0,0,0), RGB(176, 216, 64))));
 		else
 		{
 			// to do....

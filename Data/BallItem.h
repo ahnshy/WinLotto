@@ -1,37 +1,30 @@
 #pragma once
 
+#include <gdiplus.h>
+using namespace Gdiplus;
+
 /////////////////////////////////////////////////////////////////////////
 // #20240219 Work Ahnshy :: BallItem class
 // CBallItem class
 // Bug Report :: ahnshy@naver.com
-#include <map>
 using namespace std;
-
-
-typedef map<DWORD, INT32>				MapWinsNumber;
 
 class CBallItem
 {
 public:
 	CBallItem();
+	CBallItem(RectF rc, COLORREF c);;
 	~CBallItem();
 
-	void	SetEmpty();
+	void		SetEmpty();
 
-	DWORD	GetRound()				{ return m_dwRound; }
-	CString	GetDate()				{ return m_strDate; }
-	INT32	GetNumberCount()		{ return m_mapNumbers.size(); }
+	RectF&		GetRect()				{ return m_rc; }
+	COLORREF	GetColor()				{ return m_color; }
 
-	INT32	Parse(CString strRaw, CString strDelimeter);
-	INT32	GetWinNumbers(INT32 nIndex);
-
-	INT32	SetWinNumbers(CString strNumber);
-
-	DWORD	SetRound(DWORD dwRound)	{ m_dwRound = dwRound; }
-	CString	SetDate(CString strDate){ m_strDate = strDate; }
+	DWORD		SetRect(RectF rc)	{ m_rc = rc; }
+	COLORREF	SetColor(COLORREF c){ m_color = c; }
 
 private:
-	DWORD				m_dwRound;
-	CString				m_strDate;
-	MapWinsNumber		m_mapNumbers;
+	RectF			m_rc;
+	COLORREF		m_color;
 };

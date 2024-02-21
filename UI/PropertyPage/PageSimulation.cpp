@@ -104,7 +104,7 @@ void CPageSimulation::OnPaint()
 	for (MapBalls::iterator itor = m.begin() ; itor != m.end() ; ++itor)
 	{
 		strText.Format(_T("%d"), itor->first);
-		m_gdi.DrawBall(dc.GetSafeHdc(), RectF((((itor->first % 10)*fDiameter) +itor->first +fMargin), fMargin + (((itor->first / 10)) * fDiameter*2), fDiameter, fDiameter), itor->second, strText, TRUE);
+		m_gdi.DrawBall(dc.GetSafeHdc(), RectF((((itor->first % 10)*fDiameter) +itor->first +fMargin), fMargin + (((itor->first / 10)) * fDiameter*2), fDiameter, fDiameter),itor->second.GetColor(), strText, TRUE);
 	}
 }
 
