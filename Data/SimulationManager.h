@@ -20,7 +20,7 @@ public:
 	static void					DestroyInstance();
 
 	// Init
-	INT32						Initialize();
+	INT32						Initialize(CRect& rc);
 
 	// Getter / Setter
 	MapBalls&					GetBalls()			{		return m_mapSimulationWinBalls;		}

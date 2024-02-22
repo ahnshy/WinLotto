@@ -21,8 +21,8 @@ public:
 	RectF&		GetRect()				{ return m_rc; }
 	COLORREF	GetColor()				{ return m_color; }
 
-	DWORD		SetRect(RectF rc)	{ m_rc = rc; }
-	COLORREF	SetColor(COLORREF c){ m_color = c; }
+	void		SetRect(RectF rc)		{ m_rc = rc; }
+	void		SetColor(COLORREF c)	{ m_color = c; }
 
 private:
 	RectF			m_rc;
