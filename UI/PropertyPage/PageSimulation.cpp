@@ -47,6 +47,7 @@ void CPageSimulation::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CPageSimulation, CResizablePage)
 	//{{AFX_MSG_MAP(CPageSimulation)
 	//ON_WM_CTLCOLOR()
+	ON_WM_TIMER()
 	ON_WM_PAINT()
 	ON_WM_ERASEBKGND()
 	ON_WM_DESTROY()
@@ -62,12 +63,25 @@ BOOL CPageSimulation::OnInitDialog()
 	
 	m_gdi.Init();
 
+	CRect rc;
+	GetClientRect(&rc);
+
 	CSimulationManager *pManager = CSimulationManager::GetInstance();
 	if (pManager)
-		pManager->Initialize();
+		pManager->Initialize(rc);
+
+	::SetTimer(GetSafeHwnd(), 1000, 50, NULL);
 	
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
+}
+
+void CPageSimulation::OnTimer(UINT nIDEvent) 
+{
+	if (nIDEvent==1000)
+	{
+	}
+	CResizablePage::OnTimer(nIDEvent);
 }
 
 HBRUSH CPageSimulation::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) 
@@ -104,7 +118,8 @@ void CPageSimulation::OnPaint()
 	for (MapBalls::iterator itor = m.begin() ; itor != m.end() ; ++itor)
 	{
 		strText.Format(_T("%d"), itor->first);
-		m_gdi.DrawBall(dc.GetSafeHdc(), RectF((((itor->first % 10)*fDiameter) +itor->first +fMargin), fMargin + (((itor->first / 10)) * fDiameter*2), fDiameter, fDiameter),itor->second.GetColor(), strText, TRUE);
+		//itor->second.SetRect(RectF((((itor->first % 10)*fDiameter) +itor->first +fMargin), fMargin + (((itor->first / 10)) * fDiameter*2), fDiameter, fDiameter));
+		m_gdi.DrawBall(dc.GetSafeHdc(), itor->second.GetRect(), itor->second.GetColor(), strText, TRUE);
 	}
 }
 

@@ -64,22 +64,26 @@ void CSimulationManager::SetEmpty()
 	m_mapRemainBalls.clear();
 }
 
-INT32 CSimulationManager::Initialize()
+INT32 CSimulationManager::Initialize(CRect& rc)
 {
 	SetEmpty();
 
+	float fDiameter = (sqrt(double(rc.Width() * rc.Height()))) * 0.06;
+	float fMargin = fDiameter;
+
 	for (INT32 nNumber = 1 ; nNumber <= CSimulationManager::m_nMaxBalls ; nNumber++)
-	{
+	{	
+		RectF rcInit((((nNumber % 10)*fDiameter) +nNumber +fMargin), fMargin + (((nNumber / 10)) * fDiameter*2), fDiameter, fDiameter);
 		if (nNumber / 10 == 0)
-			m_mapSimulationWinBalls.insert(make_pair(nNumber, CBallItem(RectF(0,0,0,0), RGB(251, 196, 0))));
+			m_mapSimulationWinBalls.insert(make_pair(nNumber, CBallItem(rcInit, RGB(251, 196, 0))));
 		else if (nNumber / 10 == 1)
-			m_mapSimulationWinBalls.insert(make_pair(nNumber, CBallItem(RectF(0,0,0,0), RGB(105, 200, 242))));
+			m_mapSimulationWinBalls.insert(make_pair(nNumber, CBallItem(rcInit, RGB(105, 200, 242))));
 		else if (nNumber / 10 == 2)
-			m_mapSimulationWinBalls.insert(make_pair(nNumber, CBallItem(RectF(0,0,0,0), RGB(255, 114, 114))));
+			m_mapSimulationWinBalls.insert(make_pair(nNumber, CBallItem(rcInit, RGB(255, 114, 114))));
 		else if (nNumber / 10 == 3)
-			m_mapSimulationWinBalls.insert(make_pair(nNumber, CBallItem(RectF(0,0,0,0), RGB(170, 170, 170))));
+			m_mapSimulationWinBalls.insert(make_pair(nNumber, CBallItem(rcInit, RGB(170, 170, 170))));
 		else if (nNumber / 10 == 4)
-			m_mapSimulationWinBalls.insert(make_pair(nNumber, CBallItem(RectF(0,0,0,0), RGB(176, 216, 64))));
+			m_mapSimulationWinBalls.insert(make_pair(nNumber, CBallItem(rcInit, RGB(176, 216, 64))));
 		else
 		{
 			// to do....
