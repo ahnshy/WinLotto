@@ -70,7 +70,7 @@ BOOL CPageSimulation::OnInitDialog()
 	if (pManager)
 		pManager->Initialize(rc);
 
-	::SetTimer(GetSafeHwnd(), 1000, 50, NULL);
+	::SetTimer(GetSafeHwnd(), 1000, 80, NULL);
 	
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
@@ -80,7 +80,32 @@ void CPageSimulation::OnTimer(UINT nIDEvent)
 {
 	if (nIDEvent==1000)
 	{
+		CSimulationManager *pManager = CSimulationManager::GetInstance();
+		if (!pManager)
+			return;
+
+		CRect rc;
+		GetClientRect(&rc);
+
+		CString strText;
+		double fDiameter = (sqrt(double(rc.Width() * rc.Height()))) * 0.06;
+		double fMargin = fDiameter;
+
+		RectF rcBall;
+		MapBalls m = pManager->GetBalls();
+		for (MapBalls::iterator itor = m.begin() ; itor != m.end() ; ++itor)
+		{
+			rcBall = itor->second->GetRect();
+			rcBall.X += rand()%40;
+			rcBall.Y += rand()%40;
+			rcBall.X -= rand()%40;
+			rcBall.Y -= rand()%40;
+			itor->second->SetRect(rcBall);
+		}
+
+		InvalidateRect(NULL);
 	}
+
 	CResizablePage::OnTimer(nIDEvent);
 }
 
@@ -111,19 +136,15 @@ void CPageSimulation::OnPaint()
 	GetClientRect(&rc);
 
 	CString strText;
-	float fDiameter = (sqrt(double(rc.Width() * rc.Height()))) * 0.06;
-	float fMargin = fDiameter;
+	double fDiameter = (sqrt(double(rc.Width() * rc.Height()))) * 0.06;
+	double fMargin = fDiameter;
 
 	MapBalls m = pManager->GetBalls();
 	for (MapBalls::iterator itor = m.begin() ; itor != m.end() ; ++itor)
 	{
 		strText.Format(_T("%d"), itor->first);
-<<<<<<< HEAD
 		//itor->second.SetRect(RectF((((itor->first % 10)*fDiameter) +itor->first +fMargin), fMargin + (((itor->first / 10)) * fDiameter*2), fDiameter, fDiameter));
-		m_gdi.DrawBall(dc.GetSafeHdc(), itor->second.GetRect(), itor->second.GetColor(), strText, TRUE);
-=======
-		m_gdi.DrawBall(dc.GetSafeHdc(), RectF((((itor->first % 10)*fDiameter) +itor->first +fMargin), fMargin + (((itor->first / 10)) * fDiameter*2), fDiameter, fDiameter),itor->second.GetColor(), strText, TRUE);
->>>>>>> 01af084 (<refactor> : Adding the RectF field in the Ball Item Class to display the movement of the ball)
+		m_gdi.DrawBall(dc.GetSafeHdc(), itor->second->GetRect(), itor->second->GetColor(), strText, TRUE);
 	}
 }
 
@@ -153,5 +174,9 @@ BOOL CPageSimulation::OnEraseBkgnd(CDC* pDC)
 
 void CPageSimulation::OnDestroy()
 {
+	CSimulationManager *pManager = CSimulationManager::GetInstance();
+	if (pManager)
+		pManager->DestroyInstance();
+
 	CDialog::OnDestroy();
 }

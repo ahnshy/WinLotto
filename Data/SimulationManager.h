@@ -8,7 +8,7 @@
 #include <map>
 using namespace std;
 
-typedef map<DWORD, CBallItem>	MapBalls;
+typedef map<DWORD, CBallItem*>	MapBalls;
 
 class CSimulationManager
 {
