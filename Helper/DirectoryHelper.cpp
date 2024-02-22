@@ -34,8 +34,8 @@ CString CDirectoryHelper::MakePath(TCHAR *pszFullPath, int nBufSiz)
 	TCHAR	szBinDir[BUFSIZ]		= { NULL, };
 
 	_tfullpath(szBinDir, pszFullPath, nBufSiz);
-	_tsplitpath(szBinDir, szDrive, szDir, szFileName, szExt);
-	_tmakepath(szBinDir, szDrive, szDir, NULL, NULL);
+	_wsplitpath_s(szBinDir, szDrive, _MAX_DRIVE, szDir, _MAX_DIR, szFileName, _MAX_FNAME, szExt, _MAX_EXT);
+	_tmakepath_s(szBinDir, BUFSIZ-sizeof(TCHAR), szDrive, szDir, NULL, NULL);
 
 	strRet.Format(_T("%s"), szBinDir);
 	return strRet;
@@ -247,7 +247,8 @@ CString CDirectoryHelper::GetDirectoryPath(CString strPath)
 	TCHAR szDrive[_MAX_DRIVE] = { 0, };
 	TCHAR szDir[_MAX_DIR] = { 0, };
 
-	_tsplitpath(strPath, szDrive, szDir, NULL, NULL);
+	//_tsplitpath(strPath, szDrive, szDir, NULL, NULL);
+	_wsplitpath_s(strPath, szDrive, _MAX_DRIVE, szDir, _MAX_DIR, NULL, 0, NULL, 0);
 	strDir += szDrive;
 	strDir += szDir;
 
