@@ -92,3 +92,21 @@ INT32 CSimulationManager::Initialize(CRect& rc)
 
 	return 0;
 }
+
+INT32 CSimulationManager::SetBallDeployment(CRect rc, INT32 nMargin)
+{
+	double fDiameter = (sqrt(double(rc.Width() * rc.Height()))) * 0.06;
+	//double fMargin = fDiameter;
+
+	srand(time(NULL));
+	rc.DeflateRect(nMargin, nMargin, nMargin, nMargin);
+	for (MapBalls::iterator itor = m_mapSimulationWinBalls.begin() ; itor != m_mapSimulationWinBalls.end() ; ++itor)
+	{
+		RectF rcDeploy(rand()%rc.Width(), rand()%rc.Height(), fDiameter, fDiameter);
+		itor->second->SetRect(rcDeploy);
+		itor->second->GetDirection().cx = (rand()%7)+1;
+		itor->second->GetDirection().cy = (rand()%7)+1;
+	}
+	
+	return 0;
+}

@@ -64,12 +64,15 @@ BOOL CPageSimulation::OnInitDialog()
 	m_gdi.Init();
 
 	CRect rc;
-	GetClientRect(&rc);
+	GetSimulationWndRect(rc);
 
 
 	CSimulationManager *pManager = CSimulationManager::GetInstance();
 	if (pManager)
+	{
 		pManager->Initialize(rc);
+		pManager->SetBallDeployment(rc, 20);
+	}
 
 	::SetTimer(GetSafeHwnd(), 1000, 10, NULL);
 	
@@ -86,7 +89,7 @@ void CPageSimulation::OnTimer(UINT nIDEvent)
 			return;
 
 		CRect rc;
-		GetClientRect(&rc);
+		GetSimulationWndRect(rc);
 
 		CString strText;
 		double fDiameter = (sqrt(double(rc.Width() * rc.Height()))) * 0.06;
@@ -94,34 +97,18 @@ void CPageSimulation::OnTimer(UINT nIDEvent)
 
 		RectF rcBall;
 		MapBalls m = pManager->GetBalls();
-		INT32 nVariation = 2;
 		for (MapBalls::iterator itor = m.begin() ; itor != m.end() ; ++itor)
 		{
 			rcBall = itor->second->GetRect();
-			if (rcBall.X + rcBall.Width >= rc.Width())
-				itor->second->GetDirection().cx = -nVariation;
+			if (rcBall.X + rcBall.Width >= rc.Width() || (rcBall.X <= 0))
+				itor->second->GetDirection().cx = -itor->second->GetDirection().cx;
+
+			if (rcBall.Y + rcBall.Height >= rc.Height() || (rcBall.Y <= 0))
+				itor->second->GetDirection().cy = -itor->second->GetDirection().cy;
 			
-			if (rcBall.X <= 0)
-				itor->second->GetDirection().cx = nVariation;
-
-			if (rcBall.Y + rcBall.Height >= rc.Height())
-				itor->second->GetDirection().cy = -nVariation;
-			
-			if (rcBall.Y <= 0)
-				itor->second->GetDirection().cy = nVariation;
-
-			//if (itor->second->GetDirection().cx == 0)
-			//	itor->second->GetDirection().cx = nVariation;
-
-			//if (itor->second->GetDirection().cy == 0)
-			//	itor->second->GetDirection().cy = nVariation;
-
 			rcBall.X += itor->second->GetDirection().cx;
 			rcBall.Y += itor->second->GetDirection().cy;
-			//rcBall.X += rand()%40;
-			//rcBall.Y += rand()%40;
-			//rcBall.X -= rand()%40;
-			//rcBall.Y -= rand()%40;
+
 			itor->second->SetRect(rcBall);
 		}
 
@@ -183,10 +170,13 @@ COLORREF CPageSimulation::GetRandomColor()
 
 void CPageSimulation::OnPaint() 
 {
+	
 	CPaintDC dc(this);
+	//GetClientRect(&rc);
+	//dc.FillSolidRect(&rc, RGB(255, 255, 255));
 
 	CRect rc;
-	GetClientRect(&rc);
+	GetSimulationWndRect(rc);
 
 	//  LOGIN DIALOG - Append Ahnshy
 #define		COLOR_PAGE_SIMULATION_DLG_BG_RGB						RGB(5, 36, 63)
@@ -214,19 +204,16 @@ void CPageSimulation::OnPaint()
 		m_gdi.BufferDrawBall(itor->second->GetRect(), itor->second->GetColor(), strText, TRUE);
 	}
 
-	m_gdi.BufferBitblt(dc.GetSafeHdc());
+	m_gdi.BufferBitblt(dc.GetSafeHdc(), rc);
 }
 
 BOOL CPageSimulation::OnEraseBkgnd(CDC* pDC) 
 {
-	// TCClientDCyour message handler code here and/or call default
-	//CRect rt;
-	//GetClientRect(&rt);  // 클라이언트 영역의 크기 계산
-	//pDC->FillSolidRect(&rt, RGB(0, 0, 0));  // 클라이언트 영역 크기만큼 흰색으로 채운다
+	//CRect rc;
+	//GetClientRect(&rc);
+	//pDC->FillSolidRect(&rc, RGB(255, 255, 255));
 
-	return TRUE;  // 상위 클래스의 OnEraseBkgnd 함수를 호출하지 않아야 바꾼 배경색이 적용된다
-	// return CDialog::OnEraseBkgnd(pDC);
-
+	return TRUE;
 	//return CDialog::OnEraseBkgnd(pDC);
 }
 
@@ -237,4 +224,13 @@ void CPageSimulation::OnDestroy()
 		pManager->DestroyInstance();
 
 	CDialog::OnDestroy();
+}
+
+INT32 CPageSimulation::GetSimulationWndRect(CRect& rc)
+{
+	GetClientRect(&rc);
+	//rc.top += 50;
+	//rc.left += 30;
+
+	return 1;
 }

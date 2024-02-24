@@ -269,7 +269,7 @@ int CGdiPlusHelper::GetEncoderClsid(const WCHAR* pszFormat, CLSID* pClsid)
 	return -1;  // Failure
 }
 
-INT32 CGdiPlusHelper::BufferBitblt(HDC hDC)
+INT32 CGdiPlusHelper::BufferBitblt(HDC hDC, CRect& rcTarget)
 {
 	if (hDC == NULL)
 		return -1;
@@ -278,7 +278,7 @@ INT32 CGdiPlusHelper::BufferBitblt(HDC hDC)
 	//Bitmap mBitmap(rc.Width(), rc.Height());
 
 	CachedBitmap cachedBitmap(m_pBufferBitmap, &graphics);
-	graphics.DrawCachedBitmap(&cachedBitmap, 0, 0);
+	graphics.DrawCachedBitmap(&cachedBitmap, rcTarget.left, rcTarget.top);
 
 	if (m_pBufferBitmap != NULL)
 	{

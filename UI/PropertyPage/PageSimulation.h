@@ -37,7 +37,8 @@ public:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-	COLORREF GetRandomColor();
+	COLORREF		GetRandomColor();
+	INT32			GetSimulationWndRect(CRect& rc);
 
 private:
 	CGdiPlusHelper m_gdi;
