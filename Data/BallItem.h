@@ -16,17 +16,20 @@ public:
 	CBallItem(RectF rc, COLORREF c);;
 	~CBallItem();
 
-	void		SetEmpty();
+	void			SetEmpty();
 
 	// Getter
-	RectF&		GetRect()				{ return m_rc; }
-	COLORREF	GetColor()				{ return m_color; }
+	RectF&			GetRect()					{ return m_rc; }
+	COLORREF		GetColor()					{ return m_color; }
+	CSize&			GetDirection()				{ return m_sizeDirection; }
 
 	// Setter
-	void		SetRect(RectF rc)		{ m_rc = rc; }
-	void		SetColor(COLORREF c)	{ m_color = c; }
+	void			SetRect(RectF rc)			{ m_rc = rc; }
+	void			SetColor(COLORREF c)		{ m_color = c; }
+	void			SetDirection(CSize size)	{ m_sizeDirection = size; }
 
 private:
 	RectF			m_rc;
 	COLORREF		m_color;
+	CSize			m_sizeDirection;
 };
