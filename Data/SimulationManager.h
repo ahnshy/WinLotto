@@ -24,7 +24,9 @@ public:
 
 	// Getter / Setter
 	MapBalls&					GetBalls()			{		return m_mapSimulationWinBalls;		}
+	
 	void						SetEmpty();
+	INT32						SetBallDeployment(CRect rc, INT32 nMargin);
 
 protected:
 	MapBalls					m_mapRemainBalls;

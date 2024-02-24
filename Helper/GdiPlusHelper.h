@@ -37,7 +37,7 @@ public:
 	// Gdi+ Double Buffering Method
 	INT32					BufferDrawGradientBackGound(CRect& rcRect, COLORREF colorBackGround, Color colorHighLight, INT32 nFeather);
 	INT32					BufferDrawBall(RectF& rcRect, COLORREF colorBall, CString strText, BOOL bFlat);
-	INT32					BufferBitblt(HDC hDC);
+	INT32					BufferBitblt(HDC hDC, CRect& rcTarget);
 	
 	INT32					SetTransform(LPCTSTR lpszPath, Bitmap** ppBitmap);
 
