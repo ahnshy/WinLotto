@@ -17,6 +17,7 @@ CBallItem::CBallItem(RectF rc, COLORREF c)
 {
 	CBallItem();
 	m_rc = rc, m_color = c;
+	m_sizeDirection.SetSize(1, 1);
 }
 
 CBallItem::~CBallItem()
@@ -26,4 +27,5 @@ CBallItem::~CBallItem()
 void CBallItem::SetEmpty()
 {
 	m_rc.X = m_rc.Y = m_rc.Width = m_rc.Height = 0;
+	m_sizeDirection.SetSize(1, 1);
 }

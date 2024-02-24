@@ -8,10 +8,18 @@ CGdiPlusHelper::CGdiPlusHelper()
 	m_pTextFont = NULL;
 	m_gdiToken = 0;
 	m_mapSize.clear();
+
+	m_pBufferBitmap = NULL;
 }
 
 CGdiPlusHelper::~CGdiPlusHelper()
 {
+	if (m_pBufferBitmap)
+	{
+		delete m_pBufferBitmap;
+		m_pBufferBitmap = NULL;
+	}
+
 	m_mapSize.clear();
 
 	if (m_pTextFont)
@@ -34,6 +42,12 @@ BOOL CGdiPlusHelper::Init()
 		return FALSE;
 
 	MeasureFontSize();
+
+	if (m_pBufferBitmap)
+	{
+		delete m_pBufferBitmap;
+		m_pBufferBitmap = NULL;
+	}
 
 	return TRUE;
 }
@@ -72,6 +86,7 @@ INT32 CGdiPlusHelper::DrawGradientBackGound(HDC hDC, CRect& rcRect, COLORREF col
 
 	Graphics graphics(hDC);
 	Bitmap mBitmap(rcRect.Width(), rcRect.Height());
+
 	Graphics mGraphics(&mBitmap);
 	mGraphics.SetSmoothingMode(SmoothingModeAntiAlias);
 	mGraphics.SetInterpolationMode(InterpolationModeHighQuality);
@@ -252,4 +267,124 @@ int CGdiPlusHelper::GetEncoderClsid(const WCHAR* pszFormat, CLSID* pClsid)
 	free(pImageCodecInfo);
 	pImageCodecInfo = NULL;
 	return -1;  // Failure
+}
+
+INT32 CGdiPlusHelper::BufferBitblt(HDC hDC)
+{
+	if (hDC == NULL)
+		return -1;
+
+	Graphics graphics(hDC);
+	//Bitmap mBitmap(rc.Width(), rc.Height());
+
+	CachedBitmap cachedBitmap(m_pBufferBitmap, &graphics);
+	graphics.DrawCachedBitmap(&cachedBitmap, 0, 0);
+
+	if (m_pBufferBitmap != NULL)
+	{
+		delete m_pBufferBitmap;
+		m_pBufferBitmap = NULL;
+	}
+
+	return 0;
+}
+
+INT32 CGdiPlusHelper::BufferDrawGradientBackGound(CRect& rcRect, COLORREF colorBackGround, Color colorHighLight, INT32 nFeather)
+{
+	//Graphics graphics(hDC);
+	if (m_pBufferBitmap == NULL)
+		m_pBufferBitmap = new Bitmap(rcRect.Width(), rcRect.Height());
+	//Bitmap mBitmap(rcRect.Width(), rcRect.Height());
+
+	Graphics mGraphics(m_pBufferBitmap);
+	mGraphics.SetSmoothingMode(SmoothingModeAntiAlias);
+	mGraphics.SetInterpolationMode(InterpolationModeHighQuality);
+
+	float const nMargin = 2;
+	RectF rcTarget(-nMargin, -nMargin, (float)rcRect.Width() + nMargin, (float)rcRect.Height() + nMargin);
+
+	SolidBrush brushBk(Color(255, GetRValue(colorBackGround), GetGValue(colorBackGround), GetBValue(colorBackGround)));
+	mGraphics.FillRectangle(&brushBk, rcTarget);
+
+	rcTarget.Inflate(nFeather, nFeather);
+	Color colorBackGound(255, GetRValue(colorBackGround), GetGValue(colorBackGround), GetBValue(colorBackGround));
+	Color colorCenter(colorHighLight);
+	Color colorSurrounds[] = { colorBackGround };
+	INT nColorCnt = _countof(colorSurrounds);
+
+	GraphicsPath path;
+	path.AddEllipse(rcTarget);
+
+	PathGradientBrush brush(&path);
+	brush.SetSurroundColors(colorSurrounds, &nColorCnt);
+	brush.SetCenterPoint(PointF((rcRect.Width() / 2), (rcRect.Height() / 2)));
+	brush.SetCenterColor(colorCenter);
+
+	mGraphics.FillPath(&brush, &path);
+
+	//CachedBitmap cachedBitmap(&mBitmap, &graphics);
+	//graphics.DrawCachedBitmap(&cachedBitmap, 0, 0);
+
+	return 0;
+}
+
+INT32 CGdiPlusHelper::BufferDrawBall(RectF& rcRect, COLORREF colorBall, CString strText, BOOL bFlat)
+{
+	if (m_pBufferBitmap == NULL)
+		return -1;
+
+	Graphics graphics(m_pBufferBitmap);
+	graphics.SetSmoothingMode(SmoothingModeAntiAlias);
+	graphics.SetInterpolationMode(InterpolationModeHighQuality);
+
+	float const nMargin = 0;
+	RectF rcTarget(rcRect.X, rcRect.Y, (float)rcRect.Width + nMargin, (float)rcRect.Height + nMargin);
+	GraphicsPath path;
+	path.AddEllipse(rcTarget);
+
+	if (bFlat)
+	{
+		SolidBrush brush(Color(255, GetRValue(colorBall), GetGValue(colorBall), GetBValue(colorBall)));
+		graphics.FillPath(&brush, &path);
+	}
+	else
+	{
+		PathGradientBrush brush(&path);
+		Color colorBackGound(255, GetRValue(colorBall), GetGValue(colorBall), GetBValue(colorBall));
+
+		Color colorCenter(Color(255, 255, 255, 255));
+		Color colorSurrounds[] = { colorBackGound };
+		INT nColorCnt = _countof(colorSurrounds);
+
+		brush.SetSurroundColors(colorSurrounds, &nColorCnt);
+		brush.SetCenterPoint(PointF((rcRect.Width / 2), (rcRect.Height / 2)));
+		brush.SetCenterColor(colorCenter);
+		graphics.FillPath(&brush, &path);
+	}
+
+
+	for (MapSize::const_reverse_iterator itor = m_mapSize.rbegin() ; itor != m_mapSize.rend() ; ++itor)
+	{
+		RectF rect = itor->second;
+
+		if (rect.Width < rcRect.Width && rect.Height < rcRect.Height)
+		{
+			m_pTextFont = new Font(DEFAULT_FONT, itor->first);
+			break;
+		}
+	}
+
+	if (m_pTextFont)
+	{
+		//RectF layoutRect(0.0f, 0.0f, 32767.0f, 32767.0f);
+		StringFormat format;
+		format.SetAlignment(StringAlignmentCenter);
+		//RectF boundRect;
+		//graphics.DrawString(strText)
+
+		SolidBrush  solidBrush(Color(255, 0, 0, 0));
+		graphics.DrawString(strText, strText.GetLength(), m_pTextFont, rcRect, &format, &solidBrush);
+	}
+
+	return 0;
 }

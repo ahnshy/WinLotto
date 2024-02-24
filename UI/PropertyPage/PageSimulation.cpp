@@ -66,11 +66,12 @@ BOOL CPageSimulation::OnInitDialog()
 	CRect rc;
 	GetClientRect(&rc);
 
+
 	CSimulationManager *pManager = CSimulationManager::GetInstance();
 	if (pManager)
 		pManager->Initialize(rc);
 
-	::SetTimer(GetSafeHwnd(), 1000, 80, NULL);
+	::SetTimer(GetSafeHwnd(), 1000, 10, NULL);
 	
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
@@ -93,13 +94,34 @@ void CPageSimulation::OnTimer(UINT nIDEvent)
 
 		RectF rcBall;
 		MapBalls m = pManager->GetBalls();
+		INT32 nVariation = 2;
 		for (MapBalls::iterator itor = m.begin() ; itor != m.end() ; ++itor)
 		{
 			rcBall = itor->second->GetRect();
-			rcBall.X += rand()%40;
-			rcBall.Y += rand()%40;
-			rcBall.X -= rand()%40;
-			rcBall.Y -= rand()%40;
+			if (rcBall.X + rcBall.Width >= rc.Width())
+				itor->second->GetDirection().cx = -nVariation;
+			
+			if (rcBall.X <= 0)
+				itor->second->GetDirection().cx = nVariation;
+
+			if (rcBall.Y + rcBall.Height >= rc.Height())
+				itor->second->GetDirection().cy = -nVariation;
+			
+			if (rcBall.Y <= 0)
+				itor->second->GetDirection().cy = nVariation;
+
+			//if (itor->second->GetDirection().cx == 0)
+			//	itor->second->GetDirection().cx = nVariation;
+
+			//if (itor->second->GetDirection().cy == 0)
+			//	itor->second->GetDirection().cy = nVariation;
+
+			rcBall.X += itor->second->GetDirection().cx;
+			rcBall.Y += itor->second->GetDirection().cy;
+			//rcBall.X += rand()%40;
+			//rcBall.Y += rand()%40;
+			//rcBall.X -= rand()%40;
+			//rcBall.Y -= rand()%40;
 			itor->second->SetRect(rcBall);
 		}
 
@@ -125,15 +147,60 @@ COLORREF CPageSimulation::GetRandomColor()
 	return RGB((BYTE)(rand() % 255), (BYTE)(rand() % 255), (BYTE)(rand() % 255));
 }
 
+//void CPageSimulation::OnPaint() 
+//{
+//	CPaintDC dc(this);
+//
+//	CRect rc;
+//	GetClientRect(&rc);
+//
+//	//  LOGIN DIALOG - Append Ahnshy
+//	#define		COLOR_PAGE_SIMULATION_DLG_BG_RGB						RGB(5, 36, 63)
+//	#define		COLOR_PAGE_SIMULATION_DLG_BG							Color(255, 5, 36, 63)
+//	#define		COLOR_PAGE_SIMULATION_DLG_BG_HIGHLIGHT_CIRCLE			Color(255, 20, 77, 126)
+//
+//	m_gdi.DrawGradientBackGound(dc.GetSafeHdc(), rc, COLOR_PAGE_SIMULATION_DLG_BG_RGB, COLOR_PAGE_SIMULATION_DLG_BG_HIGHLIGHT_CIRCLE, 10);
+//
+//	CSimulationManager *pManager = CSimulationManager::GetInstance();
+//	if (!pManager)
+//		return;
+//
+//	//CRect rc;
+//	//GetClientRect(&rc);
+//
+//	CString strText;
+//	double fDiameter = (sqrt(double(rc.Width() * rc.Height()))) * 0.06;
+//	double fMargin = fDiameter;
+//
+//	MapBalls m = pManager->GetBalls();
+//	for (MapBalls::iterator itor = m.begin() ; itor != m.end() ; ++itor)
+//	{
+//		strText.Format(_T("%d"), itor->first);
+//		//itor->second.SetRect(RectF((((itor->first % 10)*fDiameter) +itor->first +fMargin), fMargin + (((itor->first / 10)) * fDiameter*2), fDiameter, fDiameter));
+//		m_gdi.DrawBall(dc.GetSafeHdc(), itor->second->GetRect(), itor->second->GetColor(), strText, TRUE);
+//	}
+//}
+
 void CPageSimulation::OnPaint() 
 {
+	CPaintDC dc(this);
+
+	CRect rc;
+	GetClientRect(&rc);
+
+	//  LOGIN DIALOG - Append Ahnshy
+#define		COLOR_PAGE_SIMULATION_DLG_BG_RGB						RGB(5, 36, 63)
+#define		COLOR_PAGE_SIMULATION_DLG_BG							Color(255, 5, 36, 63)
+#define		COLOR_PAGE_SIMULATION_DLG_BG_HIGHLIGHT_CIRCLE			Color(255, 20, 77, 126)
+
+	m_gdi.BufferDrawGradientBackGound(rc, COLOR_PAGE_SIMULATION_DLG_BG_RGB, COLOR_PAGE_SIMULATION_DLG_BG_HIGHLIGHT_CIRCLE, 10);
+
 	CSimulationManager *pManager = CSimulationManager::GetInstance();
 	if (!pManager)
 		return;
 
-	CPaintDC dc(this);
-	CRect rc;
-	GetClientRect(&rc);
+	//CRect rc;
+	//GetClientRect(&rc);
 
 	CString strText;
 	double fDiameter = (sqrt(double(rc.Width() * rc.Height()))) * 0.06;
@@ -144,8 +211,10 @@ void CPageSimulation::OnPaint()
 	{
 		strText.Format(_T("%d"), itor->first);
 		//itor->second.SetRect(RectF((((itor->first % 10)*fDiameter) +itor->first +fMargin), fMargin + (((itor->first / 10)) * fDiameter*2), fDiameter, fDiameter));
-		m_gdi.DrawBall(dc.GetSafeHdc(), itor->second->GetRect(), itor->second->GetColor(), strText, TRUE);
+		m_gdi.BufferDrawBall(itor->second->GetRect(), itor->second->GetColor(), strText, TRUE);
 	}
+
+	m_gdi.BufferBitblt(dc.GetSafeHdc());
 }
 
 BOOL CPageSimulation::OnEraseBkgnd(CDC* pDC) 
@@ -154,17 +223,6 @@ BOOL CPageSimulation::OnEraseBkgnd(CDC* pDC)
 	//CRect rt;
 	//GetClientRect(&rt);  // 클라이언트 영역의 크기 계산
 	//pDC->FillSolidRect(&rt, RGB(0, 0, 0));  // 클라이언트 영역 크기만큼 흰색으로 채운다
-
-	CRect rc;
-	GetClientRect(&rc);
-
-	//  LOGIN DIALOG - Append Ahnshy
-#define		COLOR_PAGE_SIMULATION_DLG_BG_RGB						RGB(5, 36, 63)
-#define		COLOR_PAGE_SIMULATION_DLG_BG							Color(255, 5, 36, 63)
-#define		COLOR_PAGE_SIMULATION_DLG_BG_HIGHLIGHT_CIRCLE			Color(255, 20, 77, 126)
-
-	m_gdi.DrawGradientBackGound(pDC->GetSafeHdc(), rc, COLOR_PAGE_SIMULATION_DLG_BG_RGB, COLOR_PAGE_SIMULATION_DLG_BG_HIGHLIGHT_CIRCLE, 10);
-
 
 	return TRUE;  // 상위 클래스의 OnEraseBkgnd 함수를 호출하지 않아야 바꾼 배경색이 적용된다
 	// return CDialog::OnEraseBkgnd(pDC);
