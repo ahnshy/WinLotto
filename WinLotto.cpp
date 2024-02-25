@@ -159,10 +159,10 @@ BOOL CTreePropSheetEx_DemoApp::InitInstance()
 	//sheet.AddPage(&pageCustomize);
 
 	sheet.SetIsResizable(true);
-	sheet.SetTreeWidth(30);  
-	//sheet.SetPaneMinimumSizes(100, 180);
-	sheet.SetPaneMinimumSizes(30, 30);
-	sheet.SetMinSize(CSize( 480, 530 ));
+	sheet.SetTreeWidth(120);  
+	sheet.SetPaneMinimumSizes(100, 180);
+	//sheet.SetPaneMinimumSizes(30, 30);
+	sheet.SetMinSize(CSize( 480, 480 ));
 	sheet.SetAutoExpandTree(true);
 
 	int nResponse = sheet.DoModal();
