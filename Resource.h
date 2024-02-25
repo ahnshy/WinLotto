@@ -9,6 +9,7 @@
 #define IDS_STRING_PROJECT              102
 #define IDD_PAGE_CONTACT                107
 #define IDD_PAGE_CONTACT_EMAIL          108
+#define IDD_PAGE_EXTRACT                108
 #define IDD_PAGE_CONTANCT_PHONE         109
 #define IDD_PAGE_NOTE                   110
 #define IDD_PAGE_MISC_NOTE              110
@@ -25,7 +26,6 @@
 #define IDD_DLG_CHILD_SHEETS            142
 #define IDI_PREFERENCES                 143
 #define IDD_PAGE_WINS                   146
-#define IDD_PAGE_MISC_DATES1            147
 #define IDD_PAGE_EMPTY                  147
 #define IDC_RESIZABLE_TREEPROPSHEETEX   1000
 #define IDC_CLASSIC_TREEPROPSHEET       1001
@@ -64,6 +64,9 @@
 #define IDC_CHECK_PHONE                 1037
 #define IDC_CHECK_EMAIL                 1038
 #define IDC_LIST_WINS                   1039
+#define IDC_TAB_EXTRACT                 1040
+#define IDC_TAB_WINS                    1040
+#define IDC_MFCVSLISTBOX1               1041
 
 // Next default values for new objects
 // 
@@ -71,7 +74,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        147
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1040
+#define _APS_NEXT_CONTROL_VALUE         1042
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
