@@ -28,6 +28,8 @@ public:
 	void						SetEmpty();
 	INT32						SetBallDeployment(CRect rc, INT32 nMargin);
 
+	INT32						AdjustBallPos(CRect rc);
+
 protected:
 	MapBalls					m_mapRemainBalls;
 	MapBalls					m_mapSimulationWinBalls;
