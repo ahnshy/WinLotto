@@ -25,10 +25,10 @@
 #include "UI/PropertySheet/ResizableSheet.h"
 
 #include "UI/PropertyPage/PageWins.h"
-//#include "UI/PropertyPage/PageContact.h"
-//#include "UI/PropertyPage/PageEmail.h"
-#include "UI/PropertyPage/PagePhone.h"
+#include "UI/PropertyPage/PageExtract.h"
 #include "UI/PropertyPage/PageSimulation.h"
+//#include "UI/PropertyPage/PageContact.h"
+//#include "UI/PropertyPage/PagePhone.h"
 //#include "UI/PropertyPage/PageNote.h"
 //#include "UI/PropertyPage/PageDates.h"
 //#include "UI/PropertyPage/PageCustomize.h"
@@ -126,16 +126,17 @@ BOOL CTreePropSheetEx_DemoApp::InitInstance()
 		pNumberManager->Initialize(strArray);
 
 	CPageWins		pageWins;
+	CPageExtract	pageExtract;
 	CPageSimulation pageSimulation;
 	//pageWins.SetData(&wins);
 	//CPagePhone pagePhone;
-	//CPageEmail pageEmail;
 	//CPageContact pageContact(&pagePhone, &pageEmail);
 	//CPageNote pageNote;
 	//CPageDates pageDates;
 	//CPageCustomize pageCustomize( sheet );
 
 	pageWins.SetHasWhiteBackground(true);
+	pageExtract.SetHasWhiteBackground(true);
 	pageSimulation.SetHasWhiteBackground(false);
 	
 	//pagePhone.SetHasWhiteBackground(true);
@@ -146,8 +147,10 @@ BOOL CTreePropSheetEx_DemoApp::InitInstance()
 	//pageDates.SetHasWhiteBackground(true);
 	//pageCustomize.SetHasWhiteBackground(true);
 
-	sheet.AddPage(&pageSimulation);
 	sheet.AddPage(&pageWins);
+	//sheet.AddPage(&pageExtract);
+	//sheet.AddPage(&pageSimulation);
+	
 	
 	
 	

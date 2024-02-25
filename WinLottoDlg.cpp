@@ -25,7 +25,6 @@
 #include "UI/PropertySheet/ResizableSheet.h"
 
 #include "UI/PropertyPage/PageContact.h"
-#include "UI/PropertyPage/PageEmail.h"
 #include "UI/PropertyPage/PagePhone.h"
 #include "UI/PropertyPage/PageNote.h"
 #include "UI/PropertyPage/PageDates.h"
@@ -230,7 +229,6 @@ void CTreePropSheetEx_DemoDlg::OnShowTreepropsheet()
 {
   CPageContact pageContact;
   CPagePhone pagePhone;
-  CPageEmail pageEmail;
   CPageNote pageNote;
   CPageDates pageDates;
 
@@ -240,7 +238,6 @@ void CTreePropSheetEx_DemoDlg::OnShowTreepropsheet()
 
   sheet.AddPage( &pageContact );
   sheet.AddPage( &pagePhone );
-  sheet.AddPage( &pageEmail );
   sheet.AddPage( &pageNote );
   sheet.AddPage( &pageDates );
 
@@ -251,7 +248,6 @@ void CTreePropSheetEx_DemoDlg::OnResizablePropertysheet()
 {
   CPageContact pageContact;
   CPagePhone pagePhone;
-  CPageEmail pageEmail;
   CPageNote pageNote;
   CPageDates pageDates;
 
@@ -259,7 +255,6 @@ void CTreePropSheetEx_DemoDlg::OnResizablePropertysheet()
 
   sheet.AddPage( &pageContact );
   sheet.AddPage( &pagePhone );
-  sheet.AddPage( &pageEmail );
   sheet.AddPage( &pageNote );
   sheet.AddPage( &pageDates );
 
@@ -274,15 +269,14 @@ void CTreePropSheetEx_DemoDlg::OnResizableTreepropsheetex()
   sheet.SetTreeDefaultImages( IDB_EMPTY_IMAGE_LIST, 16, RGB( 255, 255, 255 ) );
 
   CPagePhone pagePhone;
-  CPageEmail pageEmail;
-  CPageContact pageContact( &pagePhone, &pageEmail );
+  //CPageContact pageContact( &pagePhone, &pageEmail );
+  CPageContact pageContact( &pagePhone, &pagePhone);
   CPageNote pageNote;
   CPageDates pageDates;
   CPageCustomize pageCustomize( sheet );
 
   sheet.AddPage( &pageContact );
   sheet.AddPage( &pagePhone );
-  sheet.AddPage( &pageEmail );
   sheet.AddPage( &pageNote );
   sheet.AddPage( &pageDates );
   sheet.AddPage( &pageCustomize );
@@ -299,7 +293,6 @@ void CTreePropSheetEx_DemoDlg::OnResizableTabbedTreepropsheetex()
 {
   CPageContact pageContact;
   CPagePhone pagePhone;
-  CPageEmail pageEmail;
   CPageNote pageNote;
 
   TreePropSheet::CTreePropSheetEx sheet( _T("TreePropSheet demo"), this );
@@ -307,7 +300,6 @@ void CTreePropSheetEx_DemoDlg::OnResizableTabbedTreepropsheetex()
 
   sheet.AddPage( &pageContact );
   sheet.AddPage( &pagePhone );
-  sheet.AddPage( &pageEmail );
   sheet.AddPage( &pageNote );
 
   sheet.SetIsResizable( true );
@@ -319,7 +311,6 @@ void CTreePropSheetEx_DemoDlg::OnResizableWizardTreepropsheetex()
 {
   CPageContact pageContact;
   CPagePhone pagePhone;
-  CPageEmail pageEmail;
   CPageNote pageNote;
 
   TreePropSheet::CTreePropSheetEx sheet( _T("TreePropSheet demo"), this );
@@ -328,7 +319,6 @@ void CTreePropSheetEx_DemoDlg::OnResizableWizardTreepropsheetex()
 
   sheet.AddPage( &pageContact );
   sheet.AddPage( &pagePhone );
-  sheet.AddPage( &pageEmail );
   sheet.AddPage( &pageNote );
 
   sheet.SetIsResizable( true );
@@ -353,7 +343,6 @@ void CTreePropSheetEx_DemoDlg::OnModeless()
 
   pSheet->AddPage( new CPageContact() );
   pSheet->AddPage( new CPagePhone );
-  pSheet->AddPage( new CPageEmail );
   pSheet->AddPage( new CPageNote );
   pSheet->AddPage( new CPageDates );
   pSheet->AddPage( new CPageCustomize( *pSheet ) );
@@ -374,22 +363,20 @@ void CTreePropSheetEx_DemoDlg::OnTreepropsheetoffice2003()
   sheet.SetTreeDefaultImages( IDB_EMPTY_IMAGE_LIST, 16, RGB( 255, 255, 255 ) );
 
   CPagePhone pagePhone;
-  CPageEmail pageEmail;
-  CPageContact pageContact( &pagePhone, &pageEmail );
+  //CPageContact pageContact( &pagePhone, &pageEmail );
+  CPageContact pageContact( &pagePhone, &pagePhone);
   CPageNote pageNote;
   CPageDates pageDates;
   CPageCustomize pageCustomize( sheet );
 
   pageContact.SetHasWhiteBackground( true );
   pagePhone.SetHasWhiteBackground( true );
-  pageEmail.SetHasWhiteBackground( true );
   pageNote.SetHasWhiteBackground( true );
   pageDates.SetHasWhiteBackground( true );
   pageCustomize.SetHasWhiteBackground( true );
 
   sheet.AddPage( &pageContact );
   sheet.AddPage( &pagePhone );
-  sheet.AddPage( &pageEmail );
   sheet.AddPage( &pageNote );
   sheet.AddPage( &pageDates );
   sheet.AddPage( &pageCustomize );
