@@ -47,6 +47,9 @@ void CPageSimulation::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CPageSimulation, CResizablePage)
 	//{{AFX_MSG_MAP(CPageSimulation)
 	//ON_WM_CTLCOLOR()
+	//ON_WM_SYSCOMMAND()
+	ON_WM_EXITSIZEMOVE()
+	ON_WM_SIZE()
 	ON_WM_TIMER()
 	ON_WM_PAINT()
 	ON_WM_ERASEBKGND()
@@ -74,7 +77,7 @@ BOOL CPageSimulation::OnInitDialog()
 		pManager->SetBallDeployment(rc, 20);
 	}
 
-	::SetTimer(GetSafeHwnd(), 1000, 10, NULL);
+	::SetTimer(GetSafeHwnd(), 1000, 30, NULL);
 	
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
@@ -116,6 +119,26 @@ void CPageSimulation::OnTimer(UINT nIDEvent)
 	}
 
 	CResizablePage::OnTimer(nIDEvent);
+}
+
+//void CPageSimulation::OnSysCommand(UINT nID, LPARAM lParam)
+//{
+//	CResizablePage::OnSysCommand(nID, lParam);
+//}
+
+void CPageSimulation::OnSize(UINT nType, int cx, int cy)
+{
+	CRect rc;
+	GetClientRect(rc);
+
+	CSimulationManager *pManager = CSimulationManager::GetInstance();
+	if (pManager)
+	{
+		pManager->AdjustBallPos(rc);
+		InvalidateRect(NULL);
+	}
+
+	CResizablePage::OnSize(nType, cx, cy);
 }
 
 HBRUSH CPageSimulation::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) 
@@ -223,7 +246,7 @@ void CPageSimulation::OnDestroy()
 	if (pManager)
 		pManager->DestroyInstance();
 
-	CDialog::OnDestroy();
+	CResizablePage::OnDestroy();
 }
 
 INT32 CPageSimulation::GetSimulationWndRect(CRect& rc)
@@ -233,4 +256,9 @@ INT32 CPageSimulation::GetSimulationWndRect(CRect& rc)
 	//rc.left += 30;
 
 	return 1;
+}
+
+void CPageSimulation::OnExitSizeMove()
+{
+	CResizablePage::OnExitSizeMove();
 }

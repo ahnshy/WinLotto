@@ -95,6 +95,8 @@ BOOL CTreePropSheetEx_DemoApp::InitInstance()
 	//CTreePropSheetEx_DemoDlg dlg;
 	//m_pMainWnd = &dlg;
 
+	SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, TRUE, 0, 0);
+
 	CString strRoundFIle;
 	CPathManager* pPathManager = CPathManager::GetInstance();
 	if (pPathManager)
@@ -157,8 +159,9 @@ BOOL CTreePropSheetEx_DemoApp::InitInstance()
 	//sheet.AddPage(&pageCustomize);
 
 	sheet.SetIsResizable(true);
-	sheet.SetTreeWidth(170);  
-	sheet.SetPaneMinimumSizes(100, 180);
+	sheet.SetTreeWidth(30);  
+	//sheet.SetPaneMinimumSizes(100, 180);
+	sheet.SetPaneMinimumSizes(30, 30);
 	sheet.SetMinSize(CSize( 480, 530 ));
 	sheet.SetAutoExpandTree(true);
 

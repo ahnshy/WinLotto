@@ -110,3 +110,42 @@ INT32 CSimulationManager::SetBallDeployment(CRect rc, INT32 nMargin)
 	
 	return 0;
 }
+
+INT32 CSimulationManager::AdjustBallPos(CRect rc)
+{
+	double fDiameter = (sqrt(double(rc.Width() * rc.Height()))) * 0.06;
+
+	RectF rcBall;
+	for (MapBalls::iterator itor = m_mapSimulationWinBalls.begin() ; itor != m_mapSimulationWinBalls.end() ; ++itor)
+	{
+		rcBall = itor->second->GetRect();
+		if (rcBall.X < 0)
+		{
+			rcBall.X = rcBall.Width;
+			itor->second->GetDirection().cx = abs(itor->second->GetDirection().cx);
+		}
+		else if (rcBall.X + rcBall.Width > rc.Width())
+		{
+			rcBall.X = rc.Width() - rcBall.Width*2;
+			itor->second->GetDirection().cx = -abs(itor->second->GetDirection().cx);
+		}
+
+		if (rcBall.Y < 0)
+		{
+			rcBall.Y = rcBall.Height;
+			itor->second->GetDirection().cy = -abs(itor->second->GetDirection().cy);
+		}
+		else if (rcBall.Y + rcBall.Height > rc.Height())
+		{
+			rcBall.Y = rc.Height() - rcBall.Height*2;
+			itor->second->GetDirection().cy = abs(itor->second->GetDirection().cy);
+		}
+
+		//rcBall.X += itor->second->GetDirection().cx;
+		//rcBall.Y += itor->second->GetDirection().cy;
+
+		itor->second->SetRect(rcBall);
+	}
+
+	return 0;
+}
