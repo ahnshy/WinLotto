@@ -335,13 +335,13 @@ void CPropPageFrameEx::OnPaint()
 	CPaintDC dc(this);
   CRect rect;
   GetClientRect(&rect);
-  CMemDC memDC( &dc,&rect );
+  CMemoryDC MemoryDC( &dc,&rect );
 
   // Draw the background.
-  DrawBackground( &memDC );
+  DrawBackground( &MemoryDC );
 
   // Draw the title pane.
-  Draw( &memDC );	
+  Draw( &MemoryDC );	
 }
 
 

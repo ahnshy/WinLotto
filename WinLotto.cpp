@@ -95,6 +95,9 @@ BOOL CTreePropSheetEx_DemoApp::InitInstance()
 	//CTreePropSheetEx_DemoDlg dlg;
 	//m_pMainWnd = &dlg;
 
+	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerWindows7));
+	CMFCButton::EnableWindowsTheming();
+
 	SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, TRUE, 0, 0);
 
 	CString strRoundFIle;
@@ -149,7 +152,7 @@ BOOL CTreePropSheetEx_DemoApp::InitInstance()
 
 	sheet.AddPage(&pageWins);
 	//sheet.AddPage(&pageExtract);
-	//sheet.AddPage(&pageSimulation);
+	sheet.AddPage(&pageSimulation);
 	
 	
 	

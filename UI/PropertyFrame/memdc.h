@@ -1,8 +1,8 @@
-#ifndef _MEMDC_H_
-#define _MEMDC_H_
+#ifndef _MemoryDC_H_
+#define _MemoryDC_H_
 
 //////////////////////////////////////////////////
-// CMemDC - memory DC
+// CMemoryDC - memory DC
 //
 // Author: Keith Rule
 // Email:  keithr@europa.com
@@ -26,23 +26,23 @@
 // This class implements a memory Device Context which allows
 // flicker free drawing.
 
-class CMemDC : public CDC {
+class CMemoryDC : public CDC {
 private:	
 	CBitmap		m_bitmap;		// Offscreen bitmap
-	CBitmap*	m_oldBitmap;	// bitmap originally found in CMemDC
+	CBitmap*	m_oldBitmap;	// bitmap originally found in CMemoryDC
 	CDC*		m_pDC;			// Saves CDC passed in constructor
 	CRect		m_rect;			// Rectangle of drawing area.
-	BOOL		m_bMemDC;		// TRUE if CDC really is a Memory DC.
+	BOOL		m_bMemoryDC;		// TRUE if CDC really is a Memory DC.
 public:
 	
-	CMemDC(CDC* pDC, const CRect* pRect = NULL) : CDC()
+	CMemoryDC(CDC* pDC, const CRect* pRect = NULL) : CDC()
 	{
 		ASSERT(pDC != NULL); 
 
 		// Some initialization
 		m_pDC = pDC;
 		m_oldBitmap = NULL;
-		m_bMemDC = !pDC->IsPrinting();
+		m_bMemoryDC = !pDC->IsPrinting();
 
 		// Get the rectangle to draw
 		if (pRect == NULL) {
@@ -51,7 +51,7 @@ public:
 			m_rect = *pRect;
 		}
 
-		if (m_bMemDC) {
+		if (m_bMemoryDC) {
 			// Create a Memory DC
 			CreateCompatibleDC(pDC);
 			pDC->LPtoDP(&m_rect);
@@ -77,9 +77,9 @@ public:
 		FillSolidRect(m_rect, pDC->GetBkColor());
 	}
 	
-	~CMemDC()	
+	~CMemoryDC()	
 	{		
-		if (m_bMemDC) {
+		if (m_bMemoryDC) {
 			// Copy the offscreen bitmap onto the screen.
 			m_pDC->BitBlt(m_rect.left, m_rect.top, m_rect.Width(), m_rect.Height(),
 				this, m_rect.left, m_rect.top, SRCCOPY);			
@@ -95,13 +95,13 @@ public:
 	}
 	
 	// Allow usage as a pointer	
-	CMemDC* operator->() 
+	CMemoryDC* operator->() 
 	{
 		return this;
 	}	
 
 	// Allow usage as a pointer	
-	operator CMemDC*() 
+	operator CMemoryDC*() 
 	{
 		return this;
 	}

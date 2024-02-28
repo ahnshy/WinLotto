@@ -24,7 +24,7 @@ public:
 
 // Dialog Data
 	//{{AFX_DATA(CPageSimulation)
-	enum { IDD = IDD_PAGE_EMPTY };
+	enum { IDD = IDD_PAGE_SIMULATION };
 		// NOTE - ClassWizard will add data members here.
 		//    DO NOT EDIT what you see in these blocks of generated code !
 	//}}AFX_DATA

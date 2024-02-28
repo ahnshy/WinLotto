@@ -76,3 +76,11 @@ BOOL CResizablePage::OnEraseBkgnd(CDC* pDC)
 	return CPropertyPage::OnEraseBkgnd(pDC);
 */
 }
+
+void CResizablePage::MoveAdjustWnd(CRect &rc)
+{
+	if (!GetSafeHwnd() || !IsWindowVisible())
+		return;
+
+	SetWindowPos(&wndTop, rc.left, rc.top, rc.right, rc.bottom, SWP_SHOWWINDOW);
+}

@@ -13,6 +13,63 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
+// Korean (Korea) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
+#pragma code_page(949)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_PAGE_WINS_LIST DIALOGEX 0, 0, 316, 182
+STYLE DS_SETFONT | WS_CHILD | WS_VISIBLE | WS_SYSMENU
+FONT 9, "¸¼Àº °íµñ", 400, 0, 0x0
+BEGIN
+    CONTROL         "",IDC_LIST_WINS,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,0,0,314,180
+END
+
+IDD_PAGE_SIMULATION DIALOGEX 0, 0, 316, 182
+STYLE DS_SETFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Simulation"
+FONT 9, "¸¼Àº °íµñ", 400, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,7,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,63,7,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_PAGE_WINS_LIST, DIALOG
+    BEGIN
+        RIGHTMARGIN, 314
+        BOTTOMMARGIN, 180
+    END
+
+    IDD_PAGE_SIMULATION, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 309
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 175
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Korean (Korea) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
 // English (United States) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
@@ -193,10 +250,9 @@ END
 IDD_PAGE_WINS DIALOGEX 0, 0, 274, 248
 STYLE DS_SETFONT | WS_CHILD | WS_DISABLED | WS_CAPTION
 CAPTION "Win Numbers"
-FONT 9, "?? ??", 400, 0, 0x0
+FONT 9, "?? ??", 400, 0, 0x81
 BEGIN
-    CONTROL         "",IDC_LIST_WINS,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,127,259,114
-    CONTROL         "",IDC_TAB_WINS,"SysTabControl32",TCS_FIXEDWIDTH,7,7,259,100
+    CONTROL         "",IDC_TAB_WINS,"SysTabControl32",TCS_FIXEDWIDTH,0,0,274,248
 END
 
 IDD_PAGE_EMPTY DIALOGEX 0, 0, 235, 156
@@ -327,10 +383,6 @@ BEGIN
 
     IDD_PAGE_WINS, DIALOG
     BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 266
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 241
     END
 
     IDD_PAGE_EMPTY, DIALOG

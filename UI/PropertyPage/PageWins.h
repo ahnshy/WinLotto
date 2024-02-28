@@ -2,7 +2,9 @@
 
 #include <afxcmn.h>
 #include <afxlistctrl.h>
-
+#include <afxtabctrl.h>
+#include <afxole.h>
+#include <afxdialogex.h>
 
 #include "ResizablePage.h"
 
@@ -32,6 +34,12 @@ public:
 	void			SetList();
 
 	void			Initialize();
+	void			InitCtrl();
+	void			CalcContols();
+
+	void			ShowTabWindow(int nTabIndex);
+	void			MoveTabWindow();
+
 	void			AddFiles();
 	DWORD			GetTargetFileCount();
 	BOOL			TaskCountLine(CString strPath);
@@ -42,6 +50,9 @@ public:
 
 	CMFCListCtrl*	GetListCtrl();
 	CProgressCtrl*	GetProgressCtrl();
+
+	void			ChangeTabStyle();
+	void			CleanUp();
 	
 	void			TaskFinish()											{			m_pThread = NULL;						}
 
@@ -56,6 +67,11 @@ public:
 protected:
 	//MapWins*		m_pWins;
 	//CMFCListCtrl	m_wndList;
+	CTabCtrl		m_wndTab;
+	CRect					m_rcTab;
+	CPtrArray				m_arWnd;
+	CDialogEx*		m_pCurrent;
+
 	CWinsListCtrl	m_wndList;
 	CProgressCtrl	m_wndProgress;
 	DWORD			m_dwTotalFiles;
@@ -67,9 +83,12 @@ protected:
 	virtual BOOL	OnInitDialog();
 	virtual BOOL	PreTranslateMessage(MSG* pMsg);
 
-	afx_msg void	OnItemchangedListRecord(NMHDR* pNMHDR, LRESULT* pResult);
+	//afx_msg void	OnItemchangedListRecord(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg	void	OnTcnSelchangeTabResult(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
-	afx_msg void OnEnable(BOOL bEnable);
+	afx_msg void	OnEnable(BOOL bEnable);
+	afx_msg void	OnSize(UINT nType, int cx, int cy);
+	afx_msg	void	OnWindowPosChanged(WINDOWPOS* lpwndpos);
 
 protected:
 	CWnd*			m_pNofityWnd;

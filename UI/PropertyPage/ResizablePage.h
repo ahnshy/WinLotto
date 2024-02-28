@@ -61,6 +61,8 @@ protected:
 		return this;
 	};
 
+	virtual void MoveAdjustWnd(CRect &rc);
+
 // Generated message map functions
 protected:
 	//{{AFX_MSG(CResizablePage)

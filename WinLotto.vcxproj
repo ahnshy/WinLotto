@@ -181,6 +181,8 @@
     <ClCompile Include="UI\PropertyPage\PagePhone.cpp" />
     <ClCompile Include="UI\PropertyPage\PageSimulation.cpp" />
     <ClCompile Include="UI\PropertyPage\PageWins.cpp" />
+    <ClCompile Include="UI\PropertyPage\PageWinsFrequencyList.cpp" />
+    <ClCompile Include="UI\PropertyPage\PageWinsRoundList.cpp" />
     <ClCompile Include="UI\PropertyPage\ResizablePage.cpp" />
     <ClCompile Include="UI\PropertySheet\hookwnd.cpp" />
     <ClCompile Include="UI\PropertySheet\ResizableGrip.cpp" />
@@ -246,6 +248,8 @@
     <ClInclude Include="UI\PropertyPage\PagePhone.h" />
     <ClInclude Include="UI\PropertyPage\PageSimulation.h" />
     <ClInclude Include="UI\PropertyPage\PageWins.h" />
+    <ClInclude Include="UI\PropertyPage\PageWinsFrequencyList.h" />
+    <ClInclude Include="UI\PropertyPage\PageWinsRoundList.h" />
     <ClInclude Include="UI\PropertyPage\ResizablePage.h" />
     <ClInclude Include="UI\PropertySheet\HighColorTab.hpp" />
     <ClInclude Include="UI\PropertySheet\hookwnd.h" />

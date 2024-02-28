@@ -27,6 +27,8 @@
 #define IDI_PREFERENCES                 143
 #define IDD_PAGE_WINS                   146
 #define IDD_PAGE_EMPTY                  147
+#define IDD_PAGE_WINS_LIST              148
+#define IDD_PAGE_SIMULATION             149
 #define IDC_RESIZABLE_TREEPROPSHEETEX   1000
 #define IDC_CLASSIC_TREEPROPSHEET       1001
 #define IDC_RESIZABLE_TABBED_TREEPROPSHEETEX 1002
@@ -67,14 +69,15 @@
 #define IDC_TAB_EXTRACT                 1040
 #define IDC_TAB_WINS                    1040
 #define IDC_MFCVSLISTBOX1               1041
+#define IDC_TAB_FRAME                   1042
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        147
+#define _APS_NEXT_RESOURCE_VALUE        150
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1042
+#define _APS_NEXT_CONTROL_VALUE         1043
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
