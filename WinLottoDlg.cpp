@@ -315,18 +315,24 @@ void CWinLottoDlg::SetListControl()
 	int nIndex = 0;
 	//float const fWidthRatio = 0.11;
 	//itemColumn.cx = rt.Width() * fWidthRatio;
-	itemColumn.pszText = (_T("No."));
+	itemColumn.pszText = (_T("Round"));
 	m_wndRoundWins.InsertColumn(nIndex++, &itemColumn);
 	//m_wndRoundWins.SetColumnWidth(nIndex++, LVSCW_AUTOSIZE_USEHEADER);
+
+	itemColumn.pszText = (_T("Date"));
+	m_wndRoundWins.InsertColumn(nIndex++, &itemColumn);
 
 	for (; nIndex < 8; nIndex++)
 	{
 		//itemColumn.cx = rt.Width() * fWidthRatio;
-		strBuffer.Format(_T("%02d"), nIndex);
+		strBuffer.Format(_T("%02d"), nIndex-1);
 		itemColumn.pszText = ((LPTSTR)(LPCTSTR)strBuffer);
 		itemColumn.iSubItem = nIndex;
 		m_wndRoundWins.InsertColumn(nIndex, &itemColumn);
 	}
+
+	itemColumn.pszText = (_T("Bonus"));
+	m_wndRoundWins.InsertColumn(++nIndex, &itemColumn);
 
 	m_wndRoundWins.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_HEADERDRAGDROP);
 
