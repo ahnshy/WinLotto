@@ -46,7 +46,7 @@ public:
 private:
 	ULONG_PTR				m_gdiToken;
 
-	Font*					m_pTextFont;
+	Gdiplus::Font*			m_pTextFont;
 	Bitmap*					m_pBufferBitmap;
 	
 	//CArray<RectF, RectF&>	m_arrFontSize;

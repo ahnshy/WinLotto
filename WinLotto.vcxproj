@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -11,134 +11,118 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{228027BB-FACC-4B73-93B8-D59FBB45C607}</ProjectGuid>
+    <ProjectGuid>{ED42DA68-A1DD-4671-BD83-36B539464100}</ProjectGuid>
     <RootNamespace>WinLotto</RootNamespace>
     <Keyword>MFCProj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseOfMfc>Static</UseOfMfc>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <UseOfMfc>Static</UseOfMfc>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Static</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Static</UseOfMfc>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup>
-    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</IntDir>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</IntDir>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Midl>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MkTypLibCompatible>true</MkTypLibCompatible>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <TargetEnvironment>Win32</TargetEnvironment>
-      <TypeLibraryName>.\Debug/WinLotto.tlb</TypeLibraryName>
-      <HeaderFileName>
-      </HeaderFileName>
-    </Midl>
     <ClCompile>
-      <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>.\Debug/WinLotto.pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
-      <ObjectFileName>.\Debug/</ObjectFileName>
-      <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ResourceCompile>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x0409</Culture>
-    </ResourceCompile>
     <Link>
-      <OutputFile>.\Debug/WinLotto.exe</OutputFile>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>.\Debug/WinLotto.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <DataExecutionPrevention>
-      </DataExecutionPrevention>
-      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Midl>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MkTypLibCompatible>true</MkTypLibCompatible>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <TargetEnvironment>Win32</TargetEnvironment>
-      <TypeLibraryName>.\Release/WinLotto.tlb</TypeLibraryName>
-      <HeaderFileName>
-      </HeaderFileName>
-    </Midl>
     <ClCompile>
-      <Optimization>MaxSpeed</Optimization>
-      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <RuntimeTypeInfo>true</RuntimeTypeInfo>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>.\Release/WinLotto.pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
-      <ObjectFileName>.\Release/</ObjectFileName>
-      <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ResourceCompile>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x0409</Culture>
-    </ResourceCompile>
     <Link>
-      <OutputFile>.\Release/WinLotto.exe</OutputFile>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <ProgramDatabaseFile>.\Release/WinLotto.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <DataExecutionPrevention>
-      </DataExecutionPrevention>
-      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ChildSheetsDlg.cpp">
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Data\BallItem.h" />
+    <ClInclude Include="Data\PathManager.h" />
+    <ClInclude Include="Data\SimulationManager.h" />
+    <ClInclude Include="Data\WinsItem.h" />
+    <ClInclude Include="Data\WinsNumberManager.h" />
+    <ClInclude Include="Helper\DirectoryHelper.h" />
+    <ClInclude Include="Helper\GdiPlusHelper.h" />
+    <ClInclude Include="Helper\HtmlParser.h" />
+    <ClInclude Include="Helper\HttpHelper.h" />
+    <ClInclude Include="Helper\IniUtil.h" />
+    <ClInclude Include="Helper\PaserUtil.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="UI\Control\MultiPaneCtrl\DockingMarkers.h" />
+    <ClInclude Include="UI\Control\MultiPaneCtrl\MultiPaneCtrl.h" />
+    <ClInclude Include="UI\Control\MultiPaneCtrl\StyleDefine.h" />
+    <ClInclude Include="UI\Control\MultiPaneCtrl\TabCtrl.h" />
+    <ClInclude Include="UI\Control\OutlookTabCtrl\OutlookTabCtrl.h" />
+    <ClInclude Include="UI\Control\WinsListCtrl.h" />
+    <ClInclude Include="WinLotto.h" />
+    <ClInclude Include="WinLottoDlg.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="Data\BallItem.cpp" />
     <ClCompile Include="Data\PathManager.cpp" />
     <ClCompile Include="Data\SimulationManager.cpp" />
@@ -150,148 +134,56 @@
     <ClCompile Include="Helper\HttpHelper.cpp" />
     <ClCompile Include="Helper\IniUtil.cpp" />
     <ClCompile Include="Helper\PaserUtil.cpp" />
-    <ClCompile Include="ResizableDialog.cpp">
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
-    <ClCompile Include="StdAfx.cpp">
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">EnableFastChecks</BasicRuntimeChecks>
+    <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="UI\Controls\WinsListCtrl.cpp" />
-    <ClCompile Include="UI\PropertyFrame\PropPageFrame.cpp" />
-    <ClCompile Include="UI\PropertyFrame\PropPageFrameBordered.cpp" />
-    <ClCompile Include="UI\PropertyFrame\PropPageFrameDefault.cpp" />
-    <ClCompile Include="UI\PropertyFrame\PropPageFrameEx.cpp" />
-    <ClCompile Include="UI\PropertyFrame\PropPageFrameOffice2003.cpp" />
-    <ClCompile Include="UI\PropertyFrame\ThemeLibEx.cpp" />
-    <ClCompile Include="UI\PropertyPage\PageContact.cpp" />
-    <ClCompile Include="UI\PropertyPage\PageCustomize.cpp" />
-    <ClCompile Include="UI\PropertyPage\PageDates.cpp" />
-    <ClCompile Include="UI\PropertyPage\PageExtract.cpp" />
-    <ClCompile Include="UI\PropertyPage\PageNote.cpp" />
-    <ClCompile Include="UI\PropertyPage\PagePhone.cpp" />
-    <ClCompile Include="UI\PropertyPage\PageSimulation.cpp" />
-    <ClCompile Include="UI\PropertyPage\PageWins.cpp" />
-    <ClCompile Include="UI\PropertyPage\PageWinsFrequencyList.cpp" />
-    <ClCompile Include="UI\PropertyPage\PageWinsRoundList.cpp" />
-    <ClCompile Include="UI\PropertyPage\ResizablePage.cpp" />
-    <ClCompile Include="UI\PropertySheet\hookwnd.cpp" />
-    <ClCompile Include="UI\PropertySheet\ResizableGrip.cpp" />
-    <ClCompile Include="UI\PropertySheet\ResizableLayout.cpp" />
-    <ClCompile Include="UI\PropertySheet\ResizableMinMax.cpp" />
-    <ClCompile Include="UI\PropertySheet\ResizableSheet.cpp" />
-    <ClCompile Include="UI\PropertySheet\ResizableState.cpp" />
-    <ClCompile Include="UI\PropertySheet\TreePropSheet.cpp" />
-    <ClCompile Include="UI\PropertySheet\TreePropSheetBase.cpp" />
-    <ClCompile Include="UI\PropertySheet\TreePropSheetBordered.cpp" />
-    <ClCompile Include="UI\PropertySheet\TreePropSheetEx.cpp" />
-    <ClCompile Include="UI\PropertySheet\TreePropSheetOffice2003.cpp" />
-    <ClCompile Include="UI\PropertySheet\TreePropSheetResizableLibHook.cpp" />
-    <ClCompile Include="UI\PropertySheet\TreePropSheetSplitter.cpp" />
-    <ClCompile Include="UI\PropertySheet\TreePropSheetTreeCtrl.cpp" />
-    <ClCompile Include="WinLotto.cpp">
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
-    <ClCompile Include="WinLottoDlg.cpp">
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
+    <ClCompile Include="UI\Control\MultiPaneCtrl\DockingMarkers.cpp" />
+    <ClCompile Include="UI\Control\MultiPaneCtrl\MultiPaneCtrl.cpp" />
+    <ClCompile Include="UI\Control\MultiPaneCtrl\TabCtrl.cpp" />
+    <ClCompile Include="UI\Control\OutlookTabCtrl\OutlookTabCtrl.cpp" />
+    <ClCompile Include="UI\Control\WinsListCtrl.cpp" />
+    <ClCompile Include="WinLotto.cpp" />
+    <ClCompile Include="WinLottoDlg.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="WinLotto.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ChildSheetsDlg.h" />
-    <ClInclude Include="Data\BallItem.h" />
-    <ClInclude Include="Data\PathManager.h" />
-    <ClInclude Include="Data\SimulationManager.h" />
-    <ClInclude Include="Data\WinsItem.h" />
-    <ClInclude Include="Data\WinsNumberManager.h" />
-    <ClInclude Include="Helper\DirectoryHelper.h" />
-    <ClInclude Include="Helper\GdiPlusHelper.h" />
-    <ClInclude Include="Helper\HtmlParser.h" />
-    <ClInclude Include="Helper\HttpHelper.h" />
-    <ClInclude Include="helper\iniutil.h" />
-    <ClInclude Include="Helper\PaserUtil.h" />
-    <ClInclude Include="ResizableDialog.h" />
-    <ClInclude Include="Resource.h" />
-    <ClInclude Include="StdAfx.h" />
-    <ClInclude Include="UI\Controls\WinsListCtrl.h" />
-    <ClInclude Include="UI\PropertyFrame\memdc.h" />
-    <ClInclude Include="UI\PropertyFrame\PropPageFrame.h" />
-    <ClInclude Include="UI\PropertyFrame\PropPageFrameBordered.h" />
-    <ClInclude Include="UI\PropertyFrame\PropPageFrameDefault.h" />
-    <ClInclude Include="UI\PropertyFrame\PropPageFrameEx.h" />
-    <ClInclude Include="UI\PropertyFrame\PropPageFrameOffice2003.h" />
-    <ClInclude Include="UI\PropertyFrame\ThemeLibEx.h" />
-    <ClInclude Include="UI\PropertyPage\PageContact.h" />
-    <ClInclude Include="UI\PropertyPage\PageCustomize.h" />
-    <ClInclude Include="UI\PropertyPage\PageDates.h" />
-    <ClInclude Include="UI\PropertyPage\PageExtract.h" />
-    <ClInclude Include="UI\PropertyPage\PageNote.h" />
-    <ClInclude Include="UI\PropertyPage\PagePhone.h" />
-    <ClInclude Include="UI\PropertyPage\PageSimulation.h" />
-    <ClInclude Include="UI\PropertyPage\PageWins.h" />
-    <ClInclude Include="UI\PropertyPage\PageWinsFrequencyList.h" />
-    <ClInclude Include="UI\PropertyPage\PageWinsRoundList.h" />
-    <ClInclude Include="UI\PropertyPage\ResizablePage.h" />
-    <ClInclude Include="UI\PropertySheet\HighColorTab.hpp" />
-    <ClInclude Include="UI\PropertySheet\hookwnd.h" />
-    <ClInclude Include="UI\PropertySheet\ResizableGrip.h" />
-    <ClInclude Include="UI\PropertySheet\ResizableLayout.h" />
-    <ClInclude Include="UI\PropertySheet\ResizableMinMax.h" />
-    <ClInclude Include="UI\PropertySheet\ResizableMsgSupport.h" />
-    <ClInclude Include="UI\PropertySheet\ResizableSheet.h" />
-    <ClInclude Include="UI\PropertySheet\ResizableState.h" />
-    <ClInclude Include="UI\PropertySheet\TreePropSheet.h" />
-    <ClInclude Include="UI\PropertySheet\TreePropSheetBase.h" />
-    <ClInclude Include="UI\PropertySheet\TreePropSheetBordered.h" />
-    <ClInclude Include="UI\PropertySheet\TreePropSheetEx.h" />
-    <ClInclude Include="UI\PropertySheet\TreePropSheetOffice2003.h" />
-    <ClInclude Include="UI\PropertySheet\TreePropSheetResizableLibHook.h" />
-    <ClInclude Include="UI\PropertySheet\TreePropSheetSplitter.h" />
-    <ClInclude Include="UI\PropertySheet\TreePropSheetTreeCtrl.h" />
-    <ClInclude Include="UI\PropertySheet\TreePropSheetUtil.hpp" />
-    <ClInclude Include="WinLotto.h" />
-    <ClInclude Include="WinLottoDlg.h" />
+    <None Include="res\WinLotto.rc2" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\date-time.ico" />
-    <None Include="res\EmptyImageList.bmp" />
-    <None Include="res\icon1.ico" />
-    <None Include="res\mail.ico" />
-    <None Include="res\mobilephone3.ico" />
-    <None Include="res\note.ico" />
-    <None Include="res\preferences.ico" />
-    <None Include="res\telephone.ico" />
-    <None Include="res\WinLotto.ico" />
-    <None Include="res\WinLotto.rc2" />
-    <None Include="res\user1.ico" />
-    <None Include="ReadMe.txt" />
-    <None Include="UI\PropertySheet\ResizableMsgSupport.inl" />
+    <Image Include="res\Markers A\Bottom.png" />
+    <Image Include="res\Markers A\Center.png" />
+    <Image Include="res\Markers A\Left.png" />
+    <Image Include="res\Markers A\Right.png" />
+    <Image Include="res\Markers A\Top.png" />
+    <Image Include="res\Markers B\Back.png" />
+    <Image Include="res\Markers B\Bottom.png" />
+    <Image Include="res\Markers B\Center.png" />
+    <Image Include="res\Markers B\Left.png" />
+    <Image Include="res\Markers B\Right.png" />
+    <Image Include="res\Markers B\Top.png" />
+    <Image Include="res\Markers C\Back.png" />
+    <Image Include="res\Markers C\Bottom.png" />
+    <Image Include="res\Markers C\Center.png" />
+    <Image Include="res\Markers C\Left.png" />
+    <Image Include="res\Markers C\Right.png" />
+    <Image Include="res\Markers C\Top.png" />
+    <Image Include="res\Markers D\Back.png" />
+    <Image Include="res\Markers D\Bottom.png" />
+    <Image Include="res\Markers D\Center.png" />
+    <Image Include="res\Markers D\Left.png" />
+    <Image Include="res\Markers D\Right.png" />
+    <Image Include="res\Markers D\Top.png" />
+    <Image Include="res\StripeDisable.png" />
+    <Image Include="res\StripeNormal.png" />
+    <Image Include="res\System.png" />
+    <Image Include="res\TabDisable.png" />
+    <Image Include="res\TabNormal.png" />
+    <Image Include="res\WinLotto.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-  <ProjectExtensions>
-    <VisualStudio>
-      <UserProperties RESOURCE_FILE="WinLotto.rc" />
-    </VisualStudio>
-  </ProjectExtensions>
 </Project>

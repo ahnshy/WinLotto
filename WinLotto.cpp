@@ -1,101 +1,78 @@
-// TreePropSheetEx_Demo.cpp : Defines the class behaviors for the application.
+
+// WinLotto.cpp : Defines the class behaviors for the application.
 //
-/////////////////////////////////////////////////////////////////////////////
-//
-// Copyright (C) 2004 by Yves Tkaczyk
-// (http://www.tkaczyk.net - yves@tkaczyk.net)
-//
-// The contents of this file are subject to the Artistic License (the "License").
-// You may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at:
-// http://www.opensource.org/licenses/artistic-license.html
-//
-// Documentation: http://www.codeproject.com/property/treepropsheetex.asp
-// CVS tree:      http://sourceforge.net/projects/treepropsheetex
-//
-/////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
 #include "WinLotto.h"
 #include "WinLottoDlg.h"
-
-#include "UI/PropertySheet/TreePropSheet.h"
-#include "UI/PropertySheet/TreePropSheetEx.h"
-#include "UI/PropertySheet/TreePropSheetOffice2003.h"
-#include "UI/PropertySheet/ResizableSheet.h"
-
-#include "UI/PropertyPage/PageWins.h"
-#include "UI/PropertyPage/PageExtract.h"
-#include "UI/PropertyPage/PageSimulation.h"
-//#include "UI/PropertyPage/PageContact.h"
-//#include "UI/PropertyPage/PagePhone.h"
-//#include "UI/PropertyPage/PageNote.h"
-//#include "UI/PropertyPage/PageDates.h"
-//#include "UI/PropertyPage/PageCustomize.h"
-
-//#include "ChildSheetsDlg.h"
 
 #include "Helper/HttpHelper.h"
 #include "Helper/HtmlParser.h"
 
 #include "Data/PathManager.h"
 #include "Data/WinsNumberManager.h"
+#include "Data/SimulationManager.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////
-// CTreePropSheetEx_DemoApp
 
-BEGIN_MESSAGE_MAP(CTreePropSheetEx_DemoApp, CWinApp)
-	//{{AFX_MSG_MAP(CTreePropSheetEx_DemoApp)
-		// NOTE - the ClassWizard will add and remove mapping macros here.
-		//    DO NOT EDIT what you see in these blocks of generated code!
-	//}}AFX_MSG
-	ON_COMMAND(ID_HELP, CWinApp::OnHelp)
+// CWinLottoApp
+
+BEGIN_MESSAGE_MAP(CWinLottoApp, CWinApp)
+	ON_COMMAND(ID_HELP, &CWinApp::OnHelp)
 END_MESSAGE_MAP()
 
-/////////////////////////////////////////////////////////////////////////////
-// CTreePropSheetEx_DemoApp construction
 
-CTreePropSheetEx_DemoApp::CTreePropSheetEx_DemoApp()
+// CWinLottoApp construction
+
+CWinLottoApp::CWinLottoApp()
 {
 	// TODO: add construction code here,
 	// Place all significant initialization in InitInstance
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// The one and only CTreePropSheetEx_DemoApp object
 
-CTreePropSheetEx_DemoApp theApp;
+// The one and only CWinLottoApp object
 
-/////////////////////////////////////////////////////////////////////////////
-// CTreePropSheetEx_DemoApp initialization
+CWinLottoApp theApp;
 
-BOOL CTreePropSheetEx_DemoApp::InitInstance()
+
+// CWinLottoApp initialization
+
+BOOL CWinLottoApp::InitInstance()
 {
-	AfxEnableControlContainer();
+	// InitCommonControlsEx() is required on Windows XP if an application
+	// manifest specifies use of ComCtl32.dll version 6 or later to enable
+	// visual styles.  Otherwise, any window creation will fail.
+	INITCOMMONCONTROLSEX InitCtrls;
+	InitCtrls.dwSize = sizeof(InitCtrls);
+	// Set this to include all the common control classes you want to use
+	// in your application.
+	InitCtrls.dwICC = ICC_WIN95_CLASSES;
+	InitCommonControlsEx(&InitCtrls);
+
+	CWinApp::InitInstance();
+
+
+	// Create the shell manager, in case the dialog contains
+	// any shell tree view or shell list view controls.
+	CShellManager *pShellManager = new CShellManager;
+
+	// Activate "Windows Native" visual manager for enabling themes in MFC controls
+	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerOffice2007));
 
 	// Standard initialization
 	// If you are not using these features and wish to reduce the size
-	//  of your final executable, you should remove from the following
-	//  the specific initialization routines you do not need.
+	// of your final executable, you should remove from the following
+	// the specific initialization routines you do not need
+	// Change the registry key under which our settings are stored
+	// TODO: You should modify this string to be something appropriate
+	// such as the name of your company or organization
+	SetRegistryKey(_T("WinLotto"));
 
-#if _MSC_VER < 1300
-	#ifdef _AFXDLL
-		Enable3dControls();			// Call this when using MFC in a shared DLL
-	#else
-		Enable3dControlsStatic();	// Call this when linking to MFC statically
-	#endif
-#endif // _MSC_VER < 0x0700
-
-	//CTreePropSheetEx_DemoDlg dlg;
-	//m_pMainWnd = &dlg;
-
-	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerWindows7));
+	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerOffice2007));
 	CMFCButton::EnableWindowsTheming();
 
 	SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, TRUE, 0, 0);
@@ -107,12 +84,6 @@ BOOL CTreePropSheetEx_DemoApp::InitInstance()
 		pPathManager->Initialize();
 		strRoundFIle = pPathManager->GetRoundFilePath();
 	}
-
-
-	TreePropSheet::CTreePropSheetOffice2003 sheet(IDS_STRING_PROJECT);
-	sheet.SetTreeViewMode(TRUE, TRUE, TRUE);
-	//sheet.SetEmptyPageText(_T("Select a sub-page"));
-	//sheet.SetTreeDefaultImages( IDB_EMPTY_IMAGE_LIST, 16, RGB( 255, 255, 255 ) );
 
 	if (!strRoundFIle.IsEmpty() && !PathFileExists(strRoundFIle))
 	{
@@ -128,50 +99,8 @@ BOOL CTreePropSheetEx_DemoApp::InitInstance()
 	if (pNumberManager)
 		pNumberManager->Initialize(strArray);
 
-	CPageWins		pageWins;
-	CPageExtract	pageExtract;
-	CPageSimulation pageSimulation;
-	//pageWins.SetData(&wins);
-	//CPagePhone pagePhone;
-	//CPageContact pageContact(&pagePhone, &pageEmail);
-	//CPageNote pageNote;
-	//CPageDates pageDates;
-	//CPageCustomize pageCustomize( sheet );
-
-	pageWins.SetHasWhiteBackground(true);
-	pageExtract.SetHasWhiteBackground(true);
-	pageSimulation.SetHasWhiteBackground(false);
-	
-	//pagePhone.SetHasWhiteBackground(true);
-	//pageContact.SetHasWhiteBackground(true);
-	//pagePhone.SetHasWhiteBackground(true);
-	//pageEmail.SetHasWhiteBackground(true);
-	//pageNote.SetHasWhiteBackground(true);
-	//pageDates.SetHasWhiteBackground(true);
-	//pageCustomize.SetHasWhiteBackground(true);
-
-	sheet.AddPage(&pageWins);
-	//sheet.AddPage(&pageExtract);
-	sheet.AddPage(&pageSimulation);
-	
-	
-	
-	
-	//sheet.AddPage(&pageContact);
-	//sheet.AddPage(&pagePhone);
-	//sheet.AddPage(&pageEmail);
-	//sheet.AddPage(&pageNote);
-	//sheet.AddPage(&pageDates);
-	//sheet.AddPage(&pageCustomize);
-
-	sheet.SetIsResizable(true);
-	sheet.SetTreeWidth(120);  
-	sheet.SetPaneMinimumSizes(100, 180);
-	//sheet.SetPaneMinimumSizes(30, 30);
-	sheet.SetMinSize(CSize( 480, 480 ));
-	sheet.SetAutoExpandTree(true);
-
-	int nResponse = sheet.DoModal();
+	CWinLottoDlg dlg;
+	INT_PTR nResponse = dlg.DoModal();
 	if (nResponse == IDOK)
 	{
 		// TODO: Place code here to handle when the dialog is
@@ -182,12 +111,38 @@ BOOL CTreePropSheetEx_DemoApp::InitInstance()
 		// TODO: Place code here to handle when the dialog is
 		//  dismissed with Cancel
 	}
+	else if (nResponse == -1)
+	{
+		TRACE(traceAppMsg, 0, "Warning: dialog creation failed, so application is terminating unexpectedly.\n");
+		TRACE(traceAppMsg, 0, "Warning: if you are using MFC controls on the dialog, you cannot #define _AFX_NO_MFC_CONTROLS_IN_DIALOGS.\n");
+	}
 
+	// Delete the shell manager created above.
+	if (pShellManager != NULL)
+	{
+		delete pShellManager;
+	}
+
+	// Since the dialog has been closed, return FALSE so that we exit the
+	//  application, rather than start the application's message pump.
+	return FALSE;
+}
+
+int CWinLottoApp::ExitInstance()
+{
+	CSimulationManager* pSimulationManager = CSimulationManager::GetInstance();
+	if (pSimulationManager)
+		pSimulationManager->DestroyInstance();
+
+	CPathManager* pPathManager = CPathManager::GetInstance();
 	if (pPathManager)
 		pPathManager->DestroyInstance();
 
+	CWinsNumberManager* pNumberManager = CWinsNumberManager::GetInstance();
 	if (pNumberManager)
 		pNumberManager->DestroyInstance();
 
-	return FALSE;
+	CMFCVisualManager::DestroyInstance();
+
+	return CWinApp::ExitInstance();
 }

@@ -1,191 +1,189 @@
-// TreePropSheetEx_DemoDlg.cpp : implementation file
+
+// WinLottoDlg.cpp : implementation file
 //
-/////////////////////////////////////////////////////////////////////////////
-//
-// Copyright (C) 2004 by Yves Tkaczyk
-// (http://www.tkaczyk.net - yves@tkaczyk.net)
-//
-// The contents of this file are subject to the Artistic License (the "License").
-// You may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at:
-// http://www.opensource.org/licenses/artistic-license.html
-//
-// Documentation: http://www.codeproject.com/property/treepropsheetex.asp
-// CVS tree:      http://sourceforge.net/projects/treepropsheetex
-//
-/////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
 #include "WinLotto.h"
 #include "WinLottoDlg.h"
+#include "afxdialogex.h"
 
-#include "UI/PropertySheet/TreePropSheet.h"
-#include "UI/PropertySheet/TreePropSheetEx.h"
-#include "UI/PropertySheet/TreePropSheetOffice2003.h"
-#include "UI/PropertySheet/ResizableSheet.h"
+#include <new>
 
-#include "UI/PropertyPage/PageContact.h"
-#include "UI/PropertyPage/PagePhone.h"
-#include "UI/PropertyPage/PageNote.h"
-#include "UI/PropertyPage/PageDates.h"
-#include "UI/PropertyPage/PageCustomize.h"
-
-#include "ChildSheetsDlg.h"
+#include "Data/WinsNumberManager.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////
-// CAboutDlg dialog used for App About
-
-class CAboutDlg : public CDialog
+// CWinLottoDlg dialog
+CWinLottoDlg::CWinLottoDlg(CWnd* pParent /*=NULL*/)
+	: CDialogEx(CWinLottoDlg::IDD, pParent)
 {
-public:
-	CAboutDlg();
-
-// Dialog Data
-	//{{AFX_DATA(CAboutDlg)
-	enum { IDD = IDD_ABOUTBOX };
-	//}}AFX_DATA
-
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CAboutDlg)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	//}}AFX_VIRTUAL
-
-// Implementation
-protected:
-	//{{AFX_MSG(CAboutDlg)
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
-};
-
-CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
-{
-	//{{AFX_DATA_INIT(CAboutDlg)
-	//}}AFX_DATA_INIT
+	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
-void CAboutDlg::DoDataExchange(CDataExchange* pDX)
+void CWinLottoDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CAboutDlg)
-	//}}AFX_DATA_MAP
+	CDialogEx::DoDataExchange(pDX);
 }
 
-BEGIN_MESSAGE_MAP(CAboutDlg, CDialog)
-	//{{AFX_MSG_MAP(CAboutDlg)
-		// No message handlers
-	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
-
-/////////////////////////////////////////////////////////////////////////////
-// CTreePropSheetEx_DemoDlg dialog
-
-CTreePropSheetEx_DemoDlg::CTreePropSheetEx_DemoDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CTreePropSheetEx_DemoDlg::IDD, pParent)
-{
-	//{{AFX_DATA_INIT(CTreePropSheetEx_DemoDlg)
-	//}}AFX_DATA_INIT
-	// Note that LoadIcon does not require a subsequent DestroyIcon in Win32
-	m_hIcon = AfxGetApp()->LoadIcon(IDI_CONTACT);
-}
-
-CTreePropSheetEx_DemoDlg::~CTreePropSheetEx_DemoDlg()
-{
-	// Delete all modeless sheets.
-  for( std::vector<CPropertySheet*>::iterator itSheet = m_contSheet.begin(); m_contSheet.end() != itSheet; ++itSheet )
-  {
-    // Delete the pages.
-    int nCount = (*itSheet)->GetPageCount();
-    for( int nCurrent = 0; nCurrent < nCount; ++nCurrent )
-    {
-      CPropertyPage* pPage = (*itSheet)->GetPage( 0 );
-      (*itSheet)->RemovePage( 0 );
-      delete pPage;
-    }
-
-    // Destroy the associated window.
-    if( ::IsWindow( (*itSheet)->GetSafeHwnd() ) )
-      ::DestroyWindow( (*itSheet)->GetSafeHwnd() );
-    // Delete the sheet object.
-    delete *itSheet;
-  }
-}
-
-void CTreePropSheetEx_DemoDlg::DoDataExchange(CDataExchange* pDX)
-{
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CTreePropSheetEx_DemoDlg)
-	//}}AFX_DATA_MAP
-}
-
-BEGIN_MESSAGE_MAP(CTreePropSheetEx_DemoDlg, CDialog)
-	//{{AFX_MSG_MAP(CTreePropSheetEx_DemoDlg)
+BEGIN_MESSAGE_MAP(CWinLottoDlg, CDialogEx)
+	ON_WM_CREATE()
+	ON_WM_DESTROY()
+	ON_WM_SIZE()
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
-	ON_WM_QUERYDRAGICON()
-	ON_BN_CLICKED(IDC_CLASSIC_TREEPROPSHEET, OnShowTreepropsheet)
-	ON_BN_CLICKED(IDC_RESIZABLE_PROPERTYSHEET, OnResizablePropertysheet)
-	ON_BN_CLICKED(IDC_RESIZABLE_TREEPROPSHEETEX, OnResizableTreepropsheetex)
-	ON_BN_CLICKED(IDC_RESIZABLE_TABBED_TREEPROPSHEETEX, OnResizableTabbedTreepropsheetex)
-	ON_BN_CLICKED(IDC_RESIZABLE_WIZARD_TREEPROPSHEETEX, OnResizableWizardTreepropsheetex)
-	ON_BN_CLICKED(IDC_CHILD_TREEPROPSHEETEX, OnChildTreepropsheetex)
-	ON_BN_CLICKED(IDC_MODELESS, OnModeless)
-	ON_WM_CONTEXTMENU()
-	ON_BN_CLICKED(IDC_TREEPROPSHEETOFFICE2003, OnTreepropsheetoffice2003)
-	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
-/////////////////////////////////////////////////////////////////////////////
-// CTreePropSheetEx_DemoDlg message handlers
 
-BOOL CTreePropSheetEx_DemoDlg::OnInitDialog()
+// CWinLottoDlg message handlers
+int CWinLottoDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
-	CDialog::OnInitDialog();
+	if (CDialogEx::OnCreate(lpCreateStruct) == -1)
+		return -1;
+	
+	ModifyStyle(0, WS_CLIPCHILDREN); // to avoid flicks of child controls.
+	
+	VERIFY(m_MPCC.Create(this, WS_CHILD | WS_VISIBLE, CRect(0, 0, 0, 0), 3001));
+	VERIFY(m_wndOutlookTabCtrl.Create(this, WS_CHILD | WS_VISIBLE, CRect(0, 0, 0, 0), 100));
+	
+	VERIFY(m_wndRoundWins.Create(WS_CHILD | LVS_REPORT, CRect(0, 0, 0, 0), this, 3004));
+	VERIFY(m_wndListFrequency.Create(WS_CHILD | LVS_REPORT, CRect(0, 0, 0, 0), this, 3005));
 
-	// Add "About..." menu item to system menu.
 
-	// IDM_ABOUTBOX must be in the system command range.
-	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
-	ASSERT(IDM_ABOUTBOX < 0xF000);
-
-	CMenu* pSysMenu = GetSystemMenu(FALSE);
-	if (pSysMenu != NULL)
+	for (INT32 nIndex = 0; nIndex <= 3; nIndex++)
 	{
-		CString strAboutMenu;
-		strAboutMenu.LoadString(IDS_ABOUTBOX);
-		if (!strAboutMenu.IsEmpty())
+		VERIFY(m_btnMenus[nIndex].Create(NULL, WS_CHILD | WS_VISIBLE, CRect(0, 0, 0, 0), &m_wndOutlookTabCtrl, 100 + nIndex));
+		m_btnMenus[nIndex].m_nFlatStyle = (CMFCButton::FlatStyle)(CMFCButton::BUTTONSTYLE_FLAT | CMFCButton::BUTTONSTYLE_NOBORDERS);
+		m_btnMenus[nIndex].SetFaceColor(DEFAULT_BACKGROUND_COLOR, TRUE);
+		m_btnMenus[nIndex].SetTextColor(DEFAULT_BACKGROUND_COLOR);
+		m_btnMenus[nIndex].SetTextHotColor(DEFAULT_BACKGROUND_COLOR);
+		m_btnMenus[nIndex].m_bTransparent = FALSE;
+		m_btnMenus[nIndex].EnableWindowsTheming(FALSE);
+		m_btnMenus[nIndex].m_bDrawFocus = FALSE;
+		m_btnMenus[nIndex].m_nAlignStyle = CMFCButton::ALIGN_CENTER;;
+	}
+
+	try
+	{
+		
+		//m_wndRoundWins
+		MultiPaneCtrl::Tabs tabs;
+		tabs.Add(m_wndOutlookTabCtrl, _T("Menus"), 0);
+		tabs.Add(m_wndRoundWins, _T("Wins Round Numbers"), 1);
+		tabs.Add(m_wndListFrequency, _T("Frequency Numbers"), 2);
+		
+		if (!m_MPCC.LoadState(AfxGetApp(), _T("WinLottoLayout"), _T("State"), &tabs, false))
+			SetDefaultLayout(tabs);   // create default state.
+	}
+	catch (std::bad_alloc &)
+	{
+		return -1;
+	}
+	// 
+	return 0;
+}
+
+
+BOOL CWinLottoDlg::OnInitDialog()
+{
+	CDialogEx::OnInitDialog();
+
+	SetBackgroundColor(DEFAULT_BACKGROUND_COLOR);
+	// 
+	SetTabsPosition();
+
+	CFont font;
+	font.CreatePointFont(90, DEFAULT_FONT);
+
+
+	// OutlookBar Setting
+	m_OutlookTabStyle4.Install(&m_wndOutlookTabCtrl);
+	m_wndOutlookTabCtrl.SetAbilityManager(this);
+	m_wndOutlookTabCtrl.SetNotifyManager(this);
+
+	m_wndOutlookTabCtrl.ShowCaption(false);
+	m_wndOutlookTabCtrl.ActivateSplitter(false);
+	m_wndOutlookTabCtrl.HideEmptyButtonsArea(true);
+	m_wndOutlookTabCtrl.ShowMenuButton(false);
+	m_wndOutlookTabCtrl.ShowBorder(false);
+	m_wndOutlookTabCtrl.SetLayout(OutlookTabCtrl::Layout4);
+
+	m_wndOutlookTabCtrl.CreateStripesImages(NULL, IDB_STRIPE_NORMAL, IDB_STRIPE_DISABLE, true, 24);
+	m_wndOutlookTabCtrl.CreateButtonsImages(NULL, IDB_IMAGES_TAB_NORMAL, IDB_IMAGES_TAB_DISABLE, true, 16);
+	m_wndOutlookTabCtrl.SetCaptionFont(&font);
+	m_wndOutlookTabCtrl.SetStripesFont(&font);
+	m_wndOutlookTabCtrl.SetButtonsFont(&font);
+
+	INT32 nCount = 0;
+	INT32 nArrIcon[] = { 3, 1, 2, 3, 4 };
+	LPCTSTR lpszMenuText[] = { _T("Round Wins"), _T("Simulation"), _T("Statistics"), _T("Prediction"), };
+	for (nCount = 0; nCount < _countof(m_btnMenus); nCount++)
+	{
+		if (!m_btnMenus[nCount].GetSafeHwnd())
+			continue;
+
+		m_wndOutlookTabCtrl.AddItem(m_btnMenus[nCount], lpszMenuText[nCount], nArrIcon[nCount], nArrIcon[nCount]);
+		if (nCount == 3 || nCount == 2)
 		{
-			pSysMenu->AppendMenu(MF_SEPARATOR);
-			pSysMenu->AppendMenu(MF_STRING, IDM_ABOUTBOX, strAboutMenu);
+			HANDLE hItemDisable = m_wndOutlookTabCtrl.GetItemHandleByIndex(nCount);   // 'Contacts' item.
+			m_wndOutlookTabCtrl.DisableItem(hItemDisable, true);   // just for demonstration the disable item.
 		}
 	}
 
-	// Set the icon for this dialog.  The framework does this automatically
-	//  when the application's main window is not a dialog
+	m_wndOutlookTabCtrl.Update();
+
+	// MPCC Settings
+	m_wndListFrequency.InsertColumn(0, _T("Frequency Numbers"), LVCFMT_LEFT, 100);
+	//m_List1.InsertItem(0, _T("Item 1"));
+	//m_List1.InsertItem(1, _T("Item 2"));
+	//m_List2.InsertColumn(0, _T("CListCtrl 2"), LVCFMT_LEFT, 100);
+	//m_List2.InsertItem(0, _T("Item 1"));
+	//m_List2.InsertItem(1, _T("Item 2"));
+
+	m_MPCC.CreateSystemImages(nullptr, IDB_IMAGES_SYSTEM, true, 14);
+	m_MPCC.CreateImages(nullptr, IDB_IMAGES_TAB_NORMAL, IDB_IMAGES_TAB_DISABLE, true, 16);
+
+	m_MPCC.SetFontNormal(&font);
+	m_MPCC.SetFontSelect(&font);
+	m_MPCC.InstallStyle(&m_MPCC.styleVS2010_bars);
+	m_MPCC.SetDockingMarkers(MarkersLayoutB(), 21);
+	m_MPCC.SetAbilityManager(this);
+	m_MPCC.SetNotifyManager(this);
+	//m_MPCC.SetCursors(IDC_CURSOR_TAB, IDC_CURSOR_SPLITTER_HORZ, IDC_CURSOR_SPLITTER_VERT, IDC_CURSOR_DRAGOUT_ENABLE, IDC_CURSOR_DRAGOUT_DISABLE);
+	m_MPCC.SetCursors(static_cast<UINT>(0), 0, 0, 0, 0);
+	m_MPCC.EnableTabRemove(true);
+	m_MPCC.EnableTabDrag(true);
+	m_MPCC.SetPanesMinSize(CSize(35, 35));
+
+	// Setting
+	//m_MPCC.Show
+	m_MPCC.ShowButtonsMenu(true);
+	m_MPCC.ShowButtonsClose(false);
+	m_MPCC.ShowButtonsScroll(true);
+	m_MPCC.HideSingleTab(true);
+	m_MPCC.Update();
+
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
-	
-	// TODO: Add extra initialization here
-	
+
+	MoveWindow(CRect(0, 0, 800, 600));
+	RedrawWindow(0, 0, RDW_INVALIDATE | RDW_UPDATENOW | RDW_ALLCHILDREN);
+
+	SetListControl();
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
-void CTreePropSheetEx_DemoDlg::OnSysCommand(UINT nID, LPARAM lParam)
+void CWinLottoDlg::OnSysCommand(UINT nID, LPARAM lParam)
 {
 	if ((nID & 0xFFF0) == IDM_ABOUTBOX)
 	{
-		CAboutDlg dlgAbout;
-		dlgAbout.DoModal();
+		//CAboutDlg dlgAbout;
+		//dlgAbout.DoModal();
 	}
 	else
 	{
-		CDialog::OnSysCommand(nID, lParam);
+		CDialogEx::OnSysCommand(nID, lParam);
 	}
 }
 
@@ -193,13 +191,13 @@ void CTreePropSheetEx_DemoDlg::OnSysCommand(UINT nID, LPARAM lParam)
 //  to draw the icon.  For MFC applications using the document/view model,
 //  this is automatically done for you by the framework.
 
-void CTreePropSheetEx_DemoDlg::OnPaint() 
+void CWinLottoDlg::OnPaint()
 {
 	if (IsIconic())
 	{
 		CPaintDC dc(this); // device context for painting
 
-		SendMessage(WM_ICONERASEBKGND, (WPARAM) dc.GetSafeHdc(), 0);
+		SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
 
 		// Center icon in client rectangle
 		int cxIcon = GetSystemMetrics(SM_CXICON);
@@ -214,178 +212,179 @@ void CTreePropSheetEx_DemoDlg::OnPaint()
 	}
 	else
 	{
-		CDialog::OnPaint();
+		CDialogEx::OnPaint();
 	}
 }
 
-// The system calls this to obtain the cursor to display while the user drags
-//  the minimized window.
-HCURSOR CTreePropSheetEx_DemoDlg::OnQueryDragIcon()
+void CWinLottoDlg::OnDestroy()
 {
-	return (HCURSOR) m_hIcon;
+	//ahnshy
+	return CDialogEx::OnDestroy();
+	m_MPCC.SaveState(AfxGetApp(), _T("WinLottoLayout"), _T("State"));
+	// 
+	//CDialogEx::OnDestroy();
 }
 
-void CTreePropSheetEx_DemoDlg::OnShowTreepropsheet() 
+void CWinLottoDlg::OnSize(UINT nType, int cx, int cy)
 {
-  CPageContact pageContact;
-  CPagePhone pagePhone;
-  CPageNote pageNote;
-  CPageDates pageDates;
+	CDialogEx::OnSize(nType, cx, cy);
 
-  TreePropSheet::CTreePropSheet sheet( _T("TreePropSheet demo"), this );
-  sheet.SetTreeViewMode( TRUE, TRUE, TRUE);
-  sheet.SetTreeDefaultImages( IDB_EMPTY_IMAGE_LIST, 16, RGB( 255, 255, 255 ) );
-
-  sheet.AddPage( &pageContact );
-  sheet.AddPage( &pagePhone );
-  sheet.AddPage( &pageNote );
-  sheet.AddPage( &pageDates );
-
-  sheet.DoModal();
+	SetTabsPosition();
 }
 
-void CTreePropSheetEx_DemoDlg::OnResizablePropertysheet() 
+void CWinLottoDlg::SetTabsPosition()
 {
-  CPageContact pageContact;
-  CPagePhone pagePhone;
-  CPageNote pageNote;
-  CPageDates pageDates;
+	CWnd *pBaseWnd = GetDlgItem(IDC_STATIC_CONTENTS);
+	if (pBaseWnd)
+	{
+		CRect rcBase;
+		pBaseWnd->GetWindowRect(&rcBase/*out*/);
+		ScreenToClient(&rcBase);
 
-  CResizableSheet sheet( _T("Resizable property sheet demo"), this );
-
-  sheet.AddPage( &pageContact );
-  sheet.AddPage( &pagePhone );
-  sheet.AddPage( &pageNote );
-  sheet.AddPage( &pageDates );
-
-  sheet.DoModal();
+		CRect rc;
+		GetClientRect(&rc/*out*/);
+		rc.DeflateRect(rcBase.left, rcBase.top, rcBase.top, rcBase.top);
+		m_MPCC.MoveWindow(&rc);
+	}
 }
 
-void CTreePropSheetEx_DemoDlg::OnResizableTreepropsheetex() 
+void CWinLottoDlg::SetDefaultLayout(MultiPaneCtrl::Tabs const &tabs)
 {
-  TreePropSheet::CTreePropSheetEx sheet( _T("TreePropSheet demo"), this );
-  sheet.SetTreeViewMode( TRUE, TRUE, TRUE);
-  sheet.SetEmptyPageText( _T("Select a sub-page") );
-  sheet.SetTreeDefaultImages( IDB_EMPTY_IMAGE_LIST, 16, RGB( 255, 255, 255 ) );
-
-  CPagePhone pagePhone;
-  //CPageContact pageContact( &pagePhone, &pageEmail );
-  CPageContact pageContact( &pagePhone, &pagePhone);
-  CPageNote pageNote;
-  CPageDates pageDates;
-  CPageCustomize pageCustomize( sheet );
-
-  sheet.AddPage( &pageContact );
-  sheet.AddPage( &pagePhone );
-  sheet.AddPage( &pageNote );
-  sheet.AddPage( &pageDates );
-  sheet.AddPage( &pageCustomize );
-
-  sheet.SetIsResizable( true );
-  sheet.SetTreeWidth( 200 );  
-  sheet.SetPaneMinimumSizes( 135, 180 );
-  sheet.SetMinSize( CSize( 340, 320 ) );
-
-  sheet.DoModal();
+	HPANE h1 = m_MPCC.ConvertPaneToLine(nullptr, true);
+	HPANE h2 = m_MPCC.ConvertPaneToLine(h1, false);
+	HPANE h3 = m_MPCC.ConvertPaneToLine(h2, true);
+	HPANE h4 = m_MPCC.AddPane(h2);
+	m_MPCC.AddTab(h3, tabs[0]);
+	m_MPCC.AddTab(h4, tabs[1]);
+	m_MPCC.AddTab(h4, tabs[2]);
 }
 
-void CTreePropSheetEx_DemoDlg::OnResizableTabbedTreepropsheetex() 
+/////////////////////////////////////////////////////////////////////////////
+//
+void CWinLottoDlg::OnSelectionChanged(OutlookTabCtrl *ctrl)
 {
-  CPageContact pageContact;
-  CPagePhone pagePhone;
-  CPageNote pageNote;
-
-  TreePropSheet::CTreePropSheetEx sheet( _T("TreePropSheet demo"), this );
-  sheet.SetTreeViewMode( FALSE, FALSE, FALSE);
-
-  sheet.AddPage( &pageContact );
-  sheet.AddPage( &pagePhone );
-  sheet.AddPage( &pageNote );
-
-  sheet.SetIsResizable( true );
-
-  sheet.DoModal();
+	CString strText = ctrl->GetItemText(ctrl->GetSelectedItem());
+	if (strText.CompareNoCase(_T("Tasks")) || strText.CompareNoCase(_T("Notes")))
+	{
+		//text = _T("You selected item: \"") + text + _T('\"');
+		//::MessageBox(m_hWnd, text, _T("OutlookTabCtrl::Notify"), MB_OK);
+	}
 }
-
-void CTreePropSheetEx_DemoDlg::OnResizableWizardTreepropsheetex() 
+/////////////////////////////////////////////////////////////////////////////
+//
+void CWinLottoDlg::OnRightButtonReleased(OutlookTabCtrl *ctrl, CPoint pt)
 {
-  CPageContact pageContact;
-  CPagePhone pagePhone;
-  CPageNote pageNote;
-
-  TreePropSheet::CTreePropSheetEx sheet( _T("TreePropSheet demo"), this );
-  sheet.SetTreeViewMode( FALSE, FALSE, FALSE);
-  sheet.SetWizardMode();
-
-  sheet.AddPage( &pageContact );
-  sheet.AddPage( &pagePhone );
-  sheet.AddPage( &pageNote );
-
-  sheet.SetIsResizable( true );
-
-  sheet.DoModal();
+	//CMenu menu;
+	//menu.LoadMenu(IDR_CONTEXT_MENU);
+	//CMenu *popup = menu.GetSubMenu(0);
+	//// 
+	//if (!ctrl->CanVisibleItemPop())
+	//	popup->EnableMenuItem(ID_CONTEXT_MENU_POP, MF_BYCOMMAND | MF_GRAYED);
+	//if (!ctrl->CanVisibleItemPush())
+	//	popup->EnableMenuItem(ID_CONTEXT_MENU_PUSH, MF_BYCOMMAND | MF_GRAYED);
+	//// 
+	//ctrl->ClientToScreen(&pt);
+	//popup->TrackPopupMenu(TPM_LEFTALIGN, pt.x, pt.y, this);
 }
-
-void CTreePropSheetEx_DemoDlg::OnChildTreepropsheetex() 
+/////////////////////////////////////////////////////////////////////////////
+//
+void CWinLottoDlg::OnMenuButtonClicked(OutlookTabCtrl *ctrl, CRect const *rect)
 {
-  CChildSheetsDlg dlg;
-  dlg.DoModal();
+	OnRightButtonReleased(ctrl, CPoint(rect->right, rect->top));
 }
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
-void CTreePropSheetEx_DemoDlg::OnModeless() 
+
+void CWinLottoDlg::SetListControl()
 {
-  TreePropSheet::CTreePropSheetEx* pSheet = new TreePropSheet::CTreePropSheetEx( _T("TreePropSheet demo"), this );
-  m_contSheet.push_back( pSheet );
+	// Initial Header
+	CRect rt;
+	GetClientRect(&rt);
 
-  pSheet->SetTreeViewMode( TRUE, TRUE, TRUE);
-  pSheet->SetEmptyPageText( _T("Select a sub-page") );
-  pSheet->SetTreeDefaultImages( IDB_EMPTY_IMAGE_LIST, 16, RGB( 255, 255, 255 ) );
+	//m_wndRoundWins.MoveWindow(&rt);
+	//m_wndList.SetWindowPos(&wndTop, rt.left, rt.top, rt.right, rt.bottom, SWP_SHOWWINDOW);
 
-  pSheet->AddPage( new CPageContact() );
-  pSheet->AddPage( new CPagePhone );
-  pSheet->AddPage( new CPageNote );
-  pSheet->AddPage( new CPageDates );
-  pSheet->AddPage( new CPageCustomize( *pSheet ) );
+	LVCOLUMN itemColumn;
+	itemColumn.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
 
-  pSheet->SetIsResizable( true );
-  pSheet->SetTreeWidth( 200 );
-  pSheet->SetMinSize( CSize( 460, 350 ) );
 
-  pSheet->Create( this, WS_POPUP|WS_SYSMENU|WS_CAPTION|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_VISIBLE, 0 );
-  pSheet->Invalidate( TRUE );
-}
+	itemColumn.fmt = LVCFMT_LEFT;
 
-void CTreePropSheetEx_DemoDlg::OnTreepropsheetoffice2003() 
-{
-  TreePropSheet::CTreePropSheetOffice2003 sheet( _T("TreePropSheet demo"), this );
-  sheet.SetTreeViewMode( TRUE, TRUE, TRUE);
-  sheet.SetEmptyPageText( _T("Select a sub-page") );
-  sheet.SetTreeDefaultImages( IDB_EMPTY_IMAGE_LIST, 16, RGB( 255, 255, 255 ) );
+	CString strBuffer;
+	int nIndex = 0;
+	//float const fWidthRatio = 0.11;
+	//itemColumn.cx = rt.Width() * fWidthRatio;
+	itemColumn.pszText = (_T("No."));
+	m_wndRoundWins.InsertColumn(nIndex++, &itemColumn);
+	//m_wndRoundWins.SetColumnWidth(nIndex++, LVSCW_AUTOSIZE_USEHEADER);
 
-  CPagePhone pagePhone;
-  //CPageContact pageContact( &pagePhone, &pageEmail );
-  CPageContact pageContact( &pagePhone, &pagePhone);
-  CPageNote pageNote;
-  CPageDates pageDates;
-  CPageCustomize pageCustomize( sheet );
+	for (; nIndex < 8; nIndex++)
+	{
+		//itemColumn.cx = rt.Width() * fWidthRatio;
+		strBuffer.Format(_T("%02d"), nIndex);
+		itemColumn.pszText = ((LPTSTR)(LPCTSTR)strBuffer);
+		itemColumn.iSubItem = nIndex;
+		m_wndRoundWins.InsertColumn(nIndex, &itemColumn);
+	}
 
-  pageContact.SetHasWhiteBackground( true );
-  pagePhone.SetHasWhiteBackground( true );
-  pageNote.SetHasWhiteBackground( true );
-  pageDates.SetHasWhiteBackground( true );
-  pageCustomize.SetHasWhiteBackground( true );
+	m_wndRoundWins.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_HEADERDRAGDROP);
 
-  sheet.AddPage( &pageContact );
-  sheet.AddPage( &pagePhone );
-  sheet.AddPage( &pageNote );
-  sheet.AddPage( &pageDates );
-  sheet.AddPage( &pageCustomize );
 
-  sheet.SetIsResizable( true );
-  sheet.SetTreeWidth( 105 );  
-  sheet.SetPaneMinimumSizes( 100, 180 );
-  sheet.SetMinSize( CSize( 300, 320 ) );
-  sheet.SetAutoExpandTree( true );
+	// Initial item
+	LVITEM item;
 
-  sheet.DoModal();
+	try
+	{
+		CWinsNumberManager* pManager = CWinsNumberManager::GetInstance();
+		if (!pManager)
+			return;
+
+		MapRounds& m = pManager->GetRoundMap();
+		for (MapRounds::const_reverse_iterator itor = m.rbegin(); itor != m.rend(); ++itor)
+		{
+			int nColumn = 0, nCnt = m_wndRoundWins.GetItemCount();
+
+			item.iItem = nCnt;
+			item.iSubItem = nColumn;
+			strBuffer.Format(_T("%d"), itor->first);
+			item.pszText = (LPTSTR)(LPCTSTR)strBuffer;
+			item.mask = LVIF_TEXT;
+			if (m_wndRoundWins.GetSafeHwnd())
+				m_wndRoundWins.InsertItem(&item);
+
+			//if (m_bTaskFinish)
+			//return;
+
+			item.iSubItem = ++nColumn;
+			item.pszText = (LPTSTR)(LPCTSTR)itor->second->GetDate();
+
+			if (m_wndRoundWins.GetSafeHwnd())
+				m_wndRoundWins.SetItem(&item);
+
+			//if (m_bTaskFinish)
+			//return;
+
+			for (INT32 nIndex = 0; nIndex < itor->second->GetNumberCount(); nIndex++)
+			{
+				item.iSubItem = ++nColumn;
+				strBuffer.Format(_T("%d"), itor->second->GetWinNumbers(nIndex));
+
+				item.pszText = (LPTSTR)(LPCTSTR)strBuffer;
+				if (m_wndRoundWins.GetSafeHwnd())
+					m_wndRoundWins.SetItem(&item);
+			}
+
+			if (m_wndRoundWins.GetSafeHwnd())
+				m_wndRoundWins.SetItemData(nCnt, (DWORD)itor->second);
+
+			//nCnt++;
+		}
+
+		for (int i = 0; i < m_wndRoundWins.GetHeaderCtrl().GetItemCount(); i++)
+			m_wndRoundWins.SetColumnWidth(i, LVSCW_AUTOSIZE_USEHEADER);
+	}
+	catch (...)
+	{
+	}
 }

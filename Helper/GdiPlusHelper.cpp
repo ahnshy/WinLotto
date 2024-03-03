@@ -66,7 +66,7 @@ void CGdiPlusHelper::MeasureFontSize()
 
 	for (INT32 nSize = 1 ; nSize <= 72 ; nSize++)
 	{
-		m_pTextFont = new Font(DEFAULT_FONT, nSize);
+		m_pTextFont = new Gdiplus::Font(DEFAULT_FONT, nSize);
 		if (!m_pTextFont)
 			continue;
 
@@ -160,7 +160,7 @@ INT32 CGdiPlusHelper::DrawBall(HDC hDC, RectF& rcRect, COLORREF colorBall, CStri
 
 		if (rect.Width < rcRect.Width && rect.Height < rcRect.Height)
 		{
-			m_pTextFont = new Font(DEFAULT_FONT, itor->first);
+			m_pTextFont = new Gdiplus::Font(DEFAULT_FONT, itor->first);
 			break;
 		}
 	}
@@ -369,7 +369,7 @@ INT32 CGdiPlusHelper::BufferDrawBall(RectF& rcRect, COLORREF colorBall, CString 
 
 		if (rect.Width < rcRect.Width && rect.Height < rcRect.Height)
 		{
-			m_pTextFont = new Font(DEFAULT_FONT, itor->first);
+			m_pTextFont = new Gdiplus::Font(DEFAULT_FONT, itor->first);
 			break;
 		}
 	}
