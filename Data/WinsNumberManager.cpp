@@ -8,6 +8,9 @@
 //
 
 #include "StdAfx.h"
+
+//#include <algorithm>
+
 #include "WinsNumberManager.h"
 
 #include "../Helper/IniUtil.h"
@@ -16,6 +19,12 @@
 // FileInfo
 #define CONFIG_WINLOTTO_FILENAME							TEXT("WinLotto.ini")
 #define CONFIG_SECTION_CONFIG								TEXT("Config")
+
+//bool fnCompare(const <INT32, INT32>& a, const <INT32, INT32>& b)
+//{
+//	if (a.second == b.second) return a.first < b.first;
+		//return a.second < b.second;
+//}
 
 CWinsNumberManager*	CWinsNumberManager::m_pWinsNumberManager= NULL;
 /////////////////////////////////////////////////////////////////////////////
@@ -41,8 +50,10 @@ void CWinsNumberManager::DestroyInstance()
 /////////////////////////////////////////////////////////////////////////////
 // CWinsNumberManager
 CWinsNumberManager::CWinsNumberManager(void)
-{
-	SetEmpty();
+{	
+	//m_pFrequency = m_pFrequencyWithBonus = NULL;
+
+	RemoveAll();
 
 	if (m_pWinsNumberManager != NULL)
 		ASSERT(FALSE);
@@ -52,15 +63,31 @@ CWinsNumberManager::CWinsNumberManager(void)
 
 CWinsNumberManager::~CWinsNumberManager(void)
 {
-	SetEmpty();
+	RemoveAll();
 }
 
-void CWinsNumberManager::SetEmpty()
+void CWinsNumberManager::RemoveAll()
 {
 	for (MapRounds::iterator itor = m_mapRounds.begin() ; itor != m_mapRounds.end() ; ++itor)
 		delete itor->second;
 
 	m_mapRounds.clear();
+	m_mapFrequency.clear();
+	m_mapFrequencyWithBonus.clear();
+
+	//if (m_pFrequency)
+	//{
+	//	m_pFrequency->clear();
+	//	delete m_pFrequency;
+	//	m_pFrequency = NULL;
+	//}
+
+	//if (m_pFrequencyWithBonus)
+	//{
+	//	m_pFrequencyWithBonus->clear();
+	//	delete m_pFrequencyWithBonus;
+	//	m_pFrequencyWithBonus = NULL;
+	//}
 }
 
 void CWinsNumberManager::ReadConfig()
@@ -79,6 +106,10 @@ INT32 CWinsNumberManager::Initialize(CStringArray& arrRounds)
 	CWinsItem *pItem = NULL;
 	CStringArray arr;
 	const CString strDelimeter = _T(",");
+	INT32 nSum = 0, nSumWithBonus = 0;
+	for (INT32 nBallCount = 0; nBallCount <= MAX_BALLS; nBallCount++)
+		m_mapFrequencyWithBonus[nBallCount] = m_mapFrequency[nBallCount] = 0;
+
 	for(INT32 nIndex =  0 ; nIndex < arrRounds.GetCount() ; nIndex++)
 	{
 		strBuffer = arrRounds.GetAt(nIndex);
@@ -90,8 +121,49 @@ INT32 CWinsNumberManager::Initialize(CStringArray& arrRounds)
 		{
 			pItem->Parse(strBuffer, _T(","));
 			m_mapRounds.insert(make_pair(pItem->GetRound(), pItem));
+
+			nSumWithBonus = nSum = 0;
+			for (MapWinsNumber::iterator itor = pItem->GetNumberMap().begin(); itor != pItem->GetNumberMap().end(); ++itor)
+			{
+				m_mapFrequencyWithBonus[itor->second]++;
+				nSumWithBonus += itor->second;
+
+				if (itor->first == 6)
+					continue;
+
+				m_mapFrequency[itor->second]++;
+				nSum += itor->second;
+			}
+
+			pItem->SetTotal(nSum);
+			pItem->SetTotalWithBonus(nSumWithBonus);
 		}
 	}
+
+	return 0;
+}
+
+INT32 CWinsNumberManager::SortFrequncyRanking()
+{
+	//if (m_pFrequency)
+	//{
+	//	m_pFrequency->clear();
+	//	delete m_pFrequency;
+	//	m_pFrequency = NULL;
+	//}
+
+	//m_pFrequency = new vectorFrequency(m_mapFrequency.begin(), m_mapFrequency.end());
+	//sort(m_pFrequency->begin(), m_pFrequency->end(), fnCompare);
+
+
+
+	//if (m_pFrequencyWithBonus)
+	//{
+	//	m_pFrequencyWithBonus->clear();
+	//	delete m_pFrequencyWithBonus;
+	//	m_pFrequencyWithBonus = NULL;   
+	//}
+
 
 	return 0;
 }

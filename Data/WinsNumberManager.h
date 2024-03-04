@@ -6,7 +6,15 @@
 
 #include "WinsItem.h"
 
+#include <map>
+#include <vector>
+
+#define MAX_BALLS				45
+
 typedef map<DWORD, CWinsItem*>	MapRounds;
+typedef map<INT32, INT32>		MapFrequency;
+
+typedef vector<INT32, INT32>	vectorFrequency;
 
 class CWinsNumberManager
 {
@@ -19,16 +27,25 @@ public:
 
 	// Init
 	INT32						Initialize(CStringArray& arrRounds);
+	INT32						SortFrequncyRanking();
 
 	void						SaveConfig();
 	void						ReadConfig();
 
 	// Getter / Setter
-	MapRounds&					GetRoundMap()			{		return m_mapRounds;		}
-	void						SetEmpty();
+	MapRounds&					GetRoundMap()					{ return m_mapRounds;	}
+	//MapFrequency&				GetFrequencyMap()				{ return m_mapFrequency; }
+	//MapFrequency&				GetFrequencyBonusRoundMap()		{ return m_mapFrequencyWithBonus; }
+
+	void						RemoveAll();
 
 protected:
 	MapRounds					m_mapRounds;
+	MapFrequency				m_mapFrequency;
+	MapFrequency				m_mapFrequencyWithBonus;
+	
+	//vectorFrequency*			m_pFrequency;
+	//vectorFrequency*			m_pFrequencyWithBonus;
 
 	static CWinsNumberManager*	m_pWinsNumberManager;
 };

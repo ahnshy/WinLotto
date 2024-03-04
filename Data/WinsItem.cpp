@@ -22,6 +22,7 @@ CWinsItem::~CWinsItem()
 void CWinsItem::SetEmpty()
 {
 	m_dwRound = 0;
+	m_nSumWithBonus = m_nSum = 0;
 	m_strDate.Empty();
 	m_mapNumbers.clear();
 }
@@ -44,9 +45,4 @@ INT32 CWinsItem::Parse(CString strRaw, CString strDelimeter)
 INT32	CWinsItem::GetWinNumbers(INT32 nIndex)
 {
 	return m_mapNumbers[nIndex];
-}
-
-INT32	CWinsItem::SetWinNumbers(CString strNumber)
-{
-	return 0;
 }

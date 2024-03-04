@@ -134,7 +134,7 @@ BOOL CWinLottoDlg::OnInitDialog()
 	m_wndOutlookTabCtrl.Update();
 
 	// MPCC Settings
-	m_wndListFrequency.InsertColumn(0, _T("Frequency Numbers"), LVCFMT_LEFT, 100);
+	//m_wndListFrequency.InsertColumn(0, _T("Frequency Numbers"), LVCFMT_LEFT, 100);
 	//m_List1.InsertItem(0, _T("Item 1"));
 	//m_List1.InsertItem(1, _T("Item 2"));
 	//m_List2.InsertColumn(0, _T("CListCtrl 2"), LVCFMT_LEFT, 100);
@@ -170,7 +170,8 @@ BOOL CWinLottoDlg::OnInitDialog()
 	MoveWindow(CRect(0, 0, 800, 600));
 	RedrawWindow(0, 0, RDW_INVALIDATE | RDW_UPDATENOW | RDW_ALLCHILDREN);
 
-	SetListControl();
+	SetRoundListControl();
+	SetFrequncyListControl();
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -218,11 +219,8 @@ void CWinLottoDlg::OnPaint()
 
 void CWinLottoDlg::OnDestroy()
 {
-	//ahnshy
+	//MPCC.SaveState(AfxGetApp(), _T("WinLottoLayout"), _T("State")); 
 	return CDialogEx::OnDestroy();
-	m_MPCC.SaveState(AfxGetApp(), _T("WinLottoLayout"), _T("State"));
-	// 
-	//CDialogEx::OnDestroy();
 }
 
 void CWinLottoDlg::OnSize(UINT nType, int cx, int cy)
@@ -296,7 +294,7 @@ void CWinLottoDlg::OnMenuButtonClicked(OutlookTabCtrl *ctrl, CRect const *rect)
 /////////////////////////////////////////////////////////////////////////////
 
 
-void CWinLottoDlg::SetListControl()
+void CWinLottoDlg::SetRoundListControl()
 {
 	// Initial Header
 	CRect rt;
@@ -332,6 +330,12 @@ void CWinLottoDlg::SetListControl()
 	}
 
 	itemColumn.pszText = (_T("Bonus"));
+	m_wndRoundWins.InsertColumn(++nIndex, &itemColumn);
+
+	itemColumn.pszText = (_T("Sum"));
+	m_wndRoundWins.InsertColumn(++nIndex, &itemColumn);
+
+	itemColumn.pszText = (_T("+Bonus"));
 	m_wndRoundWins.InsertColumn(++nIndex, &itemColumn);
 
 	m_wndRoundWins.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_HEADERDRAGDROP);
@@ -381,6 +385,23 @@ void CWinLottoDlg::SetListControl()
 					m_wndRoundWins.SetItem(&item);
 			}
 
+			// Sum
+			item.iSubItem = ++nColumn;
+			strBuffer.Format(_T("%d"), itor->second->GetSum());
+
+			item.pszText = (LPTSTR)(LPCTSTR)strBuffer;
+			if (m_wndRoundWins.GetSafeHwnd())
+				m_wndRoundWins.SetItem(&item);
+
+			// Sum + Bonus
+			item.iSubItem = ++nColumn;
+			strBuffer.Format(_T("%d"), itor->second->GetSumWithBonus());
+
+			item.pszText = (LPTSTR)(LPCTSTR)strBuffer;
+			if (m_wndRoundWins.GetSafeHwnd())
+				m_wndRoundWins.SetItem(&item);
+
+
 			if (m_wndRoundWins.GetSafeHwnd())
 				m_wndRoundWins.SetItemData(nCnt, (DWORD)itor->second);
 
@@ -389,6 +410,107 @@ void CWinLottoDlg::SetListControl()
 
 		for (int i = 0; i < m_wndRoundWins.GetHeaderCtrl().GetItemCount(); i++)
 			m_wndRoundWins.SetColumnWidth(i, LVSCW_AUTOSIZE_USEHEADER);
+	}
+	catch (...)
+	{
+	}
+}
+
+void CWinLottoDlg::SetFrequncyListControl()
+{
+	// Initial Header
+	CRect rt;
+	GetClientRect(&rt);
+
+	LVCOLUMN itemColumn;
+	itemColumn.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
+
+
+	itemColumn.fmt = LVCFMT_LEFT;
+
+	CString strBuffer;
+	int nIndex = 0;
+
+	itemColumn.pszText = (_T("No."));
+	m_wndListFrequency.InsertColumn(nIndex++, &itemColumn);
+
+	itemColumn.pszText = (_T("Count"));
+	m_wndListFrequency.InsertColumn(nIndex++, &itemColumn);
+
+	itemColumn.pszText = (_T("Count(+Bonus)"));
+	m_wndListFrequency.InsertColumn(nIndex++, &itemColumn);
+
+	m_wndListFrequency.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_HEADERDRAGDROP);
+
+	// Initial item
+	LVITEM item;
+
+	try
+	{
+		CWinsNumberManager* pManager = CWinsNumberManager::GetInstance();
+		if (!pManager)
+			return;
+
+		MapRounds& m = pManager->GetRoundMap();
+		for (MapRounds::const_reverse_iterator itor = m.rbegin(); itor != m.rend(); ++itor)
+		{
+			int nColumn = 0, nCnt = m_wndListFrequency.GetItemCount();
+
+			item.iItem = nCnt;
+			item.iSubItem = nColumn;
+			strBuffer.Format(_T("%d"), itor->first);
+			item.pszText = (LPTSTR)(LPCTSTR)strBuffer;
+			item.mask = LVIF_TEXT;
+			if (m_wndListFrequency.GetSafeHwnd())
+				m_wndListFrequency.InsertItem(&item);
+
+			//if (m_bTaskFinish)
+			//return;
+
+			item.iSubItem = ++nColumn;
+			item.pszText = (LPTSTR)(LPCTSTR)itor->second->GetDate();
+
+			if (m_wndListFrequency.GetSafeHwnd())
+				m_wndListFrequency.SetItem(&item);
+
+			//if (m_bTaskFinish)
+			//return;
+
+			for (INT32 nIndex = 0; nIndex < itor->second->GetNumberCount(); nIndex++)
+			{
+				item.iSubItem = ++nColumn;
+				strBuffer.Format(_T("%d"), itor->second->GetWinNumbers(nIndex));
+
+				item.pszText = (LPTSTR)(LPCTSTR)strBuffer;
+				if (m_wndListFrequency.GetSafeHwnd())
+					m_wndListFrequency.SetItem(&item);
+			}
+
+			// Sum
+			item.iSubItem = ++nColumn;
+			strBuffer.Format(_T("%d"), itor->second->GetSum());
+
+			item.pszText = (LPTSTR)(LPCTSTR)strBuffer;
+			if (m_wndListFrequency.GetSafeHwnd())
+				m_wndListFrequency.SetItem(&item);
+
+			// Sum + Bonus
+			item.iSubItem = ++nColumn;
+			strBuffer.Format(_T("%d"), itor->second->GetSumWithBonus());
+
+			item.pszText = (LPTSTR)(LPCTSTR)strBuffer;
+			if (m_wndListFrequency.GetSafeHwnd())
+				m_wndListFrequency.SetItem(&item);
+
+
+			if (m_wndRoundWins.GetSafeHwnd())
+				m_wndListFrequency.SetItemData(nCnt, (DWORD)itor->second);
+
+			//nCnt++;
+		}
+
+		for (int i = 0; i < m_wndRoundWins.GetHeaderCtrl().GetItemCount(); i++)
+			m_wndListFrequency.SetColumnWidth(i, LVSCW_AUTOSIZE_USEHEADER);
 	}
 	catch (...)
 	{

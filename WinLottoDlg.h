@@ -43,11 +43,12 @@ protected:
 	typedef MultiPaneCtrl::HPANE HPANE;
 
 	CWinsListCtrl m_wndRoundWins;
-	CListCtrl m_wndListFrequency; // to do...
+	CWinsListCtrl m_wndListFrequency;
 
 	void SetTabsPosition();
 	void SetDefaultLayout(MultiPaneCtrl::Tabs const &tabs);
-	void SetListControl();
+	void SetRoundListControl();
+	void SetFrequncyListControl();
 
 	void OnSelectionChanged(OutlookTabCtrl *ctrl) override;
 	void OnRightButtonReleased(OutlookTabCtrl *ctrl, CPoint pt) override;
