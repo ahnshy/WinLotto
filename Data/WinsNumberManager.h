@@ -8,13 +8,16 @@
 
 #include <map>
 #include <vector>
+#include <algorithm>
+
+typedef pair<int, int> pairDataType;
 
 #define MAX_BALLS				45
 
 typedef map<DWORD, CWinsItem*>	MapRounds;
 typedef map<INT32, INT32>		MapFrequency;
 
-typedef vector<INT32, INT32>	vectorFrequency;
+//typedef vector<pairDataType>	vectorFrequency;
 
 class CWinsNumberManager
 {
@@ -44,8 +47,8 @@ protected:
 	MapFrequency				m_mapFrequency;
 	MapFrequency				m_mapFrequencyWithBonus;
 	
-	//vectorFrequency*			m_pFrequency;
-	//vectorFrequency*			m_pFrequencyWithBonus;
+	vector<pairDataType>*		m_pFrequency;
+	vector<pairDataType>*		m_pFrequencyWithBonus;
 
 	static CWinsNumberManager*	m_pWinsNumberManager;
 };

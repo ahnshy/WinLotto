@@ -51,7 +51,7 @@ void CWinsNumberManager::DestroyInstance()
 // CWinsNumberManager
 CWinsNumberManager::CWinsNumberManager(void)
 {	
-	//m_pFrequency = m_pFrequencyWithBonus = NULL;
+	m_pFrequency = m_pFrequencyWithBonus = NULL;
 
 	RemoveAll();
 
@@ -68,26 +68,26 @@ CWinsNumberManager::~CWinsNumberManager(void)
 
 void CWinsNumberManager::RemoveAll()
 {
-	for (MapRounds::iterator itor = m_mapRounds.begin() ; itor != m_mapRounds.end() ; ++itor)
+	for (MapRounds::iterator itor = m_mapRounds.begin() ; itor != m_mapRounds.end() ; ++itor)	
 		delete itor->second;
 
 	m_mapRounds.clear();
 	m_mapFrequency.clear();
 	m_mapFrequencyWithBonus.clear();
 
-	//if (m_pFrequency)
-	//{
-	//	m_pFrequency->clear();
-	//	delete m_pFrequency;
-	//	m_pFrequency = NULL;
-	//}
+	if (m_pFrequency)
+	{
+		m_pFrequency->clear();
+		delete m_pFrequency;
+		m_pFrequency = NULL;
+	}
 
-	//if (m_pFrequencyWithBonus)
-	//{
-	//	m_pFrequencyWithBonus->clear();
-	//	delete m_pFrequencyWithBonus;
-	//	m_pFrequencyWithBonus = NULL;
-	//}
+	if (m_pFrequencyWithBonus)
+	{
+		m_pFrequencyWithBonus->clear();
+		delete m_pFrequencyWithBonus;
+		m_pFrequencyWithBonus = NULL;
+	}
 }
 
 void CWinsNumberManager::ReadConfig()
@@ -139,31 +139,47 @@ INT32 CWinsNumberManager::Initialize(CStringArray& arrRounds)
 			pItem->SetTotalWithBonus(nSumWithBonus);
 		}
 	}
+	
+	//for (auto it in m_mapFrequencyWithBonus){}
+
+	SortFrequncyRanking();
 
 	return 0;
 }
 
 INT32 CWinsNumberManager::SortFrequncyRanking()
 {
-	//if (m_pFrequency)
-	//{
-	//	m_pFrequency->clear();
-	//	delete m_pFrequency;
-	//	m_pFrequency = NULL;
-	//}
+	if (m_pFrequency)
+	{
+		m_pFrequency->clear();
+		delete m_pFrequency;
+		m_pFrequency = NULL;
+	}
 
-	//m_pFrequency = new vectorFrequency(m_mapFrequency.begin(), m_mapFrequency.end());
-	//sort(m_pFrequency->begin(), m_pFrequency->end(), fnCompare);
+	{
+		m_pFrequency = new vector<pairDataType>(m_mapFrequency.begin(), m_mapFrequency.end());
+		sort(m_pFrequency->begin(), m_pFrequency->end(), [](pairDataType nBefore, pairDataType nAfter){
+			return nBefore.second > nAfter.second;
+		});
 
+		//for (pairDataType itor : vectorSort) cout << itor.first << ":" << itor.second << " ";
+	}
 
+	if (m_pFrequencyWithBonus)
+	{
+		m_pFrequencyWithBonus->clear();
+		delete m_pFrequencyWithBonus;
+		m_pFrequencyWithBonus = NULL;   
+	}
 
-	//if (m_pFrequencyWithBonus)
-	//{
-	//	m_pFrequencyWithBonus->clear();
-	//	delete m_pFrequencyWithBonus;
-	//	m_pFrequencyWithBonus = NULL;   
-	//}
+	{
+		m_pFrequencyWithBonus = new vector<pairDataType>(m_mapFrequencyWithBonus.begin(), m_mapFrequencyWithBonus.end());
+		sort(m_pFrequencyWithBonus->begin(), m_pFrequencyWithBonus->end(), [](pairDataType nBefore, pairDataType nAfter){
+			return nBefore.second > nAfter.second;
+		});
 
+		// for (pairDataType itor : vectorSort) cout << itor.first << ":" << itor.second << " ";
+	}
 
 	return 0;
 }

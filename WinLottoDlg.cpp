@@ -172,6 +172,7 @@ BOOL CWinLottoDlg::OnInitDialog()
 
 	SetRoundListControl();
 	SetFrequncyListControl();
+
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
