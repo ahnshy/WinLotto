@@ -161,8 +161,6 @@ INT32 CWinsNumberManager::SortFrequncyRanking()
 		sort(m_pFrequency->begin(), m_pFrequency->end(), [](pairDataType nBefore, pairDataType nAfter){
 			return nBefore.second > nAfter.second;
 		});
-
-		//for (pairDataType itor : vectorSort) cout << itor.first << ":" << itor.second << " ";
 	}
 
 	if (m_pFrequencyWithBonus)
@@ -177,8 +175,6 @@ INT32 CWinsNumberManager::SortFrequncyRanking()
 		sort(m_pFrequencyWithBonus->begin(), m_pFrequencyWithBonus->end(), [](pairDataType nBefore, pairDataType nAfter){
 			return nBefore.second > nAfter.second;
 		});
-
-		// for (pairDataType itor : vectorSort) cout << itor.first << ":" << itor.second << " ";
 	}
 
 	return 0;

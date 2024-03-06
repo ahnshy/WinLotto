@@ -37,8 +37,8 @@ public:
 
 	// Getter / Setter
 	MapRounds&					GetRoundMap()					{ return m_mapRounds;	}
-	//MapFrequency&				GetFrequencyMap()				{ return m_mapFrequency; }
-	//MapFrequency&				GetFrequencyBonusRoundMap()		{ return m_mapFrequencyWithBonus; }
+	vector<pairDataType>*		GetFrequencyVector()			{ return m_pFrequency; }
+	vector<pairDataType>*		GetFrequencyBonusRoundVector()	{ return m_pFrequencyWithBonus; }
 
 	void						RemoveAll();
 
