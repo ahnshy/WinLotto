@@ -13,19 +13,22 @@ public:
 	virtual ~CListCtrlEx();
 
 // Overrides
-	// ClassWizard generated virtual function overrides
-    //{{AFX_VIRTUAL(CFontCombo)     
 	public:
     virtual void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);
 	virtual void MeasureItem ( LPMEASUREITEMSTRUCT lpMeasureItemStruct );
-	//}}AFX_VIRTUAL
+	virtual int OnCompareItems(LPARAM lParam1, LPARAM lParam2, int iColumn);
+
+	void			SetTextColor(COLORREF color)					{ m_colorText = color; }
+	void			SetFocusTextColor(COLORREF color)				{ m_colorFocusText = color; }
+	void			SetBkColor(COLORREF color)						{ m_colorBk = color; }
+
 
 // Implementation
 public:
 	void Init();
-	COLORREF m_clrText;
-	COLORREF m_clrBkgnd;
-	COLORREF m_clrHText;
+	COLORREF m_colorText;
+	COLORREF m_colorBk;
+	COLORREF m_colorFocusText;
 	COLORREF m_clrHBkgnd;
 	COLORREF m_clrPercent;
     COLORREF m_clrHPercent;

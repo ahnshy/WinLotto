@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include <assert.h>
-#include "ListCtrlTest.h"
 #include "ListCtrlEx.h"
 
 #ifdef _DEBUG
@@ -26,9 +25,9 @@ END_MESSAGE_MAP()
 
 CListCtrlEx::CListCtrlEx()
 {
-	m_clrText = ::GetSysColor(COLOR_WINDOWTEXT);
-	m_clrBkgnd = ::GetSysColor(COLOR_WINDOW);
-	m_clrHText = ::GetSysColor(COLOR_HIGHLIGHTTEXT);
+	m_colorText = ::GetSysColor(COLOR_WINDOWTEXT);
+	m_colorBk = ::GetSysColor(COLOR_WINDOW);
+	m_colorFocusText = ::GetSysColor(COLOR_HIGHLIGHTTEXT);
 	m_clrHBkgnd = ::GetSysColor(COLOR_HIGHLIGHT);
 	m_clrPercent = ::GetSysColor(COLOR_HOTLIGHT);
 	m_clrHPercent = ::GetSysColor(COLOR_BTNFACE);
@@ -60,7 +59,7 @@ void CListCtrlEx::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 		((lvi.state & LVIS_SELECTED) && ((GetFocus() == this) || (GetStyle() & LVS_SHOWSELALWAYS)))
 		);
 
-	pDC->FillSolidRect(&rcBound, (bHighlight)? m_clrHBkgnd:m_clrBkgnd);
+	pDC->FillSolidRect(&rcBound, (bHighlight) ? m_clrHBkgnd : m_colorBk);
 
 	// Draw labels for remaining columns
 	LV_COLUMN lvc;
@@ -72,34 +71,34 @@ void CListCtrlEx::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 		CString sItem = GetItemText(iItem, nColumn);
 
 		rcItem.DeflateRect(2, 1);
-		if(sItem.Right(1) == '%')
+		if(sItem.Right(1) == _T('%'))
 		{
 			pDC->Rectangle(rcItem);
 			rcItem.DeflateRect(1, 1);
 			CRect rcLeft, rcRight;
 			rcLeft = rcRight = rcItem;
-			rcLeft.right = rcLeft.left + MulDiv(atoi(sItem), rcItem.Width(), 100);
+			rcLeft.right = rcLeft.left + MulDiv(_tstoi(sItem), rcItem.Width(), 100);
 			rcRight.left = rcLeft.right;
 			if(bHighlight)
 			{
-				pDC->FillSolidRect(rcLeft, m_clrHPercent);
-				pDC->FillSolidRect(rcRight, m_clrBkgnd);
-				pDC->SetTextColor(m_clrText);
+				pDC->FillSolidRect(rcLeft, m_colorBk);
+				pDC->FillSolidRect(rcRight, m_colorBk);
+				pDC->SetTextColor(m_colorText);
 				pDC->DrawText(sItem, rcItem, DT_VCENTER|DT_CENTER|DT_SINGLELINE);
 			}
 			else
 			{
 				pDC->FillSolidRect(rcLeft, m_clrPercent);
-				pDC->FillSolidRect(rcRight, m_clrHPercent);
+				pDC->FillSolidRect(rcRight, m_colorBk);
 				CRgn rgn;
 				rgn.CreateRectRgnIndirect(rcLeft);
 				pDC->SelectClipRgn(&rgn);
-				pDC->SetTextColor(m_clrBkgnd);
+				pDC->SetTextColor(m_colorBk);
 				pDC->DrawText(sItem, rcItem, DT_VCENTER|DT_CENTER|DT_SINGLELINE);
 
 				rgn.SetRectRgn(rcRight);
 				pDC->SelectClipRgn(&rgn);
-				pDC->SetTextColor(m_clrText);
+				pDC->SetTextColor(m_colorText);
 				pDC->DrawText(sItem, rcItem, DT_VCENTER|DT_CENTER|DT_SINGLELINE);
 				pDC->SelectClipRgn(NULL);
 			}
@@ -107,7 +106,7 @@ void CListCtrlEx::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 		}
 		else
 		{
-			pDC->SetTextColor((bHighlight) ? m_clrHText:m_clrText);
+			pDC->SetTextColor((bHighlight) ? m_colorFocusText : m_colorText);
 			pDC->DrawText(sItem, rcItem, DT_NOCLIP | DT_LEFT | DT_VCENTER);
 		}
 		rcBound.left = rcBound.right;
@@ -123,8 +122,6 @@ void CListCtrlEx::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct)
 
 void CListCtrlEx::Init()
 {
-	// WM_WINDOWPOSCHANGED를 일부러 발생시켜서 부모 윈도우가
-	// WM_MEASUREITEM 메세지를 보내도록 한다.
 	CRect rc;
 	GetWindowRect( &rc );
 
@@ -134,4 +131,37 @@ void CListCtrlEx::Init()
 	wp.cy = rc.Height();
 	wp.flags = SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER;
 	SendMessage( WM_WINDOWPOSCHANGED, 0, (LPARAM)&wp );
+}
+
+//return(nRow % 2) == 0 ? RGB(253, 241, 249) : RGB(196, 238, 254);
+
+int CListCtrlEx::OnCompareItems(LPARAM lParam1, LPARAM lParam2, int iColumn)
+{
+	//CWinsItem *pParam1 = (CWinsItem*)lParam1;
+	//CWinsItem *pParam2 = (CWinsItem*)lParam2;
+
+	//if (!pParam1 || !pParam2)
+		//return 0;
+
+	if (iColumn == 0)
+	{
+		//return(pParam1->GetRound() < pParam2->GetRound() ? -1 : 1);
+		//return pParam1->m_strFileName.CompareNoCase(pParam2->m_strFileName);
+	}
+	else if (iColumn == 1)
+	{
+		//return pParam1->GetDate().CompareNoCase(pParam2->GetDate());
+	}
+	//else if (iColumn == 2)
+	//{
+	//	//return(pParam1->m_dwSize < pParam2->m_dwSize ? -1 : 1);
+	//}
+	//else if (iColumn == 3)
+	//{	
+	//	//return(pParam1->m_dwLines < pParam2->m_dwLines ? -1 : 1);
+	//}
+	else
+		return 0;
+
+	return 0;
 }
