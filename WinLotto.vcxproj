@@ -113,11 +113,14 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="UI\Control\FrequncyListCtrl.h" />
+    <ClInclude Include="UI\Control\ListCtrlEx.h" />
     <ClInclude Include="UI\Control\MultiPaneCtrl\DockingMarkers.h" />
     <ClInclude Include="UI\Control\MultiPaneCtrl\MultiPaneCtrl.h" />
     <ClInclude Include="UI\Control\MultiPaneCtrl\StyleDefine.h" />
     <ClInclude Include="UI\Control\MultiPaneCtrl\TabCtrl.h" />
     <ClInclude Include="UI\Control\OutlookTabCtrl\OutlookTabCtrl.h" />
+    <ClInclude Include="UI\Control\WinLottoTabCtrl.h" />
     <ClInclude Include="UI\Control\WinsListCtrl.h" />
     <ClInclude Include="WinLotto.h" />
     <ClInclude Include="WinLottoDlg.h" />
@@ -138,10 +141,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="UI\Control\FrequncyListCtrl.cpp" />
+    <ClCompile Include="UI\Control\ListCtrlEx.cpp" />
     <ClCompile Include="UI\Control\MultiPaneCtrl\DockingMarkers.cpp" />
     <ClCompile Include="UI\Control\MultiPaneCtrl\MultiPaneCtrl.cpp" />
     <ClCompile Include="UI\Control\MultiPaneCtrl\TabCtrl.cpp" />
     <ClCompile Include="UI\Control\OutlookTabCtrl\OutlookTabCtrl.cpp" />
+    <ClCompile Include="UI\Control\WinLottoTabCtrl.cpp" />
     <ClCompile Include="UI\Control\WinsListCtrl.cpp" />
     <ClCompile Include="WinLotto.cpp" />
     <ClCompile Include="WinLottoDlg.cpp" />
