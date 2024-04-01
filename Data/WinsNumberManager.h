@@ -40,9 +40,12 @@ public:
 	vector<pairDataType>*		GetFrequencyVector()			{ return m_pFrequency; }
 	vector<pairDataType>*		GetFrequencyBonusRoundVector()	{ return m_pFrequencyWithBonus; }
 
+	DWORD						GetTotalCount()					{ return m_dwTotalCount; }
+
 	void						RemoveAll();
 
 protected:
+	DWORD						m_dwTotalCount;
 	MapRounds					m_mapRounds;
 	MapFrequency				m_mapFrequency;
 	MapFrequency				m_mapFrequencyWithBonus;

@@ -51,6 +51,7 @@ void CWinsNumberManager::DestroyInstance()
 // CWinsNumberManager
 CWinsNumberManager::CWinsNumberManager(void)
 {	
+	m_dwTotalCount = 0;
 	m_pFrequency = m_pFrequencyWithBonus = NULL;
 
 	RemoveAll();
@@ -127,7 +128,7 @@ INT32 CWinsNumberManager::Initialize(CStringArray& arrRounds)
 			{
 				m_mapFrequencyWithBonus[itor->second]++;
 				nSumWithBonus += itor->second;
-
+				m_dwTotalCount++;
 				if (itor->first == 6)
 					continue;
 
