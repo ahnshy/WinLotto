@@ -11,7 +11,7 @@
 ## ⚙️ Development Environment
 - `Win32 / MFC`
 - `JDK 1.8.0.261(Java SE8.0.2810.9)`
-- **IDE** : Over Main Brunch Visual Studio 2013 (Visual Studio 2010 from master brunch to main brunch) / STS 3.9
+- **IDE** : Visual Studio 2013 (Visual Studio 2010 from master brunch to main brunch) / STS 3.9
 - **Framework** : Springboot(2.7)
 - **Database** : MariaDB 10.11(x64)
 - **ORM** : Mybatis
