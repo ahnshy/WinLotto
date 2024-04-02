@@ -3,17 +3,13 @@
 //
 
 #pragma once
-
-#include "ResizablePage.h"
+#include "../../resource.h"
 #include "../../Helper/GdiPlusHelper.h"
-#include "../PropertySheet/TreePropSheetUtil.hpp"
 
 /////////////////////////////////////////////////////////////////////////////
-// CSimulationCtrl dialog
+// CSimulationCtrl
 
-class CSimulationCtrl
- : public CWnd,
-   public TreePropSheet::CWhiteBackgroundProvider
+class CSimulationCtrl : public CDialogEx
 {
 	DECLARE_DYNCREATE(CSimulationCtrl)
 
@@ -24,7 +20,7 @@ public:
 
 // Dialog Data
 	//{{AFX_DATA(CSimulationCtrl)
-	enum { IDD = IDD_PAGE_EMPTY };
+	enum { IDD = IDD_DIALOG_EMPTY };
 		// NOTE - ClassWizard will add data members here.
 		//    DO NOT EDIT what you see in these blocks of generated code !
 	//}}AFX_DATA
@@ -38,6 +34,7 @@ public:
 	//}}AFX_VIRTUAL
 
 	COLORREF GetRandomColor();
+	INT32 GetSimulationWndRect(CRect& rc);
 
 private:
 	CGdiPlusHelper m_gdi;
@@ -48,6 +45,7 @@ protected:
 	//{{AFX_MSG(CSimulationCtrl)
 	virtual BOOL	OnInitDialog();
 	afx_msg void	OnTimer(UINT nIDEvent);
+	afx_msg void	OnSize(UINT nType, int cx, int cy);
 	afx_msg HBRUSH	OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 	afx_msg void	OnPaint();
 	afx_msg BOOL	OnEraseBkgnd(CDC* pDC);
