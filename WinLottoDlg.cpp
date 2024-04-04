@@ -20,11 +20,17 @@ CWinLottoDlg::CWinLottoDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CWinLottoDlg::IDD, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+	
+	m_arrMenus.Add(_T("Round Wins"));
+	m_arrMenus.Add(_T("Simulation"));
+	m_arrMenus.Add(_T("Statistics"));
+	m_arrMenus.Add(_T("Prediction"));
 }
 
 void CWinLottoDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+//	DDX_Control(pDX, 3005, m_wndListFrequency);
 }
 
 BEGIN_MESSAGE_MAP(CWinLottoDlg, CDialogEx)
@@ -48,7 +54,9 @@ int CWinLottoDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	VERIFY(m_wndOutlookTabCtrl.Create(this, WS_CHILD | WS_VISIBLE, CRect(0, 0, 0, 0), 100));
 	
 	VERIFY(m_wndRoundWins.Create(WS_CHILD | LVS_REPORT, CRect(0, 0, 0, 0), this, 3004));
-	VERIFY(m_wndListFrequency.Create(WS_CHILD | LVS_REPORT, CRect(0, 0, 0, 0), this, 3005));
+	VERIFY(m_wndListFrequency.Create(WS_CHILD | LVS_REPORT | LVS_OWNERDRAWFIXED, CRect(0, 0, 0, 0), this, 3005));
+
+	VERIFY(m_wndSimulation.Create(CSimulationCtrl::IDD, this));
 
 
 	for (INT32 nIndex = 0; nIndex <= 3; nIndex++)
@@ -64,26 +72,10 @@ int CWinLottoDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		m_btnMenus[nIndex].m_nAlignStyle = CMFCButton::ALIGN_CENTER;;
 	}
 
-	try
-	{
-		
-		//m_wndRoundWins
-		MultiPaneCtrl::Tabs tabs;
-		tabs.Add(m_wndOutlookTabCtrl, _T("Menus"), 0);
-		tabs.Add(m_wndRoundWins, _T("Wins Round Numbers"), 1);
-		tabs.Add(m_wndListFrequency, _T("Frequency Numbers"), 2);
-		
-		if (!m_MPCC.LoadState(AfxGetApp(), _T("WinLottoLayout"), _T("State"), &tabs, false))
-			SetDefaultLayout(tabs);   // create default state.
-	}
-	catch (std::bad_alloc &)
-	{
-		return -1;
-	}
-	// 
+	SetLayout(0);
+
 	return 0;
 }
-
 
 BOOL CWinLottoDlg::OnInitDialog()
 {
@@ -117,14 +109,13 @@ BOOL CWinLottoDlg::OnInitDialog()
 
 	INT32 nCount = 0;
 	INT32 nArrIcon[] = { 3, 1, 2, 3, 4 };
-	LPCTSTR lpszMenuText[] = { _T("Round Wins"), _T("Simulation"), _T("Statistics"), _T("Prediction"), };
 	for (nCount = 0; nCount < _countof(m_btnMenus); nCount++)
 	{
 		if (!m_btnMenus[nCount].GetSafeHwnd())
 			continue;
 
-		m_wndOutlookTabCtrl.AddItem(m_btnMenus[nCount], lpszMenuText[nCount], nArrIcon[nCount], nArrIcon[nCount]);
-		if (nCount == 3 || nCount == 2)
+		m_wndOutlookTabCtrl.AddItem(m_btnMenus[nCount], m_arrMenus.GetAt(nCount), nArrIcon[nCount], nArrIcon[nCount]);
+		if (nCount == 3)
 		{
 			HANDLE hItemDisable = m_wndOutlookTabCtrl.GetItemHandleByIndex(nCount);   // 'Contacts' item.
 			m_wndOutlookTabCtrl.DisableItem(hItemDisable, true);   // just for demonstration the disable item.
@@ -132,6 +123,9 @@ BOOL CWinLottoDlg::OnInitDialog()
 	}
 
 	m_wndOutlookTabCtrl.Update();
+	
+	// left tab remove all
+	//m_wndOutlookTabCtrl.DeleteAllItems();
 
 	// MPCC Settings
 	//m_wndListFrequency.InsertColumn(0, _T("Frequency Numbers"), LVCFMT_LEFT, 100);
@@ -174,6 +168,81 @@ BOOL CWinLottoDlg::OnInitDialog()
 	SetFrequncyListControl();
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
+}
+
+void CWinLottoDlg::SetLayout(INT32 nIndex)
+{
+	if (nIndex < 0 || nIndex >= m_arrMenus.GetCount())
+		nIndex = 0;
+
+	if (nIndex == 0)
+	{
+		try
+		{
+			//m_wndRoundWins
+			MultiPaneCtrl::Tabs tabs;
+			tabs.Add(m_wndOutlookTabCtrl, _T("Menus"), 0);
+			tabs.Add(m_wndRoundWins, _T("Wins Round Numbers"), 1);
+			tabs.Add(m_wndListFrequency, _T("Frequency Numbers"), 2);
+
+			//if (!m_MPCC.LoadState(AfxGetApp(), _T("WinLottoLayout"), _T("State"), &tabs, false))
+			m_MPCC.DeleteAllPanes();
+			SetDefaultLayout(tabs);   // create default state.
+
+			m_MPCC.Update();
+		}
+		catch (std::bad_alloc &)
+		{
+			return;
+		}
+	}
+	else if (nIndex == 1)
+	{
+		try
+		{
+			//m_wndRoundWins
+			MultiPaneCtrl::Tabs tabs;
+			tabs.Add(m_wndOutlookTabCtrl, _T("Menus"), 0);
+			
+			tabs.Add(m_wndSimulation, _T("Simulation"), 1);
+			tabs.Add(m_wndListFrequency, _T("Virtual Number"), 2);
+
+			m_MPCC.DeleteAllPanes();
+			SetDefaultLayout(tabs);   // create default state.
+
+			m_MPCC.Update();
+		}
+		catch (std::bad_alloc &)
+		{
+			return;
+		}
+	}
+	else if (nIndex == 2)
+	{
+		try
+		{
+			//m_wndRoundWins
+			MultiPaneCtrl::Tabs tabs;
+			tabs.Add(m_wndOutlookTabCtrl, _T("Menus"), 0);
+			tabs.Add(m_wndListFrequency, _T("Frequency Numbers"), 1);
+			tabs.Add(m_wndRoundWins, _T("Wins Round Numbers"), 2);
+
+			//if (!m_MPCC.LoadState(AfxGetApp(), _T("WinLottoLayout"), _T("State"), &tabs, false))
+			m_MPCC.DeleteAllPanes();
+			SetDefaultLayout(tabs);   // create default state.
+
+			m_MPCC.Update();
+		}
+		catch (std::bad_alloc &)
+		{
+			return;
+		}
+	}
+	else if (nIndex == 3)
+	{
+
+	}
+	return;
 }
 
 void CWinLottoDlg::OnSysCommand(UINT nID, LPARAM lParam)
@@ -253,6 +322,10 @@ void CWinLottoDlg::SetDefaultLayout(MultiPaneCtrl::Tabs const &tabs)
 	HPANE h2 = m_MPCC.ConvertPaneToLine(h1, false);
 	HPANE h3 = m_MPCC.ConvertPaneToLine(h2, true);
 	HPANE h4 = m_MPCC.AddPane(h2);
+
+	if (tabs.GetNumber() <= 0)
+		return;
+
 	m_MPCC.AddTab(h3, tabs[0]);
 	m_MPCC.AddTab(h4, tabs[1]);
 	m_MPCC.AddTab(h4, tabs[2]);
@@ -262,11 +335,16 @@ void CWinLottoDlg::SetDefaultLayout(MultiPaneCtrl::Tabs const &tabs)
 //
 void CWinLottoDlg::OnSelectionChanged(OutlookTabCtrl *ctrl)
 {
-	CString strText = ctrl->GetItemText(ctrl->GetSelectedItem());
-	if (strText.CompareNoCase(_T("Tasks")) || strText.CompareNoCase(_T("Notes")))
+	CString strMenu = ctrl->GetItemText(ctrl->GetSelectedItem());
+	for (INT32 nIndex = 0; nIndex < m_arrMenus.GetCount(); nIndex++)
 	{
-		//text = _T("You selected item: \"") + text + _T('\"');
-		//::MessageBox(m_hWnd, text, _T("OutlookTabCtrl::Notify"), MB_OK);
+		if (strMenu.CompareNoCase(m_arrMenus.GetAt(nIndex)) == 0)
+		{
+			SetLayout(nIndex);
+			return;
+			//CString strText = _T("You selected item: \"") + strMenu + _T('\"');
+			//::MessageBox(m_hWnd, strText, _T("OutlookTabCtrl::Notify"), MB_OK);
+		}
 	}
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -423,6 +501,8 @@ void CWinLottoDlg::SetFrequncyListControl()
 	CRect rt;
 	GetClientRect(&rt);
 
+	m_wndListFrequency.Init();
+
 	LVCOLUMN itemColumn;
 	itemColumn.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
 
@@ -441,6 +521,9 @@ void CWinLottoDlg::SetFrequncyListControl()
 	itemColumn.pszText = (_T("Count"));
 	m_wndListFrequency.InsertColumn(nIndex++, &itemColumn);
 
+	itemColumn.pszText = (_T("Ratio"));
+	m_wndListFrequency.InsertColumn(nIndex++, &itemColumn);
+
 	m_wndListFrequency.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_HEADERDRAGDROP);
 
 	// Initial item
@@ -452,6 +535,7 @@ void CWinLottoDlg::SetFrequncyListControl()
 		if (!pManager)
 			return;
 
+		DWORD dwTotalCount = pManager->GetTotalCount();
 		vector<pairDataType>* pVector = pManager->GetFrequencyVector();
 		if (pVector == NULL)
 			return;
@@ -492,10 +576,18 @@ void CWinLottoDlg::SetFrequncyListControl()
 				if (m_wndListFrequency.GetSafeHwnd())
 					m_wndListFrequency.SetItem(&item);
 
+
+				//strPercent.Format("%d %%", i * 10);
+				item.iSubItem = ++nColumn;
+				strBuffer.Format(_T("%0.2f %%"), ((float)((float)itor.second / (float)dwTotalCount)) * 100);
+				item.pszText = (LPTSTR)(LPCTSTR)strBuffer;
+
+				if (m_wndListFrequency.GetSafeHwnd())
+					m_wndListFrequency.SetItem(&item);
+
 				//if (m_bTaskFinish)
 				//return;
 		}
-
 
 		for (int i = 0; i < m_wndRoundWins.GetHeaderCtrl().GetItemCount(); i++)
 			m_wndListFrequency.SetColumnWidth(i, LVSCW_AUTOSIZE_USEHEADER);

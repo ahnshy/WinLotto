@@ -3620,7 +3620,8 @@ int MultiPaneCtrl::Tabs::Add(HWND wnd, TCHAR const *text, int image, TCHAR const
 }
 //
 void MultiPaneCtrl::Tabs::DeleteAll()
-{	if(Owner)
+{	
+	if(Owner)
 	{	Private::TabsData *ptr = static_cast<Private::TabsData*>(Owner);
 		ptr->tabs.clear();
 		ptr->id_to_tab.clear();

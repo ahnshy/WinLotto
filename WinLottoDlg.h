@@ -3,7 +3,9 @@
 //
 #pragma once
 
+#include "UI/Control/ListCtrlEx.h"
 #include "UI/Control/WinsListCtrl.h"
+#include "UI/Control/SimulationCtrl.h"
 
 #include "UI/Control/MultiPaneCtrl/StyleDefine.h"
 #include "UI/Control/MultiPaneCtrl/MultiPaneCtrl.h"
@@ -39,15 +41,22 @@ protected:
 	OutlookTabCtrlCustom3 m_OutlookTabStyle3;
 	OutlookTabCtrlCustom4 m_OutlookTabStyle4;
 
+	CStringArray		m_arrMenus;
+	//MultiPaneCtrl::Tabs	m_tabs;
+
 	MultiPaneCtrlComplex m_MPCC;
 	typedef MultiPaneCtrl::HPANE HPANE;
 
 	CWinsListCtrl m_wndRoundWins;
-	CWinsListCtrl m_wndListFrequency;
+	//CWinsListCtrl m_wndListFrequency;
+	CListCtrlEx m_wndListFrequency;
 
+	CSimulationCtrl	m_wndSimulation;
+	
 	void SetTabsPosition();
 	void SetDefaultLayout(MultiPaneCtrl::Tabs const &tabs);
 	void SetRoundListControl();
+	void SetLayout(INT32 nIndex);
 	void SetFrequncyListControl();
 
 	void OnSelectionChanged(OutlookTabCtrl *ctrl) override;
