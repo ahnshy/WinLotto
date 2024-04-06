@@ -47,12 +47,17 @@ void CListCtrlEx::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	CRect rcBound;
 	GetItemRect(iItem, rcBound, LVIR_BOUNDS);
 
+
+	//return(nRow % 2) == 0 ? RGB(253, 241, 249) : RGB(196, 238, 254);
+
 	LVITEM lvi;
 	lvi.mask = LVIF_IMAGE | LVIF_STATE | LVIF_INDENT | LVIF_PARAM;
 	lvi.iItem = iItem;
 	lvi.iSubItem = 0;
 	lvi.stateMask = 0xFFFF;		// get all state flags
 	GetItem(&lvi);
+
+	(lvi.iItem % 2) == 0 ? m_colorBk = RGB(253, 241, 249) : m_colorBk = RGB(196, 238, 254);
 
 	bool bHighlight = (
 		(lvi.state & LVIS_DROPHILITED) ||
