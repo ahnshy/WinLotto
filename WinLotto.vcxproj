@@ -120,6 +120,7 @@
     <ClInclude Include="UI\Control\MultiPaneCtrl\StyleDefine.h" />
     <ClInclude Include="UI\Control\MultiPaneCtrl\TabCtrl.h" />
     <ClInclude Include="UI\Control\OutlookTabCtrl\OutlookTabCtrl.h" />
+    <ClInclude Include="UI\Control\SimulationCtrl.h" />
     <ClInclude Include="UI\Control\WinLottoTabCtrl.h" />
     <ClInclude Include="UI\Control\WinsListCtrl.h" />
     <ClInclude Include="WinLotto.h" />
@@ -147,6 +148,7 @@
     <ClCompile Include="UI\Control\MultiPaneCtrl\MultiPaneCtrl.cpp" />
     <ClCompile Include="UI\Control\MultiPaneCtrl\TabCtrl.cpp" />
     <ClCompile Include="UI\Control\OutlookTabCtrl\OutlookTabCtrl.cpp" />
+    <ClCompile Include="UI\Control\SimulationCtrl.cpp" />
     <ClCompile Include="UI\Control\WinLottoTabCtrl.cpp" />
     <ClCompile Include="UI\Control\WinsListCtrl.cpp" />
     <ClCompile Include="WinLotto.cpp" />
