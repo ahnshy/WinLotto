@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-// SimulationCtrl.h : header file
+// PredictionCtrl.h : header file
 //
 
 #pragma once
@@ -7,19 +7,19 @@
 #include "../../Helper/GdiPlusHelper.h"
 
 /////////////////////////////////////////////////////////////////////////////
-// CSimulationCtrl
+// CPredictionCtrl
 
-class CSimulationCtrl : public CDialogEx
+class CPredictionCtrl : public CDialogEx
 {
-	DECLARE_DYNCREATE(CSimulationCtrl)
+	DECLARE_DYNCREATE(CPredictionCtrl)
 
 // Construction
 public:
-	CSimulationCtrl();
-	~CSimulationCtrl();
+	CPredictionCtrl();
+	~CPredictionCtrl();
 
 // Dialog Data
-	//{{AFX_DATA(CSimulationCtrl)
+	//{{AFX_DATA(CPredictionCtrl)
 	enum { IDD = IDD_DIALOG_EMPTY };
 		// NOTE - ClassWizard will add data members here.
 		//    DO NOT EDIT what you see in these blocks of generated code !
@@ -28,7 +28,7 @@ public:
 
 // Overrides
 	// ClassWizard generate virtual function overrides
-	//{{AFX_VIRTUAL(CSimulationCtrl)
+	//{{AFX_VIRTUAL(CPredictionCtrl)
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
@@ -42,7 +42,7 @@ private:
 // Implementation
 protected:
 	// Generated message map functions
-	//{{AFX_MSG(CSimulationCtrl)
+	//{{AFX_MSG(CPredictionCtrl)
 	virtual BOOL	OnInitDialog();
 	afx_msg void	OnTimer(UINT nIDEvent);
 	afx_msg void	OnSize(UINT nType, int cx, int cy);

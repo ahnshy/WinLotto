@@ -1,12 +1,12 @@
 /////////////////////////////////////////////////////////////////////////////
-// SimulationCtrl.cpp : implementation file
+// PredictionCtrl.cpp : implementation file
 //
 
 #include "stdafx.h"
 
 #include <math.h>
 #include <stdlib.h>
-#include "SimulationCtrl.h"
+#include "PredictionCtrl.h"
 
 #include "../../Data/SimulationManager.h"
 
@@ -17,13 +17,13 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-// CSimulationCtrl property page
+// CPredictionCtrl property page
 
-IMPLEMENT_DYNCREATE(CSimulationCtrl, CDialogEx)
+IMPLEMENT_DYNCREATE(CPredictionCtrl, CDialogEx)
 
-CSimulationCtrl::CSimulationCtrl() : CDialogEx(CSimulationCtrl::IDD)
+CPredictionCtrl::CPredictionCtrl() : CDialogEx(CPredictionCtrl::IDD)
 {
-	//{{AFX_DATA_INIT(CSimulationCtrl)
+	//{{AFX_DATA_INIT(CPredictionCtrl)
 	//}}AFX_DATA_INIT
 
   //m_psp.dwFlags &= (~PSP_HASHELP);
@@ -32,20 +32,20 @@ CSimulationCtrl::CSimulationCtrl() : CDialogEx(CSimulationCtrl::IDD)
   //m_psp.hIcon = hIconTab;
 }
 
-CSimulationCtrl::~CSimulationCtrl()
+CPredictionCtrl::~CPredictionCtrl()
 {
 }
 
-void CSimulationCtrl::DoDataExchange(CDataExchange* pDX)
+void CPredictionCtrl::DoDataExchange(CDataExchange* pDX)
 {
 	CWnd::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CSimulationCtrl)
+	//{{AFX_DATA_MAP(CPredictionCtrl)
 	//}}AFX_DATA_MAP
 }
 
 
-BEGIN_MESSAGE_MAP(CSimulationCtrl, CDialogEx)
-	//{{AFX_MSG_MAP(CSimulationCtrl)
+BEGIN_MESSAGE_MAP(CPredictionCtrl, CDialogEx)
+	//{{AFX_MSG_MAP(CPredictionCtrl)
 	//ON_WM_CTLCOLOR()
 	ON_WM_TIMER()
 	ON_WM_PAINT()
@@ -56,9 +56,9 @@ BEGIN_MESSAGE_MAP(CSimulationCtrl, CDialogEx)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// CSimulationCtrl message handlers
+// CPredictionCtrl message handlers
 
-BOOL CSimulationCtrl::OnInitDialog() 
+BOOL CPredictionCtrl::OnInitDialog() 
 {
 	CDialogEx::OnInitDialog();
 	
@@ -80,7 +80,7 @@ BOOL CSimulationCtrl::OnInitDialog()
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CSimulationCtrl::OnTimer(UINT nIDEvent) 
+void CPredictionCtrl::OnTimer(UINT nIDEvent) 
 {
 	if (nIDEvent==1000)
 	{
@@ -117,7 +117,7 @@ void CSimulationCtrl::OnTimer(UINT nIDEvent)
 	CDialogEx::OnTimer(nIDEvent);
 }
 
-void CSimulationCtrl::OnSize(UINT nType, int cx, int cy)
+void CPredictionCtrl::OnSize(UINT nType, int cx, int cy)
 {
 	CRect rc;
 	GetClientRect(rc);
@@ -132,7 +132,7 @@ void CSimulationCtrl::OnSize(UINT nType, int cx, int cy)
 	CDialogEx::OnSize(nType, cx, cy);
 }
 
-HBRUSH CSimulationCtrl::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) 
+HBRUSH CPredictionCtrl::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) 
 {
 	//if( HasWhiteBackground() )
 	{
@@ -143,12 +143,12 @@ HBRUSH CSimulationCtrl::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	return  CDialogEx::OnCtlColor(pDC, pWnd, nCtlColor);
 }
 
-COLORREF CSimulationCtrl::GetRandomColor()
+COLORREF CPredictionCtrl::GetRandomColor()
 {
 	return RGB((BYTE)(rand() % 255), (BYTE)(rand() % 255), (BYTE)(rand() % 255));
 }
 
-void CSimulationCtrl::OnPaint()
+void CPredictionCtrl::OnPaint()
 {
 
 	CPaintDC dc(this);
@@ -187,7 +187,7 @@ void CSimulationCtrl::OnPaint()
 	m_gdi.BufferBitblt(dc.GetSafeHdc(), rc);
 }
 
-BOOL CSimulationCtrl::OnEraseBkgnd(CDC* pDC)
+BOOL CPredictionCtrl::OnEraseBkgnd(CDC* pDC)
 {
 	//CRect rc;
 	//GetClientRect(&rc);
@@ -197,12 +197,12 @@ BOOL CSimulationCtrl::OnEraseBkgnd(CDC* pDC)
 	//return CDialog::OnEraseBkgnd(pDC);
 }
 
-void CSimulationCtrl::OnDestroy()
+void CPredictionCtrl::OnDestroy()
 {
 	CDialogEx::OnDestroy();
 }
 
-INT32 CSimulationCtrl::GetSimulationWndRect(CRect& rc)
+INT32 CPredictionCtrl::GetSimulationWndRect(CRect& rc)
 {
 	GetClientRect(&rc);
 	//rc.top += 50;
