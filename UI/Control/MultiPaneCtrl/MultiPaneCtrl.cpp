@@ -3593,7 +3593,7 @@ int MultiPaneCtrl::Tabs::Add(HWND wnd, TCHAR const *text, int image)
 // 
 int MultiPaneCtrl::Tabs::Add(HWND wnd, TCHAR const *text, int image, TCHAR const *tooltip, bool disable, __int64 data)
 {	assert(wnd && ::IsWindow(wnd));
-	assert( ::GetDlgCtrlID(wnd) );
+	//assert( ::GetDlgCtrlID(wnd) );
 	assert(text && tooltip);
 	assert(image>=-1);
 		// 

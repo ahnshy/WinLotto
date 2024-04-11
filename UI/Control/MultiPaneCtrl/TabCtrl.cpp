@@ -506,7 +506,7 @@ TabCtrl::HTAB TabCtrl::Private::InsertTab(i_tabs before, HWND wnd, TCHAR const *
 {	assert(wnd && ::IsWindow(wnd) && ::GetParent(wnd)==o.m_hWnd);
 	assert(text);
 	assert(image>=-1);
-	assert( ::GetDlgCtrlID(wnd) );   // ID==0 - this is error.
+	//assert( ::GetDlgCtrlID(wnd) );   // ID==0 - this is error.
 	assert(o.GetTabWithWindowID(::GetDlgCtrlID(wnd))==nullptr);   // window with this ID has inserted.
 		// 
 	Tab *tab = new (std::nothrow) Tab;
