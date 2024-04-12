@@ -108,18 +108,18 @@ BOOL CWinLottoDlg::OnInitDialog()
 	m_wndOutlookTabCtrl.SetButtonsFont(&font);
 
 	INT32 nCount = 0;
-	INT32 nArrIcon[] = { 3, 1, 2, 3, 4 };
+	INT32 nArrIcon[] = { 3, 1, 2, 6, 6 };
 	for (nCount = 0; nCount < _countof(m_btnMenus); nCount++)
 	{
 		if (!m_btnMenus[nCount].GetSafeHwnd())
 			continue;
 
 		m_wndOutlookTabCtrl.AddItem(m_btnMenus[nCount], m_arrMenus.GetAt(nCount), nArrIcon[nCount], nArrIcon[nCount]);
-		if (nCount == 3)
-		{
-			HANDLE hItemDisable = m_wndOutlookTabCtrl.GetItemHandleByIndex(nCount);   // 'Contacts' item.
-			m_wndOutlookTabCtrl.DisableItem(hItemDisable, true);   // just for demonstration the disable item.
-		}
+		//if (nCount == 3)
+		//{
+		//	HANDLE hItemDisable = m_wndOutlookTabCtrl.GetItemHandleByIndex(nCount);   // 'Contacts' item.
+		//	m_wndOutlookTabCtrl.DisableItem(hItemDisable, true);   // just for demonstration the disable item.
+		//}
 	}
 
 	m_wndOutlookTabCtrl.Update();
@@ -240,7 +240,24 @@ void CWinLottoDlg::SetLayout(INT32 nIndex)
 	}
 	else if (nIndex == 3)
 	{
+		try
+		{
+			//m_wndRoundWins
+			MultiPaneCtrl::Tabs tabs;
+			tabs.Add(m_wndOutlookTabCtrl, _T("Menus"), 0);
+			tabs.Add(m_wndListFrequency, _T("Frequency Numbers"), 1);
+			tabs.Add(m_wndRoundWins, _T("Wins Round Numbers"), 2);
 
+			//if (!m_MPCC.LoadState(AfxGetApp(), _T("WinLottoLayout"), _T("State"), &tabs, false))
+			m_MPCC.DeleteAllPanes();
+			SetDefaultLayout(tabs);   // create default state.
+
+			m_MPCC.Update();
+		}
+		catch (std::bad_alloc &)
+		{
+			return;
+		}
 	}
 	return;
 }
