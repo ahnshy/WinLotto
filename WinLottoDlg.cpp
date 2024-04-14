@@ -554,13 +554,12 @@ void CWinLottoDlg::SetFrequncyListControl()
 
 		DWORD dwTotalCount = pManager->GetTotalCount();
 		vector<pairDataType>* pVector = pManager->GetFrequencyVector();
-		if (pVector == NULL)
+		if (pVector == NULL || pVector->size() <= 0)
 			return;
 
 		int nColumn = 0, nCnt = 0, nIndex = 1;
 		for (pairDataType itor : *pVector)
 		{
-
 				if (itor.first <= 0 || itor.first > MAX_BALLS)
 					continue;
 
@@ -596,7 +595,10 @@ void CWinLottoDlg::SetFrequncyListControl()
 
 				//strPercent.Format("%d %%", i * 10);
 				item.iSubItem = ++nColumn;
-				strBuffer.Format(_T("%0.2f %%"), ((float)((float)itor.second / (float)dwTotalCount)) * 100);
+				strBuffer = _T("0 %");
+				if (dwTotalCount != 0)
+					strBuffer.Format(_T("%0.2f %%"), ((float)((float)itor.second / (float)dwTotalCount)) * 100);
+
 				item.pszText = (LPTSTR)(LPCTSTR)strBuffer;
 
 				if (m_wndListFrequency.GetSafeHwnd())
