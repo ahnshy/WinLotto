@@ -201,6 +201,7 @@ public:
 	bool IsSplitterActive(HPANE pane) const;
 		// 
 	CRect GetSplitterRect(HPANE pane) const;   // splitter which is right/bottom of pane.
+	void SetSplitterRect(CRect rcRect);
 		// 
 		// 
 		// for getting information about tabs during load state operation.

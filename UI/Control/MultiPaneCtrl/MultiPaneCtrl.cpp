@@ -1050,8 +1050,8 @@ void MultiPaneCtrl::Private::Recalc(bool redraw)
 	}
 		// 
 	DeferWindow dw;
-	Recalc(&dw,nullptr,rc,redraw);
-	m_Tree.GetData(nullptr)->real.rcSplitter.SetRectEmpty();
+	Recalc(&dw,nullptr,rc,redraw);m_Tree.GetData(nullptr)->real.rcSplitter.SetRectEmpty();
+	
 }
 // 
 void MultiPaneCtrl::Private::Recalc(DeferWindow *dw, HPANE pane, CRect rc, bool redraw)
@@ -2274,6 +2274,10 @@ CRect MultiPaneCtrl::GetSplitterRect(HPANE pane) const
 	return p.m_Tree.GetData(pane)->real.rcSplitter;
 }
 /////////////////////////////////////////////////////////////////////////////
+void MultiPaneCtrl::SetSplitterRect(CRect rcRect)
+{
+	p.m_Tree.GetData(nullptr)->real.rcSplitter.SetRectEmpty();
+}
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 // 
