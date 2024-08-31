@@ -5,6 +5,9 @@
  It analyzes lotto mathematically and statistically in various ways.
 <br>
 
+## 🛠️ Stacks
+<img src="https://img.shields.io/badge/-C++-000000?logo=c%2B%2B" /> <img src="https://img.shields.io/badge/Spring-6DB33F?logo=Spring&logoColor=white"/> <img src="https://img.shields.io/badge/MariaDB-003545?logo=mariaDB&logoColor=white"/>
+
 ## 🕰️ Term
 * 2024.02.10. - On going
 
