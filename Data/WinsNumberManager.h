@@ -50,6 +50,8 @@ protected:
 	MapRounds					m_mapRounds;
 	MapFrequency				m_mapFrequency;
 	MapFrequency				m_mapFrequencyWithBonus;
+
+	MapMonthlyFrequency			m_mapMonthlyFrequency;
 	
 	vector<pairDataType>*		m_pFrequency;
 	vector<pairDataType>*		m_pFrequencyWithBonus;
