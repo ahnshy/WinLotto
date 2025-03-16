@@ -140,11 +140,8 @@ INT32 CWinsNumberManager::Initialize(CStringArray& arrRounds)
 			pItem->SetTotalWithBonus(nSumWithBonus);
 		}
 	}
-	
-	//for (auto it in m_mapFrequencyWithBonus){}
 
 	SortFrequncyRanking();
-
 	return 0;
 }
 
