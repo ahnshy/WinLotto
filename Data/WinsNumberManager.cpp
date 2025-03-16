@@ -72,9 +72,13 @@ void CWinsNumberManager::RemoveAll()
 	for (MapRounds::iterator itor = m_mapRounds.begin() ; itor != m_mapRounds.end() ; ++itor)	
 		delete itor->second;
 
+	for (MapMonthlyFrequency::iterator itor = m_mapMonthlyFrequency.begin(); itor != m_mapMonthlyFrequency.end(); ++itor)
+		delete itor->second;
+
 	m_mapRounds.clear();
 	m_mapFrequency.clear();
 	m_mapFrequencyWithBonus.clear();
+	m_mapMonthlyFrequency.clear();
 
 	if (m_pFrequency)
 	{
