@@ -51,7 +51,7 @@ protected:
 	MapFrequency				m_mapFrequency;
 	MapFrequency				m_mapFrequencyWithBonus;
 
-	MapMonthlyFrequency			m_mapMonthlyFrequency;
+	MapMonthlyFrequency			m_mapFrequencyPerMonth;
 	
 	vector<pairDataType>*		m_pFrequency;
 	vector<pairDataType>*		m_pFrequencyWithBonus;

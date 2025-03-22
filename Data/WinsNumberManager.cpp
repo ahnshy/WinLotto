@@ -88,13 +88,13 @@ void CWinsNumberManager::RemoveAll()
 	for (MapRounds::iterator itor = m_mapRounds.begin() ; itor != m_mapRounds.end() ; ++itor)	
 		delete itor->second;
 
-	for (MapMonthlyFrequency::iterator itor = m_mapMonthlyFrequency.begin(); itor != m_mapMonthlyFrequency.end(); ++itor)
+	for (MapMonthlyFrequency::iterator itor = m_mapFrequencyPerMonth.begin(); itor != m_mapFrequencyPerMonth.end(); ++itor)
 		delete itor->second;
 
 	m_mapRounds.clear();
 	m_mapFrequency.clear();
 	m_mapFrequencyWithBonus.clear();
-	m_mapMonthlyFrequency.clear();
+	m_mapFrequencyPerMonth.clear();
 
 	if (m_pFrequency)
 	{
@@ -140,7 +140,7 @@ INT32 CWinsNumberManager::Initialize(CStringArray& arrRounds)
 			for (INT32 nBallCount = 1; nBallCount <= MAX_BALLS; nBallCount++)
 				pFrequncyMonthly->insert(make_pair(nBallCount, 0));
 
-			m_mapMonthlyFrequency.insert(make_pair(nMonth, pFrequncyMonthly));
+			m_mapFrequencyPerMonth.insert(make_pair(nMonth, pFrequncyMonthly));
 		}
 	}
 
@@ -156,7 +156,7 @@ INT32 CWinsNumberManager::Initialize(CStringArray& arrRounds)
 			pItem->Parse(strBuffer, _T(","));
 			m_mapRounds.insert(make_pair(pItem->GetRound(), pItem));
 			
-			pFrequncyMonthly = m_mapMonthlyFrequency[pItem->GetMonth()];
+			pFrequncyMonthly = m_mapFrequencyPerMonth[pItem->GetMonth()];
 
 			nSumWithBonus = nSum = 0;
 			for (MapWinsNumber::iterator itor = pItem->GetNumberMap().begin(); itor != pItem->GetNumberMap().end(); ++itor)
