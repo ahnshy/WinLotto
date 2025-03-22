@@ -20,6 +20,22 @@
 #define CONFIG_WINLOTTO_FILENAME							TEXT("WinLotto.ini")
 #define CONFIG_SECTION_CONFIG								TEXT("Config")
 
+enum Month {
+	JANUARY = 1,
+	FEBRUARY,
+	MARCH,
+	APRIL,
+	MAY,
+	JUNE,
+	JULY,
+	AUGUST,
+	SEPTEMBER,
+	OCTOBER,
+	NOVEMBER,
+	DECEMBER,
+	MAX_MONTH = DECEMBER
+};
+
 //bool fnCompare(const <INT32, INT32>& a, const <INT32, INT32>& b)
 //{
 //	if (a.second == b.second) return a.first < b.first;
@@ -114,6 +130,19 @@ INT32 CWinsNumberManager::Initialize(CStringArray& arrRounds)
 	INT32 nSum = 0, nSumWithBonus = 0;
 	for (INT32 nBallCount = 0; nBallCount <= MAX_BALLS; nBallCount++)
 		m_mapFrequencyWithBonus[nBallCount] = m_mapFrequency[nBallCount] = 0;
+
+	vector<pairDataType>* pVector = NULL;
+	for (INT32 nMonth = JANUARY; nMonth <= MAX_MONTH; nMonth++)
+	{
+		pVector = new vector<pairDataType>();
+		if (pVector)
+		{
+			for (INT32 nBallCount = 1; nBallCount <= MAX_BALLS; nBallCount++)
+				pVector->push_back(make_pair(nBallCount, 0));
+
+			m_mapMonthlyFrequency[nMonth] = pVector;
+		}
+	}
 
 	for(INT32 nIndex =  0 ; nIndex < arrRounds.GetCount() ; nIndex++)
 	{
