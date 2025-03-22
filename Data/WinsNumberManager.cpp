@@ -131,16 +131,16 @@ INT32 CWinsNumberManager::Initialize(CStringArray& arrRounds)
 	for (INT32 nBallCount = 0; nBallCount <= MAX_BALLS; nBallCount++)
 		m_mapFrequencyWithBonus[nBallCount] = m_mapFrequency[nBallCount] = 0;
 
-	vector<pairDataType>* pVector = NULL;
+	MapFrequency* pFrequncyMonthly = NULL;
 	for (INT32 nMonth = JANUARY; nMonth <= MAX_MONTH; nMonth++)
 	{
-		pVector = new vector<pairDataType>();
-		if (pVector)
+		pFrequncyMonthly = new MapFrequency();
+		if (pFrequncyMonthly)
 		{
 			for (INT32 nBallCount = 1; nBallCount <= MAX_BALLS; nBallCount++)
-				pVector->push_back(make_pair(nBallCount, 0));
+				pFrequncyMonthly->insert(make_pair(nBallCount, 0));
 
-			m_mapMonthlyFrequency[nMonth] = pVector;
+			m_mapMonthlyFrequency.insert(make_pair(nMonth, pFrequncyMonthly));
 		}
 	}
 
@@ -155,6 +155,8 @@ INT32 CWinsNumberManager::Initialize(CStringArray& arrRounds)
 		{
 			pItem->Parse(strBuffer, _T(","));
 			m_mapRounds.insert(make_pair(pItem->GetRound(), pItem));
+			
+			pFrequncyMonthly = m_mapMonthlyFrequency[pItem->GetMonth()];
 
 			nSumWithBonus = nSum = 0;
 			for (MapWinsNumber::iterator itor = pItem->GetNumberMap().begin(); itor != pItem->GetNumberMap().end(); ++itor)
@@ -162,6 +164,10 @@ INT32 CWinsNumberManager::Initialize(CStringArray& arrRounds)
 				m_mapFrequencyWithBonus[itor->second]++;
 				nSumWithBonus += itor->second;
 				m_dwTotalCount++;
+
+				if (pFrequncyMonthly)
+					(*pFrequncyMonthly)[itor->second]++;
+
 				if (itor->first == 6)
 					continue;
 

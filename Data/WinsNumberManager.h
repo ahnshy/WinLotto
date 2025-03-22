@@ -16,7 +16,7 @@ typedef pair<int, int> pairDataType;
 
 typedef map<DWORD, CWinsItem*>				MapRounds;
 typedef map<INT32, INT32>					MapFrequency;
-typedef map<INT32, vector<pairDataType>*>	MapMonthlyFrequency;
+typedef map<INT32, MapFrequency*>			MapMonthlyFrequency;
 
 //typedef vector<pairDataType>	vectorFrequency;
 
