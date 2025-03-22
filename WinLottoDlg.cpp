@@ -225,7 +225,7 @@ void CWinLottoDlg::SetLayout(INT32 nIndex)
 			MultiPaneCtrl::Tabs tabs;
 			tabs.Add(m_wndOutlookTabCtrl, _T("Menus"), 0);
 			tabs.Add(m_wndListFrequency, _T("Frequency Numbers"), 1);
-			tabs.Add(m_wndRoundWins, _T("Wins Round Numbers"), 2);
+			tabs.Add(m_wndRoundWins, _T("Number of monthly frequencies"), 2);
 
 			//if (!m_MPCC.LoadState(AfxGetApp(), _T("WinLottoLayout"), _T("State"), &tabs, false))
 			m_MPCC.DeleteAllPanes();
