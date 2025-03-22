@@ -25,6 +25,7 @@ void CWinsItem::SetEmpty()
 	m_nSumWithBonus = m_nSum = 0;
 	m_strDate.Empty();
 	m_mapNumbers.clear();
+	m_nYear = m_nMonth = m_nDay = 0;
 }
 
 INT32 CWinsItem::Parse(CString strRaw, CString strDelimeter)
@@ -39,7 +40,18 @@ INT32 CWinsItem::Parse(CString strRaw, CString strDelimeter)
 	for(INT32 nKey =  0 ; nIndex < arr.GetCount() ; nIndex++, nKey++)
 		m_mapNumbers.insert(make_pair(nKey, _ttoi(arr.GetAt(nIndex))));
 
-	return 0;
+	return _ParseDate(m_strDate);
+}
+
+INT32 CWinsItem::_ParseDate(CString& strDate)
+{
+	_stscanf_s(strDate, _T("%d.%d.%d"), &m_nYear, &m_nMonth, &m_nDay);
+
+	COleDateTime dt(m_nYear, m_nMonth, m_nDay, 0, 0, 0);
+	if (dt.GetStatus() == COleDateTime::valid)
+		return 0;
+	else 
+		return 1;
 }
 
 INT32	CWinsItem::GetWinNumbers(INT32 nIndex)

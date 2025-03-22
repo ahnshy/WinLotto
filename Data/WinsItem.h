@@ -20,6 +20,9 @@ public:
 
 	DWORD				GetRound()						{ return m_dwRound; }
 	CString				GetDate()						{ return m_strDate; }
+	INT32				GetYear()						{ return m_nYear;	}
+	INT32				GetMonth()						{ return m_nMonth;	}
+	INT32				GetDay()						{ return m_nDay;	}
 	INT32				GetNumberCount()				{ return m_mapNumbers.size(); }
 	MapWinsNumber&		GetNumberMap()					{ return m_mapNumbers; }
 	INT32				GetSum()						{ return m_nSum; }
@@ -35,10 +38,17 @@ public:
 	void				SetTotalWithBonus(DWORD dwSum)	{ m_nSumWithBonus = dwSum; }
 
 private:
+	INT32				_ParseDate(CString& strDate);
+
+private:
 	DWORD				m_dwRound;
 	CString				m_strDate;
 	MapWinsNumber		m_mapNumbers;
 
 	INT32				m_nSum;
 	INT32				m_nSumWithBonus;
+	
+	INT32				m_nYear;
+	INT32				m_nMonth;
+	INT32				m_nDay;
 };
