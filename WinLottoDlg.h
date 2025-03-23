@@ -50,6 +50,7 @@ protected:
 	CWinsListCtrl m_wndRoundWins;
 	//CWinsListCtrl m_wndListFrequency;
 	CListCtrlEx m_wndListFrequency;
+	CWinsListCtrl m_wndFrequencyPerMonth;
 
 	CSimulationCtrl	m_wndSimulation;
 	
@@ -58,6 +59,7 @@ protected:
 	void SetRoundListControl();
 	void SetLayout(INT32 nIndex);
 	void SetFrequncyListControl();
+	void SetFrequncyPerMonthListControl();
 
 	void OnSelectionChanged(OutlookTabCtrl *ctrl) override;
 	void OnRightButtonReleased(OutlookTabCtrl *ctrl, CPoint pt) override;

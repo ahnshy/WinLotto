@@ -55,6 +55,7 @@ int CWinLottoDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	
 	VERIFY(m_wndRoundWins.Create(WS_CHILD | LVS_REPORT, CRect(0, 0, 0, 0), this, 3004));
 	VERIFY(m_wndListFrequency.Create(WS_CHILD | LVS_REPORT | LVS_OWNERDRAWFIXED, CRect(0, 0, 0, 0), this, 3005));
+	VERIFY(m_wndFrequencyPerMonth.Create(WS_CHILD | LVS_REPORT, CRect(0, 0, 0, 0), this, 3006));
 
 	VERIFY(m_wndSimulation.Create(CSimulationCtrl::IDD, this));
 
@@ -166,7 +167,7 @@ BOOL CWinLottoDlg::OnInitDialog()
 
 	SetRoundListControl();
 	SetFrequncyListControl();
-
+	SetFrequncyPerMonthListControl();
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -225,7 +226,7 @@ void CWinLottoDlg::SetLayout(INT32 nIndex)
 			MultiPaneCtrl::Tabs tabs;
 			tabs.Add(m_wndOutlookTabCtrl, _T("Menus"), 0);
 			tabs.Add(m_wndListFrequency, _T("Frequency Numbers"), 1);
-			tabs.Add(m_wndRoundWins, _T("Number of monthly frequencies"), 2);
+			tabs.Add(m_wndFrequencyPerMonth, _T("Frequencies per month"), 2);
 
 			//if (!m_MPCC.LoadState(AfxGetApp(), _T("WinLottoLayout"), _T("State"), &tabs, false))
 			m_MPCC.DeleteAllPanes();
@@ -500,12 +501,110 @@ void CWinLottoDlg::SetRoundListControl()
 
 			if (m_wndRoundWins.GetSafeHwnd())
 				m_wndRoundWins.SetItemData(nCnt, (DWORD)itor->second);
-
-			//nCnt++;
 		}
 
 		for (int i = 0; i < m_wndRoundWins.GetHeaderCtrl().GetItemCount(); i++)
 			m_wndRoundWins.SetColumnWidth(i, LVSCW_AUTOSIZE_USEHEADER);
+	}
+	catch (...)
+	{
+	}
+}
+
+void CWinLottoDlg::SetFrequncyPerMonthListControl()
+{
+	// Initial Header
+	CRect rt;
+	GetClientRect(&rt);
+
+	LVCOLUMN itemColumn;
+	itemColumn.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
+
+
+	itemColumn.fmt = LVCFMT_LEFT;
+
+	CString strBuffer;
+	int nIndex = 0;
+	itemColumn.pszText = (_T("Ball"));
+	m_wndFrequencyPerMonth.InsertColumn(nIndex++, &itemColumn);
+	 
+	for (; nIndex <= MAX_MONTH ; nIndex++)
+	{
+		strBuffer.Format(_T("%dM"), nIndex);
+		itemColumn.pszText = ((LPTSTR)(LPCTSTR)strBuffer);
+		itemColumn.iSubItem = nIndex;
+		m_wndFrequencyPerMonth.InsertColumn(nIndex, &itemColumn);
+	}
+
+	m_wndFrequencyPerMonth.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_HEADERDRAGDROP);
+
+
+	// Initial item
+	LVITEM item;
+
+	try
+	{
+		CWinsNumberManager* pManager = CWinsNumberManager::GetInstance();
+		if (!pManager)
+			return;
+
+		MapMonthlyFrequency& m = pManager->GetFrequencyPerMonthMap();
+		
+		for (int nBall = 1; nBall <= MAX_BALLS; nBall++)
+		{
+			int nColumn = 0, nCnt = m_wndFrequencyPerMonth.GetItemCount();
+			for (MapMonthlyFrequency::iterator itor = m.begin(); itor != m.end(); ++itor)
+			{
+					item.iItem = nBall-1;
+					item.iSubItem = nColumn++;
+					strBuffer.Format(_T("%02d"), nBall);
+					item.pszText = (LPTSTR)(LPCTSTR)strBuffer;
+					item.mask = LVIF_TEXT;
+					if (m_wndFrequencyPerMonth.GetSafeHwnd())
+						m_wndFrequencyPerMonth.InsertItem(&item);
+
+					MapFrequency* pFrequncyMonthly = (MapFrequency*)itor->second;
+					if (pFrequncyMonthly)
+					{
+						MapFrequency::iterator mapItor = pFrequncyMonthly->find(nBall);
+						if (mapItor != pFrequncyMonthly->end())
+						{
+							strBuffer.Format(_T("%d"), mapItor->second);
+							item.iSubItem = nColumn;
+							item.pszText = (LPTSTR)(LPCTSTR)strBuffer;
+
+							if (m_wndFrequencyPerMonth.GetSafeHwnd())
+								m_wndFrequencyPerMonth.SetItem(&item);
+						}
+					}
+			}
+		}
+
+		// Row가 월별 - ListControl 하단에 여백이 많음.
+		//for (MapMonthlyFrequency::iterator itor = m.begin(); itor != m.end(); ++itor)
+		//{
+		//	item.iItem = nBall;
+		//	item.iSubItem = itor->first;
+		//	strBuffer.Format(_T("%02d"), nRow);
+		//	item.pszText = (LPTSTR)(LPCTSTR)strBuffer;
+		//	item.mask = LVIF_TEXT;
+		//	if (m_wndFrequencyPerMonth.GetSafeHwnd())
+		//		m_wndFrequencyPerMonth.InsertItem(&item);
+
+			//	MapFrequency* pFrequncyMonthly = (MapFrequency*)itor->second;
+			//	for (MapFrequency::iterator mapitor = pFrequncyMonthly->begin(); mapitor != pFrequncyMonthly->end(); ++mapitor)
+			//	{
+			//		item.iSubItem = ++nColumn;
+			//		strBuffer.Format(_T("%d"), mapitor->second);
+
+			//		item.pszText = (LPTSTR)(LPCTSTR)strBuffer;
+			//		if (m_wndFrequencyPerMonth.GetSafeHwnd())
+			//			m_wndFrequencyPerMonth.SetItem(&item);
+			//	}
+		//}
+
+		for (int i = 0; i < m_wndFrequencyPerMonth.GetHeaderCtrl().GetItemCount(); i++)
+			m_wndFrequencyPerMonth.SetColumnWidth(i, LVSCW_AUTOSIZE_USEHEADER);
 	}
 	catch (...)
 	{
@@ -553,7 +652,7 @@ void CWinLottoDlg::SetFrequncyListControl()
 			return;
 
 		DWORD dwTotalCount = pManager->GetTotalCount();
-		vector<pairDataType>* pVector = pManager->GetFrequencyVector();
+		const vector<pairDataType>* pVector = pManager->GetFrequencyVector();
 		if (pVector == NULL || pVector->size() <= 0)
 			return;
 
