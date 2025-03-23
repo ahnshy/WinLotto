@@ -46,6 +46,7 @@ public:
 	MapFrequencyPerDate&		GetFrequencyPerDayMap()			{ return m_mapFrequencyPerDay; }
 
 	DWORD						GetTotalCount()					{ return m_dwTotalCount; }
+	CString						GetLastestDate();
 
 	void						RemoveAll();
 

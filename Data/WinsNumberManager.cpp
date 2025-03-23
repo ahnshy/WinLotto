@@ -105,6 +105,16 @@ void CWinsNumberManager::RemoveAll()
 	}
 }
 
+CString CWinsNumberManager::GetLastestDate()
+{
+	CString strResult(_T(""));
+	if (m_mapRounds.empty())
+		return strResult;
+
+	auto it = m_mapRounds.rbegin();
+	return it->second->GetDate();
+}
+
 void CWinsNumberManager::ReadConfig()
 {
 	// to do...
