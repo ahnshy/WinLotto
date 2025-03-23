@@ -57,8 +57,9 @@ int CWinLottoDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	
 	VERIFY(m_wndRoundWins.Create(WS_CHILD | LVS_REPORT, CRect(0, 0, 0, 0), this, 3004));
 	VERIFY(m_wndListFrequency.Create(WS_CHILD | LVS_REPORT | LVS_OWNERDRAWFIXED, CRect(0, 0, 0, 0), this, 3005));
-	VERIFY(m_wndFrequencyPerMonth.Create(WS_CHILD | LVS_REPORT, CRect(0, 0, 0, 0), this, 3006));
-	VERIFY(m_wndFrequencyPerDay.Create(WS_CHILD | LVS_REPORT, CRect(0, 0, 0, 0), this, 3007));
+	VERIFY(m_wndFrequencyPerYear.Create(WS_CHILD | LVS_REPORT, CRect(0, 0, 0, 0), this, 3006));
+	VERIFY(m_wndFrequencyPerMonth.Create(WS_CHILD | LVS_REPORT, CRect(0, 0, 0, 0), this, 3007));
+	VERIFY(m_wndFrequencyPerDay.Create(WS_CHILD | LVS_REPORT, CRect(0, 0, 0, 0), this, 3008));
 
 	VERIFY(m_wndSimulation.Create(CSimulationCtrl::IDD, this));
 
@@ -170,6 +171,7 @@ BOOL CWinLottoDlg::OnInitDialog()
 
 	SetRoundListControl();
 	SetFrequncyListControl();
+	SetFrequncyPerYearListControl();
 	SetFrequncyPerMonthListControl();
 	SetFrequncyPerDayListControl();
 
@@ -229,8 +231,9 @@ void CWinLottoDlg::SetLayout(INT32 nIndex)
 			MultiPaneCtrl::Tabs tabs;
 			tabs.Add(m_wndOutlookTabCtrl, _T("Menus"), 0);
 			tabs.Add(m_wndListFrequency, _T("Frequency Numbers"), 1);
-			tabs.Add(m_wndFrequencyPerMonth, _T("per month"), 2);
-			tabs.Add(m_wndFrequencyPerDay, _T("per day"), 3);
+			tabs.Add(m_wndFrequencyPerYear, _T("Per Year"), 2);
+			tabs.Add(m_wndFrequencyPerMonth, _T("Per Month"), 3);
+			tabs.Add(m_wndFrequencyPerDay, _T("Per Day"), 4);
 
 			//if (!m_MPCC.LoadState(AfxGetApp(), _T("WinLottoLayout"), _T("State"), &tabs, false))
 			m_MPCC.DeleteAllPanes();
@@ -300,6 +303,7 @@ void CWinLottoDlg::SetLayout(INT32 nIndex)
 				{
 					SetRoundListControl();
 					SetFrequncyListControl();
+					SetFrequncyPerYearListControl();
 					SetFrequncyPerMonthListControl();
 					SetFrequncyPerDayListControl();
 				}
@@ -791,6 +795,90 @@ void CWinLottoDlg::SetFrequncyPerMonthListControl()
 	{
 	}
 }
+
+void CWinLottoDlg::SetFrequncyPerYearListControl()
+{
+	m_wndFrequencyPerYear.DeleteAllItems();
+	while (m_wndFrequencyPerYear.DeleteColumn(0));
+
+	// Initial Header
+	CRect rt;
+	GetClientRect(&rt);
+
+	LVCOLUMN itemColumn;
+	itemColumn.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
+	itemColumn.fmt = LVCFMT_LEFT;
+
+	CString strBuffer;
+	int nIndex = 0;
+	itemColumn.pszText = (_T("Ball"));
+	m_wndFrequencyPerYear.InsertColumn(nIndex++, &itemColumn);
+
+	CWinsNumberManager* pManager = CWinsNumberManager::GetInstance();
+	if (!pManager)
+		return;
+
+	MapFrequencyPerDate& m = pManager->GetFrequencyPerYearMap();
+	for (MapFrequencyPerDate::iterator itor = m.begin(); itor != m.end(); ++itor)
+	{
+		strBuffer.Format(_T("%d"), itor->first);
+		itemColumn.pszText = ((LPTSTR)(LPCTSTR)strBuffer);
+		itemColumn.iSubItem = nIndex;
+		m_wndFrequencyPerYear.InsertColumn(nIndex, &itemColumn);
+	}
+
+	m_wndFrequencyPerYear.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_HEADERDRAGDROP);
+
+
+	// Initial item
+	LVITEM item;
+
+	try
+	{
+		CWinsNumberManager* pManager = CWinsNumberManager::GetInstance();
+		if (!pManager)
+			return;
+
+		MapFrequencyPerDate& m = pManager->GetFrequencyPerDayMap();
+
+		for (int nBall = 1; nBall <= MAX_BALLS; nBall++)
+		{
+			int nColumn = 0, nCnt = m_wndFrequencyPerYear.GetItemCount();
+			for (MapFrequencyPerDate::iterator itor = m.begin(); itor != m.end(); ++itor)
+			{
+				item.iItem = nBall - 1;
+				item.iSubItem = nColumn++;
+				strBuffer.Format(_T("%02d"), nBall);
+				item.pszText = (LPTSTR)(LPCTSTR)strBuffer;
+				item.mask = LVIF_TEXT;
+				if (m_wndFrequencyPerYear.GetSafeHwnd())
+					m_wndFrequencyPerYear.InsertItem(&item);
+
+				MapFrequency* pFrequncyYear = (MapFrequency*)itor->second;
+				if (pFrequncyYear)
+				{
+					MapFrequency::iterator mapItor = pFrequncyYear->find(nBall);
+					if (mapItor != pFrequncyYear->end())
+					{
+						strBuffer.Format(_T("%d"), mapItor->second);
+						item.iSubItem = nColumn;
+						item.pszText = (LPTSTR)(LPCTSTR)strBuffer;
+
+						if (m_wndFrequencyPerYear.GetSafeHwnd())
+							m_wndFrequencyPerYear.SetItem(&item);
+					}
+				}
+			}
+		}
+
+		for (int i = 0; i < m_wndFrequencyPerYear.GetHeaderCtrl().GetItemCount(); i++)
+			m_wndFrequencyPerYear.SetColumnWidth(i, LVSCW_AUTOSIZE_USEHEADER);
+	}
+	catch (...)
+	{
+	}
+}
+
 
 void CWinLottoDlg::SetFrequncyListControl()
 {

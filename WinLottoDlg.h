@@ -52,6 +52,7 @@ protected:
 	CWinsListCtrl m_wndRoundWins;
 	//CWinsListCtrl m_wndListFrequency;
 	CListCtrlEx m_wndListFrequency;
+	CWinsListCtrl m_wndFrequencyPerYear;
 	CWinsListCtrl m_wndFrequencyPerMonth;
 	CWinsListCtrl m_wndFrequencyPerDay;
 
@@ -64,6 +65,7 @@ protected:
 	void SetLayout(INT32 nIndex);
 	void SetFrequncyListControl();
 
+	void SetFrequncyPerYearListControl();
 	void SetFrequncyPerMonthListControl();
 	void SetFrequncyPerDayListControl();
 
