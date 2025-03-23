@@ -189,6 +189,8 @@ INT32 CWinsNumberManager::Initialize(CStringArray& arrRounds)
 					m_mapFrequencyPerYear.insert(make_pair(pItem->GetYear(), pFrequencyPerYear));
 				}
 			}
+			else
+				pFrequencyPerYear = m_mapFrequencyPerYear[pItem->GetYear()];
 
 			nSumWithBonus = nSum = 0;
 			for (MapWinsNumber::iterator itor = pItem->GetNumberMap().begin(); itor != pItem->GetNumberMap().end(); ++itor)
