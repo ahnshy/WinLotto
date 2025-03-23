@@ -8,6 +8,8 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
+#define DOWNLOAD_LOTTERY_URL _T("https://dhlottery.co.kr/gameResult.do?method=allWinExel&gubun=byWin&nowPage=&drwNoStart=1&drwNoEnd=9999")
+
 CHttpHelper::CHttpHelper()
 {
 	_internet_handle = nullptr;
@@ -30,7 +32,14 @@ BOOL CHttpHelper::Initialize()
 
 	return TRUE;
 }
-BOOL CHttpHelper::GetHttpFile(CString strUrl, CString strPath)
+
+BOOL CHttpHelper::GetHttpFile(CString& strPath)
+{
+	CString strUrl = DOWNLOAD_LOTTERY_URL;
+	return GetHttpFile(strUrl, strPath);
+}
+
+BOOL CHttpHelper::GetHttpFile(CString& strUrl, CString& strPath)
 {
 	BOOL bResult = FALSE;
 	do {

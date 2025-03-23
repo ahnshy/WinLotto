@@ -14,10 +14,12 @@ public:
     CHttpHelper();
     ~CHttpHelper();
 public:
-    BOOL GetHttpFile(CString strUrl,  CString strPath);
+	BOOL GetHttpFile(CString& strPath);
 
 private:
 	BOOL Initialize();
+	BOOL GetHttpFile(CString& strUrl, CString& strPath);
+
 private:
     HINTERNET _internet_handle;
 };
