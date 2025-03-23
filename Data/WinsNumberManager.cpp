@@ -161,6 +161,7 @@ INT32 CWinsNumberManager::Initialize(CStringArray& arrRounds)
 		}
 	}
 
+	MapFrequency* pFrequencyPerYear = NULL;
 	for(INT32 nIndex =  0 ; nIndex < arrRounds.GetCount() ; nIndex++)
 	{
 		strBuffer = arrRounds.GetAt(nIndex);
@@ -175,6 +176,19 @@ INT32 CWinsNumberManager::Initialize(CStringArray& arrRounds)
 			
 			pFrequncyMonthly = m_mapFrequencyPerMonth[pItem->GetMonth()];
 			pFrequencyPerDay = m_mapFrequencyPerDay[pItem->GetDay()];
+			
+			MapFrequencyPerDate::iterator itorYear = m_mapFrequencyPerYear.find(pItem->GetYear());
+			if (itorYear == m_mapFrequencyPerYear.end())
+			{
+				pFrequencyPerYear = new MapFrequency();
+				if (pFrequencyPerYear)
+				{
+					for (INT32 nBallCount = 1; nBallCount <= MAX_BALLS; nBallCount++)
+						pFrequencyPerYear->insert(make_pair(nBallCount, 0));
+
+					m_mapFrequencyPerYear.insert(make_pair(pItem->GetYear(), pFrequencyPerYear));
+				}
+			}
 
 			nSumWithBonus = nSum = 0;
 			for (MapWinsNumber::iterator itor = pItem->GetNumberMap().begin(); itor != pItem->GetNumberMap().end(); ++itor)
@@ -182,6 +196,9 @@ INT32 CWinsNumberManager::Initialize(CStringArray& arrRounds)
 				m_mapFrequencyWithBonus[itor->second]++;
 				nSumWithBonus += itor->second;
 				m_dwTotalCount++;
+
+				if (pFrequencyPerYear)
+					(*pFrequencyPerYear)[itor->second]++;
 
 				if (pFrequncyMonthly)
 					(*pFrequncyMonthly)[itor->second]++;
