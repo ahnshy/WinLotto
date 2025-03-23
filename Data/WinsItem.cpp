@@ -24,7 +24,7 @@ void CWinsItem::SetEmpty()
 	m_dwRound = 0;
 	m_nSumWithBonus = m_nSum = 0;
 	m_strDate.Empty();
-	m_setYears.clear();
+	//m_setYears.clear();
 	m_mapNumbers.clear();
 	m_nYear = m_nMonth = m_nDay = 0;
 }
@@ -47,7 +47,7 @@ INT32 CWinsItem::Parse(CString strRaw, CString strDelimeter)
 INT32 CWinsItem::_ParseDate(CString& strDate)
 {
 	_stscanf_s(strDate, _T("%d.%d.%d"), &m_nYear, &m_nMonth, &m_nDay);
-	m_setYears.insert(m_nYear);
+	//m_setYears.insert(m_nYear);
 
 	COleDateTime dt(m_nYear, m_nMonth, m_nDay, 0, 0, 0);
 	if (dt.GetStatus() == COleDateTime::valid)

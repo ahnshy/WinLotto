@@ -8,7 +8,7 @@
 #include <map>
 using namespace std;
 
-typedef set<UINT32>						SetWinsYears;
+//typedef set<UINT32>						SetWinsYears;
 typedef map<DWORD, INT32>				MapWinsNumber;
 
 class CWinsItem
@@ -25,7 +25,7 @@ public:
 	INT32				GetMonth()						{ return m_nMonth;	}
 	INT32				GetDay()						{ return m_nDay;	}
 	INT32				GetNumberCount()				{ return m_mapNumbers.size(); }
-	SetWinsYears&		GetYearSet()					{ return m_setYears;}
+	//SetWinsYears&		GetYearSet()					{ return m_setYears;}
 	MapWinsNumber&		GetNumberMap()					{ return m_mapNumbers; }
 	INT32				GetSum()						{ return m_nSum; }
 	INT32				GetSumWithBonus()				{ return m_nSumWithBonus; }
@@ -46,7 +46,7 @@ private:
 	DWORD				m_dwRound;
 	CString				m_strDate;
 	MapWinsNumber		m_mapNumbers;
-	SetWinsYears		m_setYears;
+	//SetWinsYears		m_setYears;
 
 	INT32				m_nSum;
 	INT32				m_nSumWithBonus;
