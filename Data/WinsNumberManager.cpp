@@ -20,22 +20,6 @@
 #define CONFIG_WINLOTTO_FILENAME							TEXT("WinLotto.ini")
 #define CONFIG_SECTION_CONFIG								TEXT("Config")
 
-enum Month {
-	JANUARY = 1,
-	FEBRUARY,
-	MARCH,
-	APRIL,
-	MAY,
-	JUNE,
-	JULY,
-	AUGUST,
-	SEPTEMBER,
-	OCTOBER,
-	NOVEMBER,
-	DECEMBER,
-	MAX_MONTH = DECEMBER
-};
-
 //bool fnCompare(const <INT32, INT32>& a, const <INT32, INT32>& b)
 //{
 //	if (a.second == b.second) return a.first < b.first;

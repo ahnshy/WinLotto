@@ -37,9 +37,10 @@ public:
 	void						ReadConfig();
 
 	// Getter / Setter
-	MapRounds&					GetRoundMap()					{ return m_mapRounds;	}
-	vector<pairDataType>*		GetFrequencyVector()			{ return m_pFrequency; }
-	vector<pairDataType>*		GetFrequencyBonusRoundVector()	{ return m_pFrequencyWithBonus; }
+	MapRounds&					GetRoundMap()					{ return m_mapRounds; }
+	const vector<pairDataType>*	GetFrequencyVector()			{ return m_pFrequency; }
+	const vector<pairDataType>*	GetFrequencyBonusRoundVector()	{ return m_pFrequencyWithBonus; }
+	MapMonthlyFrequency&		GetFrequencyPerMonthMap()		{ return m_mapFrequencyPerMonth; }
 
 	DWORD						GetTotalCount()					{ return m_dwTotalCount; }
 
@@ -57,4 +58,21 @@ protected:
 	vector<pairDataType>*		m_pFrequencyWithBonus;
 
 	static CWinsNumberManager*	m_pWinsNumberManager;
+};
+
+enum eMonth
+{
+	JANUARY = 1,
+	FEBRUARY,
+	MARCH,
+	APRIL,
+	MAY,
+	JUNE,
+	JULY,
+	AUGUST,
+	SEPTEMBER,
+	OCTOBER,
+	NOVEMBER,
+	DECEMBER,
+	MAX_MONTH = DECEMBER
 };
