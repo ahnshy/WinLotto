@@ -580,7 +580,7 @@ void CWinLottoDlg::SetFrequncyPerMonthListControl()
 			}
 		}
 
-		// Row가 월별 - ListControl 하단에 여백이 많음.
+		// Row is a month. - bottom of ListControl has a extra space
 		//for (MapMonthlyFrequency::iterator itor = m.begin(); itor != m.end(); ++itor)
 		//{
 		//	item.iItem = nBall;
