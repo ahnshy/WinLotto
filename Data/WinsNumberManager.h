@@ -16,7 +16,7 @@ typedef pair<int, int> pairDataType;
 
 typedef map<DWORD, CWinsItem*>				MapRounds;
 typedef map<INT32, INT32>					MapFrequency;
-typedef map<INT32, MapFrequency*>			MapMonthlyFrequency;
+typedef map<INT32, MapFrequency*>			MapFrequencyPerDate;
 
 //typedef vector<pairDataType>	vectorFrequency;
 
@@ -40,7 +40,7 @@ public:
 	MapRounds&					GetRoundMap()					{ return m_mapRounds; }
 	const vector<pairDataType>*	GetFrequencyVector()			{ return m_pFrequency; }
 	const vector<pairDataType>*	GetFrequencyBonusRoundVector()	{ return m_pFrequencyWithBonus; }
-	MapMonthlyFrequency&		GetFrequencyPerMonthMap()		{ return m_mapFrequencyPerMonth; }
+	MapFrequencyPerDate&		GetFrequencyPerMonthMap()		{ return m_mapFrequencyPerMonth; }
 
 	DWORD						GetTotalCount()					{ return m_dwTotalCount; }
 
@@ -52,7 +52,9 @@ protected:
 	MapFrequency				m_mapFrequency;
 	MapFrequency				m_mapFrequencyWithBonus;
 
-	MapMonthlyFrequency			m_mapFrequencyPerMonth;
+	MapFrequencyPerDate			m_mapFrequencyPerYear;
+	MapFrequencyPerDate			m_mapFrequencyPerMonth;
+	MapFrequencyPerDate			m_mapFrequencyPerDay;
 	
 	vector<pairDataType>*		m_pFrequency;
 	vector<pairDataType>*		m_pFrequencyWithBonus;

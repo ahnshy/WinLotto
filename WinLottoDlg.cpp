@@ -548,12 +548,12 @@ void CWinLottoDlg::SetFrequncyPerMonthListControl()
 		if (!pManager)
 			return;
 
-		MapMonthlyFrequency& m = pManager->GetFrequencyPerMonthMap();
+		MapFrequencyPerDate& m = pManager->GetFrequencyPerMonthMap();
 		
 		for (int nBall = 1; nBall <= MAX_BALLS; nBall++)
 		{
 			int nColumn = 0, nCnt = m_wndFrequencyPerMonth.GetItemCount();
-			for (MapMonthlyFrequency::iterator itor = m.begin(); itor != m.end(); ++itor)
+			for (MapFrequencyPerDate::iterator itor = m.begin(); itor != m.end(); ++itor)
 			{
 					item.iItem = nBall-1;
 					item.iSubItem = nColumn++;
