@@ -556,7 +556,7 @@ void CWinLottoDlg::SetFrequncyPerDayListControl()
 
 	for (; nIndex <= MAX_DAYS; nIndex++)
 	{
-		strBuffer.Format(_T("%dM"), nIndex);
+		strBuffer.Format(_T("%dD"), nIndex);
 		itemColumn.pszText = ((LPTSTR)(LPCTSTR)strBuffer);
 		itemColumn.iSubItem = nIndex;
 		m_wndFrequencyPerDay.InsertColumn(nIndex, &itemColumn);
@@ -574,7 +574,7 @@ void CWinLottoDlg::SetFrequncyPerDayListControl()
 		if (!pManager)
 			return;
 
-		MapFrequencyPerDate& m = pManager->GetFrequencyPerMonthMap();
+		MapFrequencyPerDate& m = pManager->GetFrequencyPerDayMap();
 
 		for (int nBall = 1; nBall <= MAX_BALLS; nBall++)
 		{
