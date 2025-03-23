@@ -78,7 +78,11 @@ void CWinsNumberManager::RemoveAll()
 	m_mapRounds.clear();
 	m_mapFrequency.clear();
 	m_mapFrequencyWithBonus.clear();
+	
+	m_mapFrequencyPerYear.clear();
 	m_mapFrequencyPerMonth.clear();
+	m_mapFrequencyPerDay.clear();
+
 
 	if (m_pFrequency)
 	{
