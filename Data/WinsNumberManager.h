@@ -13,6 +13,7 @@
 typedef pair<int, int> pairDataType;
 
 #define MAX_BALLS				45
+#define MAX_DAYS				31
 
 typedef map<DWORD, CWinsItem*>				MapRounds;
 typedef map<INT32, INT32>					MapFrequency;

@@ -138,6 +138,19 @@ INT32 CWinsNumberManager::Initialize(CStringArray& arrRounds)
 		}
 	}
 
+	MapFrequency* pFrequencyPerDay = NULL;
+	for (INT32 nDays = 1; nDays <= MAX_DAYS; nDays++)
+	{
+		pFrequencyPerDay = new MapFrequency();
+		if (pFrequencyPerDay)
+		{
+			for (INT32 nBallCount = 1; nBallCount <= MAX_BALLS; nBallCount++)
+				pFrequencyPerDay->insert(make_pair(nBallCount, 0));
+
+			m_mapFrequencyPerDay.insert(make_pair(nDays, pFrequencyPerDay));
+		}
+	}
+
 	for(INT32 nIndex =  0 ; nIndex < arrRounds.GetCount() ; nIndex++)
 	{
 		strBuffer = arrRounds.GetAt(nIndex);
