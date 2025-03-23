@@ -8,6 +8,7 @@
 #include "afxdialogex.h"
 
 #include <new>
+#include <afxtaskdialog.h>
 
 #include "Data/WinsNumberManager.h"
 
@@ -269,6 +270,30 @@ void CWinLottoDlg::SetLayout(INT32 nIndex)
 	{
 		try
 		{
+
+			const INT32 nUpdateCommand = 100;
+			CString strBuffer;
+			strBuffer.LoadString(IDS_APP_NAME);
+
+			CTaskDialog dlg(_T("Update on the DongHang lottery server.\nhttps://dhlottery.co.kr/en/html/Introduction.html"), _T("Do you want to update winning number?"), strBuffer, TDCBF_CLOSE_BUTTON);
+			dlg.SetMainIcon(TD_SHIELD_ICON);
+			dlg.SetFooterIcon(TD_INFORMATION_ICON);
+
+			CWinsNumberManager* pNumberManager = CWinsNumberManager::GetInstance();
+			if (pNumberManager)
+				strBuffer.Format(_T("Winning number will be initialized weekly.(Last Update : %s)"), pNumberManager->GetLastestDate());
+			else
+				strBuffer.Format(_T("Winning number will be initialized weekly."));
+			dlg.SetFooterText(strBuffer);
+			dlg.AddCommandControl(nUpdateCommand, _T("Update"));
+
+			int iPixelWidth = (::GetSystemMetrics(SM_CXSCREEN) / 100) * 25;
+			int iDialogUnitsWidth = MulDiv(iPixelWidth, 4, LOWORD(GetDialogBaseUnits()));
+			dlg.SetDialogWidth(iDialogUnitsWidth);
+
+			if (dlg.DoModal() != nUpdateCommand)
+				return;
+
 			CWinLottoApp *pApp = (CWinLottoApp*)AfxGetApp();
 			if (pApp)
 			{
