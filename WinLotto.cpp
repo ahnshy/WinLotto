@@ -113,7 +113,7 @@ BOOL CWinLottoApp::InitInstance()
 	return FALSE;
 }
 
-INT32 CWinLottoApp::UpdateWinsNumber()
+INT32 CWinLottoApp::UpdateWinsNumber(BOOL bIsDeleteCache)
 {
 	CPathManager* pPathManager = CPathManager::GetInstance();
 	if (!pPathManager)
@@ -122,11 +122,14 @@ INT32 CWinLottoApp::UpdateWinsNumber()
 	CString strRoundFIle = pPathManager->GetRoundFilePath();
 	if (!strRoundFIle.IsEmpty())
 	{
-		if (PathFileExists(strRoundFIle))
+		if (bIsDeleteCache)
 			_tunlink((LPCTSTR)strRoundFIle);
 
-		CHttpHelper http;
-		http.GetHttpFile(strRoundFIle);
+		if (!PathFileExists(strRoundFIle))
+		{
+			CHttpHelper http;
+			http.GetHttpFile(strRoundFIle);
+		}
 	}
 
 	CHtmlParser dom;
@@ -135,8 +138,11 @@ INT32 CWinLottoApp::UpdateWinsNumber()
 
 	CWinsNumberManager* pNumberManager = CWinsNumberManager::GetInstance();
 	if (pNumberManager)
+	{
+		pNumberManager->RemoveAll();
 		pNumberManager->Initialize(strArray);
-
+	}
+	
 	return 0;
 }
 

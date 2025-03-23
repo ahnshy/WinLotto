@@ -25,7 +25,7 @@ public:
 	virtual BOOL	InitInstance();
 	virtual int		ExitInstance();
 
-	INT32			UpdateWinsNumber();
+	INT32			UpdateWinsNumber(BOOL bIsDeleteCache= FALSE);
 
 // Implementation
 
