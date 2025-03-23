@@ -269,10 +269,9 @@ void CWinLottoDlg::SetLayout(INT32 nIndex)
 	{
 		try
 		{
-			//MultiPaneCtrl::Tabs tabs;
-			//tabs.Add(m_wndOutlookTabCtrl, _T("Menus"), 0);
-			//SetDefaultLayout(tabs);   // create default state.
-			//m_MPCC.Update();
+			CWinLottoApp *pApp = (CWinLottoApp*)AfxGetApp();
+			if (pApp)
+				pApp->UpdateWinsNumber(TRUE);
 		}
 		catch (std::bad_alloc &)
 		{
