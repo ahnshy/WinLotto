@@ -164,6 +164,7 @@ INT32 CWinsNumberManager::Initialize(CStringArray& arrRounds)
 			m_mapRounds.insert(make_pair(pItem->GetRound(), pItem));
 			
 			pFrequncyMonthly = m_mapFrequencyPerMonth[pItem->GetMonth()];
+			pFrequencyPerDay = m_mapFrequencyPerDay[pItem->GetDay()];
 
 			nSumWithBonus = nSum = 0;
 			for (MapWinsNumber::iterator itor = pItem->GetNumberMap().begin(); itor != pItem->GetNumberMap().end(); ++itor)
@@ -174,6 +175,9 @@ INT32 CWinsNumberManager::Initialize(CStringArray& arrRounds)
 
 				if (pFrequncyMonthly)
 					(*pFrequncyMonthly)[itor->second]++;
+
+				if (pFrequencyPerDay)
+					(*pFrequencyPerDay)[itor->second]++;
 
 				if (itor->first == 6)
 					continue;
