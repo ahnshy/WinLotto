@@ -40,7 +40,9 @@ public:
 	MapRounds&					GetRoundMap()					{ return m_mapRounds; }
 	const vector<pairDataType>*	GetFrequencyVector()			{ return m_pFrequency; }
 	const vector<pairDataType>*	GetFrequencyBonusRoundVector()	{ return m_pFrequencyWithBonus; }
+	MapFrequencyPerDate&		GetFrequencyPerYearMap()		{ return m_mapFrequencyPerYear; }
 	MapFrequencyPerDate&		GetFrequencyPerMonthMap()		{ return m_mapFrequencyPerMonth; }
+	MapFrequencyPerDate&		GetFrequencyPerDayMap()			{ return m_mapFrequencyPerDay; }
 
 	DWORD						GetTotalCount()					{ return m_dwTotalCount; }
 
