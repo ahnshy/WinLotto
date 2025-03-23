@@ -56,6 +56,7 @@ int CWinLottoDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	VERIFY(m_wndRoundWins.Create(WS_CHILD | LVS_REPORT, CRect(0, 0, 0, 0), this, 3004));
 	VERIFY(m_wndListFrequency.Create(WS_CHILD | LVS_REPORT | LVS_OWNERDRAWFIXED, CRect(0, 0, 0, 0), this, 3005));
 	VERIFY(m_wndFrequencyPerMonth.Create(WS_CHILD | LVS_REPORT, CRect(0, 0, 0, 0), this, 3006));
+	VERIFY(m_wndFrequencyPerDay.Create(WS_CHILD | LVS_REPORT, CRect(0, 0, 0, 0), this, 3007));
 
 	VERIFY(m_wndSimulation.Create(CSimulationCtrl::IDD, this));
 
@@ -168,6 +169,8 @@ BOOL CWinLottoDlg::OnInitDialog()
 	SetRoundListControl();
 	SetFrequncyListControl();
 	SetFrequncyPerMonthListControl();
+	SetFrequncyPerDayListControl();
+
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -226,11 +229,12 @@ void CWinLottoDlg::SetLayout(INT32 nIndex)
 			MultiPaneCtrl::Tabs tabs;
 			tabs.Add(m_wndOutlookTabCtrl, _T("Menus"), 0);
 			tabs.Add(m_wndListFrequency, _T("Frequency Numbers"), 1);
-			tabs.Add(m_wndFrequencyPerMonth, _T("Frequencies per month"), 2);
+			tabs.Add(m_wndFrequencyPerMonth, _T("per month"), 2);
+			tabs.Add(m_wndFrequencyPerDay, _T("per day"), 3);
 
 			//if (!m_MPCC.LoadState(AfxGetApp(), _T("WinLottoLayout"), _T("State"), &tabs, false))
 			m_MPCC.DeleteAllPanes();
-			SetDefaultLayout(tabs);   // create default state.
+			SetDefaultLayoutAddTab(tabs);   // create default state.
 
 			m_MPCC.Update();
 		}
@@ -331,6 +335,28 @@ void CWinLottoDlg::SetTabsPosition()
 		GetClientRect(&rc/*out*/);
 		rc.DeflateRect(rcBase.left, rcBase.top, rcBase.top, rcBase.top);
 		m_MPCC.MoveWindow(&rc);
+	}
+}
+
+void CWinLottoDlg::SetDefaultLayoutAddTab(MultiPaneCtrl::Tabs const &tabs)
+{
+	HPANE h1 = m_MPCC.ConvertPaneToLine(nullptr, true);
+	HPANE h2 = m_MPCC.ConvertPaneToLine(h1, false);
+	HPANE h3 = m_MPCC.ConvertPaneToLine(h2, true);
+	HPANE h4 = m_MPCC.AddPane(h2);
+
+	if (tabs.GetNumber() <= 0)
+		return;
+
+	HPANE hTarget = nullptr;
+	for (INT32 nIndex = 0; nIndex < tabs.GetNumber(); nIndex++)
+	{
+		if (nIndex == 0)
+			hTarget = h3;
+		else
+			hTarget = h4;
+
+		m_MPCC.AddTab(hTarget, tabs[nIndex]);
 	}
 }
 
@@ -505,6 +531,106 @@ void CWinLottoDlg::SetRoundListControl()
 
 		for (int i = 0; i < m_wndRoundWins.GetHeaderCtrl().GetItemCount(); i++)
 			m_wndRoundWins.SetColumnWidth(i, LVSCW_AUTOSIZE_USEHEADER);
+	}
+	catch (...)
+	{
+	}
+}
+
+void CWinLottoDlg::SetFrequncyPerDayListControl()
+{
+	// Initial Header
+	CRect rt;
+	GetClientRect(&rt);
+
+	LVCOLUMN itemColumn;
+	itemColumn.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
+
+
+	itemColumn.fmt = LVCFMT_LEFT;
+
+	CString strBuffer;
+	int nIndex = 0;
+	itemColumn.pszText = (_T("Ball"));
+	m_wndFrequencyPerDay.InsertColumn(nIndex++, &itemColumn);
+
+	for (; nIndex <= MAX_DAYS; nIndex++)
+	{
+		strBuffer.Format(_T("%dM"), nIndex);
+		itemColumn.pszText = ((LPTSTR)(LPCTSTR)strBuffer);
+		itemColumn.iSubItem = nIndex;
+		m_wndFrequencyPerDay.InsertColumn(nIndex, &itemColumn);
+	}
+
+	m_wndFrequencyPerDay.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_HEADERDRAGDROP);
+
+
+	// Initial item
+	LVITEM item;
+
+	try
+	{
+		CWinsNumberManager* pManager = CWinsNumberManager::GetInstance();
+		if (!pManager)
+			return;
+
+		MapFrequencyPerDate& m = pManager->GetFrequencyPerMonthMap();
+
+		for (int nBall = 1; nBall <= MAX_BALLS; nBall++)
+		{
+			int nColumn = 0, nCnt = m_wndFrequencyPerDay.GetItemCount();
+			for (MapFrequencyPerDate::iterator itor = m.begin(); itor != m.end(); ++itor)
+			{
+				item.iItem = nBall - 1;
+				item.iSubItem = nColumn++;
+				strBuffer.Format(_T("%02d"), nBall);
+				item.pszText = (LPTSTR)(LPCTSTR)strBuffer;
+				item.mask = LVIF_TEXT;
+				if (m_wndFrequencyPerDay.GetSafeHwnd())
+					m_wndFrequencyPerDay.InsertItem(&item);
+
+				MapFrequency* pFrequncyDay = (MapFrequency*)itor->second;
+				if (pFrequncyDay)
+				{
+					MapFrequency::iterator mapItor = pFrequncyDay->find(nBall);
+					if (mapItor != pFrequncyDay->end())
+					{
+						strBuffer.Format(_T("%d"), mapItor->second);
+						item.iSubItem = nColumn;
+						item.pszText = (LPTSTR)(LPCTSTR)strBuffer;
+
+						if (m_wndFrequencyPerDay.GetSafeHwnd())
+							m_wndFrequencyPerDay.SetItem(&item);
+					}
+				}
+			}
+		}
+
+		// Row is a month. - bottom of ListControl has a extra space
+		//for (MapMonthlyFrequency::iterator itor = m.begin(); itor != m.end(); ++itor)
+		//{
+		//	item.iItem = nBall;
+		//	item.iSubItem = itor->first;
+		//	strBuffer.Format(_T("%02d"), nRow);
+		//	item.pszText = (LPTSTR)(LPCTSTR)strBuffer;
+		//	item.mask = LVIF_TEXT;
+		//	if (m_wndFrequencyPerDay.GetSafeHwnd())
+		//		m_wndFrequencyPerDay.InsertItem(&item);
+
+		//	MapFrequency* pFrequncyMonthly = (MapFrequency*)itor->second;
+		//	for (MapFrequency::iterator mapitor = pFrequncyMonthly->begin(); mapitor != pFrequncyMonthly->end(); ++mapitor)
+		//	{
+		//		item.iSubItem = ++nColumn;
+		//		strBuffer.Format(_T("%d"), mapitor->second);
+
+		//		item.pszText = (LPTSTR)(LPCTSTR)strBuffer;
+		//		if (m_wndFrequencyPerDay.GetSafeHwnd())
+		//			m_wndFrequencyPerDay.SetItem(&item);
+		//	}
+		//}
+
+		for (int i = 0; i < m_wndFrequencyPerDay.GetHeaderCtrl().GetItemCount(); i++)
+			m_wndFrequencyPerDay.SetColumnWidth(i, LVSCW_AUTOSIZE_USEHEADER);
 	}
 	catch (...)
 	{

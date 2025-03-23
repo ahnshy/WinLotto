@@ -51,15 +51,19 @@ protected:
 	//CWinsListCtrl m_wndListFrequency;
 	CListCtrlEx m_wndListFrequency;
 	CWinsListCtrl m_wndFrequencyPerMonth;
+	CWinsListCtrl m_wndFrequencyPerDay;
 
 	CSimulationCtrl	m_wndSimulation;
 	
 	void SetTabsPosition();
 	void SetDefaultLayout(MultiPaneCtrl::Tabs const &tabs);
+	void SetDefaultLayoutAddTab(MultiPaneCtrl::Tabs const &tabs);
 	void SetRoundListControl();
 	void SetLayout(INT32 nIndex);
 	void SetFrequncyListControl();
+
 	void SetFrequncyPerMonthListControl();
+	void SetFrequncyPerDayListControl();
 
 	void OnSelectionChanged(OutlookTabCtrl *ctrl) override;
 	void OnRightButtonReleased(OutlookTabCtrl *ctrl, CPoint pt) override;
