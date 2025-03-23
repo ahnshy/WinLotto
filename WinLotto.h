@@ -22,8 +22,10 @@ public:
 
 // Overrides
 public:
-	virtual BOOL InitInstance();
-	virtual int ExitInstance();
+	virtual BOOL	InitInstance();
+	virtual int		ExitInstance();
+
+	INT32			UpdateWinsNumber();
 
 // Implementation
 

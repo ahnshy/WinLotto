@@ -77,28 +77,13 @@ BOOL CWinLottoApp::InitInstance()
 
 	SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, TRUE, 0, 0);
 
-	CString strRoundFIle;
+	
 	CPathManager* pPathManager = CPathManager::GetInstance();
 	if (pPathManager)
-	{
 		pPathManager->Initialize();
-		strRoundFIle = pPathManager->GetRoundFilePath();
-	}
 
-	if (!strRoundFIle.IsEmpty() && !PathFileExists(strRoundFIle))
-	{
-		CHttpHelper http;
-		http.GetHttpFile(_T("https://dhlottery.co.kr/gameResult.do?method=allWinExel&gubun=byWin&nowPage=&drwNoStart=1&drwNoEnd=9999"), strRoundFIle);
-	}
-
-	CHtmlParser dom;
-	CStringArray strArray;
-	dom.GetRounds(strRoundFIle, strArray);
-
-	CWinsNumberManager* pNumberManager = CWinsNumberManager::GetInstance();
-	if (pNumberManager)
-		pNumberManager->Initialize(strArray);
-
+	UpdateWinsNumber();
+	
 	CWinLottoDlg dlg;
 	INT_PTR nResponse = dlg.DoModal();
 	if (nResponse == IDOK)
@@ -126,6 +111,33 @@ BOOL CWinLottoApp::InitInstance()
 	// Since the dialog has been closed, return FALSE so that we exit the
 	//  application, rather than start the application's message pump.
 	return FALSE;
+}
+
+INT32 CWinLottoApp::UpdateWinsNumber()
+{
+	CPathManager* pPathManager = CPathManager::GetInstance();
+	if (!pPathManager)
+		return -1;
+
+	CString strRoundFIle = pPathManager->GetRoundFilePath();
+	if (!strRoundFIle.IsEmpty())
+	{
+		if (PathFileExists(strRoundFIle))
+			_tunlink((LPCTSTR)strRoundFIle);
+
+		CHttpHelper http;
+		http.GetHttpFile(strRoundFIle);
+	}
+
+	CHtmlParser dom;
+	CStringArray strArray;
+	dom.GetRounds(strRoundFIle, strArray);
+
+	CWinsNumberManager* pNumberManager = CWinsNumberManager::GetInstance();
+	if (pNumberManager)
+		pNumberManager->Initialize(strArray);
+
+	return 0;
 }
 
 int CWinLottoApp::ExitInstance()
