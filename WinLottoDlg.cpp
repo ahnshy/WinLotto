@@ -271,7 +271,16 @@ void CWinLottoDlg::SetLayout(INT32 nIndex)
 		{
 			CWinLottoApp *pApp = (CWinLottoApp*)AfxGetApp();
 			if (pApp)
-				pApp->UpdateWinsNumber(TRUE);
+			{
+				INT32 nResult = pApp->UpdateWinsNumber(TRUE);
+				if (nResult == 0)
+				{
+					SetRoundListControl();
+					SetFrequncyListControl();
+					SetFrequncyPerMonthListControl();
+					SetFrequncyPerDayListControl();
+				}
+			}
 		}
 		catch (std::bad_alloc &)
 		{
@@ -433,6 +442,9 @@ void CWinLottoDlg::OnMenuButtonClicked(OutlookTabCtrl *ctrl, CRect const *rect)
 
 void CWinLottoDlg::SetRoundListControl()
 {
+	m_wndRoundWins.DeleteAllItems();
+	while (m_wndRoundWins.DeleteColumn(0));
+
 	// Initial Header
 	CRect rt;
 	GetClientRect(&rt);
@@ -553,6 +565,9 @@ void CWinLottoDlg::SetRoundListControl()
 
 void CWinLottoDlg::SetFrequncyPerDayListControl()
 {
+	m_wndFrequencyPerDay.DeleteAllItems();
+	while (m_wndFrequencyPerDay.DeleteColumn(0));
+
 	// Initial Header
 	CRect rt;
 	GetClientRect(&rt);
@@ -653,6 +668,9 @@ void CWinLottoDlg::SetFrequncyPerDayListControl()
 
 void CWinLottoDlg::SetFrequncyPerMonthListControl()
 {
+	m_wndFrequencyPerMonth.DeleteAllItems();
+	while (m_wndFrequencyPerMonth.DeleteColumn(0));
+
 	// Initial Header
 	CRect rt;
 	GetClientRect(&rt);
@@ -753,6 +771,9 @@ void CWinLottoDlg::SetFrequncyPerMonthListControl()
 
 void CWinLottoDlg::SetFrequncyListControl()
 {
+	m_wndListFrequency.DeleteAllItems();
+	while (m_wndListFrequency.DeleteColumn(0));
+
 	// Initial Header
 	CRect rt;
 	GetClientRect(&rt);
