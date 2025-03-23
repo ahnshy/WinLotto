@@ -11,6 +11,8 @@
 #include "UI/Control/MultiPaneCtrl/MultiPaneCtrl.h"
 #include "UI/Control/OutlookTabCtrl/OutlookTabCtrl.h"
 
+#define MAX_TABS	4
+
 // CWinLottoDlg dialog
 class CWinLottoDlg : public CDialogEx,
 	MultiPaneCtrl::Ability,

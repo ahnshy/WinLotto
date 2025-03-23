@@ -25,6 +25,7 @@ CWinLottoDlg::CWinLottoDlg(CWnd* pParent /*=NULL*/)
 	m_arrMenus.Add(_T("Simulation"));
 	m_arrMenus.Add(_T("Statistics"));
 	m_arrMenus.Add(_T("Prediction"));
+	m_arrMenus.Add(_T("Update"));
 }
 
 void CWinLottoDlg::DoDataExchange(CDataExchange* pDX)
@@ -61,7 +62,7 @@ int CWinLottoDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	VERIFY(m_wndSimulation.Create(CSimulationCtrl::IDD, this));
 
 
-	for (INT32 nIndex = 0; nIndex <= 3; nIndex++)
+	for (INT32 nIndex = 0; nIndex <= MAX_TABS; nIndex++)
 	{
 		VERIFY(m_btnMenus[nIndex].Create(NULL, WS_CHILD | WS_VISIBLE, CRect(0, 0, 0, 0), &m_wndOutlookTabCtrl, 100 + nIndex));
 		m_btnMenus[nIndex].m_nFlatStyle = (CMFCButton::FlatStyle)(CMFCButton::BUTTONSTYLE_FLAT | CMFCButton::BUTTONSTYLE_NOBORDERS);
@@ -88,7 +89,7 @@ BOOL CWinLottoDlg::OnInitDialog()
 	SetTabsPosition();
 
 	CFont font;
-	font.CreatePointFont(90, DEFAULT_FONT);
+	font.CreatePointFont(100, DEFAULT_FONT);
 
 
 	// OutlookBar Setting
@@ -110,7 +111,7 @@ BOOL CWinLottoDlg::OnInitDialog()
 	m_wndOutlookTabCtrl.SetButtonsFont(&font);
 
 	INT32 nCount = 0;
-	INT32 nArrIcon[] = { 3, 1, 2, 6, 6 };
+	INT32 nArrIcon[] = { 3, 1, 2, 4, 6, 5 };
 	for (nCount = 0; nCount < _countof(m_btnMenus); nCount++)
 	{
 		if (!m_btnMenus[nCount].GetSafeHwnd())
@@ -258,6 +259,20 @@ void CWinLottoDlg::SetLayout(INT32 nIndex)
 			SetDefaultLayout(tabs);   // create default state.
 
 			m_MPCC.Update();
+		}
+		catch (std::bad_alloc &)
+		{
+			return;
+		}
+	}
+	else if (nIndex == 4)
+	{
+		try
+		{
+			//MultiPaneCtrl::Tabs tabs;
+			//tabs.Add(m_wndOutlookTabCtrl, _T("Menus"), 0);
+			//SetDefaultLayout(tabs);   // create default state.
+			//m_MPCC.Update();
 		}
 		catch (std::bad_alloc &)
 		{
