@@ -28,8 +28,8 @@ CWinLottoDlg::CWinLottoDlg(CWnd* pParent /*=NULL*/)
 	m_arrMenus.Add(_T("Prediction"));
 	m_arrMenus.Add(_T("Update"));
 
-	m_uPortions[0] = 20;
-	m_uPortions[1] = 80;
+	m_uPortions[0] = 30;
+	m_uPortions[1] = 70;
 }
 
 void CWinLottoDlg::DoDataExchange(CDataExchange* pDX)
@@ -428,6 +428,8 @@ void CWinLottoDlg::SetDefaultLayout(MultiPaneCtrl::Tabs const &tabs)
 
 	if (tabs.GetNumber() <= 0)
 		return;
+
+	m_MPCC.SetLinePortions(h2, m_uPortions);
 
 	m_MPCC.AddTab(h3, tabs[0]);
 	m_MPCC.AddTab(h4, tabs[1]);
