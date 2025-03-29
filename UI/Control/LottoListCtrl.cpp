@@ -45,7 +45,7 @@ void CLottoListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 
 void CLottoListCtrl::DrawLottoBall(Gdiplus::Graphics& g, CRect rc, int number, bool selected)
 {
-	constexpr int BALL_SIZE = 24;
+	const int BALL_SIZE = 24;
 	CPoint center = rc.CenterPoint();
 	CRect ballRect(center.x - BALL_SIZE / 2, center.y - BALL_SIZE / 2, center.x + BALL_SIZE / 2, center.y + BALL_SIZE / 2);
 
@@ -62,7 +62,8 @@ void CLottoListCtrl::DrawLottoBall(Gdiplus::Graphics& g, CRect rc, int number, b
 	Gdiplus::PathGradientBrush gradient(&path);
 	gradient.SetCenterColor(Gdiplus::Color(255, min(color.GetR() + 60, 255), min(color.GetG() + 60, 255), min(color.GetB() + 60, 255)));
 	Gdiplus::Color surround[] = { color };
-	gradient.SetSurroundColors(surround, (INT[]){ 1 });
+	INT nCount = 1;
+	gradient.SetSurroundColors(surround, &nCount);
 
 	g.FillEllipse(&gradient, Gdiplus::Rect(ballRect.left, ballRect.top, BALL_SIZE, BALL_SIZE));
 
@@ -73,7 +74,7 @@ void CLottoListCtrl::DrawLottoBall(Gdiplus::Graphics& g, CRect rc, int number, b
 	// 4. 텍스트
 	CString str;
 	str.Format(_T("%d"), number);
-	Gdiplus::Font font(L"Arial", 10, Gdiplus::FontStyleBold);
+	Gdiplus::Font font(DEFAULT_FONT, 10, Gdiplus::FontStyleBold);
 	Gdiplus::StringFormat sf;
 	sf.SetAlignment(Gdiplus::StringAlignmentCenter);
 	sf.SetLineAlignment(Gdiplus::StringAlignmentCenter);
