@@ -124,6 +124,7 @@
     <ClInclude Include="UI\Control\SimulationCtrl.h" />
     <ClInclude Include="UI\Control\WinLottoTabCtrl.h" />
     <ClInclude Include="UI\Control\WinsListCtrl.h" />
+    <ClInclude Include="UI\Dialog\LottoNumberDlg.h" />
     <ClInclude Include="WinLotto.h" />
     <ClInclude Include="WinLottoDlg.h" />
   </ItemGroup>
@@ -153,6 +154,7 @@
     <ClCompile Include="UI\Control\SimulationCtrl.cpp" />
     <ClCompile Include="UI\Control\WinLottoTabCtrl.cpp" />
     <ClCompile Include="UI\Control\WinsListCtrl.cpp" />
+    <ClCompile Include="UI\Dialog\LottoNumberDlg.cpp" />
     <ClCompile Include="WinLotto.cpp" />
     <ClCompile Include="WinLottoDlg.cpp" />
   </ItemGroup>
