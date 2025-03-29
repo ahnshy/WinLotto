@@ -27,6 +27,9 @@ CWinLottoDlg::CWinLottoDlg(CWnd* pParent /*=NULL*/)
 	m_arrMenus.Add(_T("Statistics"));
 	m_arrMenus.Add(_T("Prediction"));
 	m_arrMenus.Add(_T("Update"));
+
+	m_uPortions[0] = 20;
+	m_uPortions[1] = 80;
 }
 
 void CWinLottoDlg::DoDataExchange(CDataExchange* pDX)
@@ -62,6 +65,9 @@ int CWinLottoDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	VERIFY(m_wndFrequencyPerDay.Create(WS_CHILD | LVS_REPORT, CRect(0, 0, 0, 0), this, 3008));
 
 	VERIFY(m_wndSimulation.Create(CSimulationCtrl::IDD, this));
+
+	VERIFY(m_dlgFrequencyProbability.Create(IDD_DIALOG_EMPTY, this));
+	m_dlgFrequencyProbability.SetBackgroundColor(RGB(255, 255, 255));
 
 
 	for (INT32 nIndex = 0; nIndex <= MAX_TABS; nIndex++)
@@ -192,6 +198,7 @@ void CWinLottoDlg::SetLayout(INT32 nIndex)
 			tabs.Add(m_wndRoundWins, _T("Wins Round Numbers"), 1);
 
 			//if (!m_MPCC.LoadState(AfxGetApp(), _T("WinLottoLayout"), _T("State"), &tabs, false))
+
 			m_MPCC.DeleteAllPanes();
 			SetDefaultLayoutAddTab(tabs);   // create default state.
 
@@ -253,7 +260,7 @@ void CWinLottoDlg::SetLayout(INT32 nIndex)
 			//m_wndRoundWins
 			MultiPaneCtrl::Tabs tabs;
 			tabs.Add(m_wndOutlookTabCtrl, _T("Menus"), 0);
-			tabs.Add(m_wndListFrequency, _T("Frequency Numbers"), 1);
+			tabs.Add(m_dlgFrequencyProbability, _T("Frequency Probability Base"), 1);
 			tabs.Add(m_wndRoundWins, _T("Wins Round Numbers"), 2);
 
 			//if (!m_MPCC.LoadState(AfxGetApp(), _T("WinLottoLayout"), _T("State"), &tabs, false))
@@ -397,6 +404,8 @@ void CWinLottoDlg::SetDefaultLayoutAddTab(MultiPaneCtrl::Tabs const &tabs)
 
 	if (tabs.GetNumber() <= 0)
 		return;
+
+	m_MPCC.SetLinePortions(h2, m_uPortions);
 
 	HPANE hTarget = nullptr;
 	for (INT32 nIndex = 0; nIndex < tabs.GetNumber(); nIndex++)
