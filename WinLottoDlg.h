@@ -3,6 +3,8 @@
 //
 #pragma once
 
+#include "UI/Dialog/LottoNumberDlg.h"
+
 #include "UI/Control/ListCtrlEx.h"
 #include "UI/Control/WinsListCtrl.h"
 #include "UI/Control/SimulationCtrl.h"
@@ -58,7 +60,7 @@ protected:
 	CWinsListCtrl			m_wndFrequencyPerDay;
 
 
-	CDialogEx				m_dlgFrequencyProbability;
+	CLottoNumberDlg			m_dlgFrequencyProbability;
 
 	CSimulationCtrl			m_wndSimulation;
 	
