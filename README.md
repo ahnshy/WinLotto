@@ -34,7 +34,9 @@
 - Sum Analysis
 - The number that appeared the most
 - The least featured number
+- Yearly number frequency
 - Monthly number frequency
+- Daily number frequency
 - Linear Regression Model Analysis
 - Stefan Mandel Algorithms
 - AI Analysis
