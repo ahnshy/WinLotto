@@ -44,7 +44,7 @@ void CLottoListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 
 void CLottoListCtrl::DrawLottoBall(Gdiplus::Graphics& g, CRect rc, int number)
 {
-    constexpr int BALL_SIZE = 15;
+    const int BALL_SIZE = 15;
     CPoint center = rc.CenterPoint();
     CRect ballRect(center.x - BALL_SIZE / 2, center.y - BALL_SIZE / 2, center.x + BALL_SIZE / 2, center.y + BALL_SIZE / 2);
 
