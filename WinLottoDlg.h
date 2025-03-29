@@ -29,34 +29,38 @@ public:
 	enum { IDD = IDD_WINLOTTO_DIALOG };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
+	virtual void			DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 
 
 // Implementation
 protected:
-	HICON m_hIcon;
+	HICON					m_hIcon;
 
-	CMFCButton m_btnMenus[10];
-	OutlookTabCtrl m_wndOutlookTabCtrl;
-	OutlookTabCtrlCustom1 m_OutlookTabStyle1;
-	OutlookTabCtrlCustom2 m_OutlookTabStyle2;
-	OutlookTabCtrlCustom3 m_OutlookTabStyle3;
-	OutlookTabCtrlCustom4 m_OutlookTabStyle4;
+	CMFCButton				m_btnMenus[10];
+	OutlookTabCtrl			m_wndOutlookTabCtrl;
+	OutlookTabCtrlCustom1	m_OutlookTabStyle1;
+	OutlookTabCtrlCustom2	m_OutlookTabStyle2;
+	OutlookTabCtrlCustom3	m_OutlookTabStyle3;
+	OutlookTabCtrlCustom4	m_OutlookTabStyle4;
 
-	CStringArray		m_arrMenus;
+	int						m_uPortions[2];
+	CStringArray			m_arrMenus;
 	//MultiPaneCtrl::Tabs	m_tabs;
 
-	MultiPaneCtrlComplex m_MPCC;
+	MultiPaneCtrlComplex	m_MPCC;
 	typedef MultiPaneCtrl::HPANE HPANE;
 
-	CWinsListCtrl m_wndRoundWins;
-	//CWinsListCtrl m_wndListFrequency;
-	CListCtrlEx m_wndListFrequency;
-	CWinsListCtrl m_wndFrequencyPerYear;
-	CWinsListCtrl m_wndFrequencyPerMonth;
-	CWinsListCtrl m_wndFrequencyPerDay;
+	CWinsListCtrl			m_wndRoundWins;
+	//CWinsListCtrl			m_wndListFrequency;
+	CListCtrlEx				m_wndListFrequency;
+	CWinsListCtrl			m_wndFrequencyPerYear;
+	CWinsListCtrl			m_wndFrequencyPerMonth;
+	CWinsListCtrl			m_wndFrequencyPerDay;
 
-	CSimulationCtrl	m_wndSimulation;
+
+	CDialogEx				m_dlgFrequencyProbability;
+
+	CSimulationCtrl			m_wndSimulation;
 	
 	void SetTabsPosition();
 	void SetDefaultLayout(MultiPaneCtrl::Tabs const &tabs);
