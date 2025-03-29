@@ -115,6 +115,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="UI\Control\FrequncyListCtrl.h" />
     <ClInclude Include="UI\Control\ListCtrlEx.h" />
+    <ClInclude Include="UI\Control\LottoListCtrl.h" />
     <ClInclude Include="UI\Control\MultiPaneCtrl\DockingMarkers.h" />
     <ClInclude Include="UI\Control\MultiPaneCtrl\MultiPaneCtrl.h" />
     <ClInclude Include="UI\Control\MultiPaneCtrl\StyleDefine.h" />
@@ -144,6 +145,7 @@
     </ClCompile>
     <ClCompile Include="UI\Control\FrequncyListCtrl.cpp" />
     <ClCompile Include="UI\Control\ListCtrlEx.cpp" />
+    <ClCompile Include="UI\Control\LottoListCtrl.cpp" />
     <ClCompile Include="UI\Control\MultiPaneCtrl\DockingMarkers.cpp" />
     <ClCompile Include="UI\Control\MultiPaneCtrl\MultiPaneCtrl.cpp" />
     <ClCompile Include="UI\Control\MultiPaneCtrl\TabCtrl.cpp" />
