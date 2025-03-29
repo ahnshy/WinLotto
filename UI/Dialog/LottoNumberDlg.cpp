@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "LottoNumberDlg.h"
+#include "../../resource.h"
 
 BEGIN_MESSAGE_MAP(CLottoNumberDlg, CDialogEx)
     ON_WM_SIZE()
@@ -7,7 +8,7 @@ BEGIN_MESSAGE_MAP(CLottoNumberDlg, CDialogEx)
 END_MESSAGE_MAP()
 
 CLottoNumberDlg::CLottoNumberDlg(CWnd* pParent)
-    : CDialogEx(IDD_MYDIALOG, pParent)
+    : CDialogEx(IDD_DIALOG_EMPTY, pParent)
     , m_pLottoCtrl(nullptr)
 {
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "LottoListCtrl.h"
+#include "../Control/LottoListCtrl.h"
 
 class CLottoNumberDlg : public CDialogEx
 {
