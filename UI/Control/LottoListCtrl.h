@@ -7,15 +7,14 @@
 class CLottoListCtrl : public CListCtrl
 {
 public:
-    CLottoListCtrl();
-    virtual ~CLottoListCtrl();
+	CLottoListCtrl();
+	virtual ~CLottoListCtrl();
 
 protected:
-    Gdiplus::Color GetBallColor(int number) const;
-    void DrawLottoBall(Gdiplus::Graphics& g, CRect rc, int number);
+	void DrawLottoBall(Gdiplus::Graphics& g, CRect rc, int number, bool selected);
+	Gdiplus::Color GetBallColor(int number) const;
 
 protected:
-    afx_msg void OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult);
-
-    DECLARE_MESSAGE_MAP()
+	afx_msg void OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult);
+	DECLARE_MESSAGE_MAP()
 };
