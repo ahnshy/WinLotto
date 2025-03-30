@@ -51,17 +51,9 @@ void CLottoListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 
 		if (selected)
 		{
-			Gdiplus::GraphicsPath path;
 			rcFull.InflateRect(-1, -1);
-			path.AddRectangle(Gdiplus::Rect(rcFull.left, rcFull.top, rcFull.Width(), rcFull.Height()));
-			Gdiplus::PathGradientBrush glowBrush(&path);
-			Gdiplus::Color centerColor(128, 173, 216, 230);
-			Gdiplus::Color surroundColor(0, 173, 216, 230);
-			glowBrush.SetCenterColor(centerColor);
-			Gdiplus::Color surround[] = { surroundColor };
-			int count = 1;
-			glowBrush.SetSurroundColors(surround, &count);
-			g.FillRectangle(&glowBrush, rcFull.left, rcFull.top, rcFull.Width(), rcFull.Height());
+			Gdiplus::SolidBrush solidBrush(Gdiplus::Color(128, 204, 232, 255));
+			g.FillRectangle(&solidBrush, rcFull.left, rcFull.top, rcFull.Width(), rcFull.Height());
 		}
 
 		CString numbers = GetItemText(index, 1);
@@ -117,7 +109,7 @@ void CLottoListCtrl::DrawBonusBall(Gdiplus::Graphics& g, const CRect& rc, const 
 	int x = rc.CenterPoint().x - BALL_SIZE / 2;
 	int y = rc.CenterPoint().y;
 
-	Gdiplus::Font font(L"Arial", static_cast<Gdiplus::REAL>(fontHeight), Gdiplus::FontStyleBold, Gdiplus::UnitPixel);
+	Gdiplus::Font font(DEFAULT_FONT, static_cast<Gdiplus::REAL>(fontHeight), Gdiplus::FontStyleBold, Gdiplus::UnitPixel);
 	Gdiplus::StringFormat format;
 	format.SetAlignment(Gdiplus::StringAlignmentCenter);
 	format.SetLineAlignment(Gdiplus::StringAlignmentCenter);
