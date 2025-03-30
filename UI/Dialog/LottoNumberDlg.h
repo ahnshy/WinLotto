@@ -10,6 +10,7 @@ public:
 
 protected:
 	CLottoListCtrl*		m_pExtractCtrl;
+	CLottoListCtrl*		m_pReultCtrl;
 	
 	CMFCButton			m_btnExtract;
 	CMFCButton			m_btnRemoveAll;
