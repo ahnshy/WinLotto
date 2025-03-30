@@ -1,17 +1,44 @@
+// LottoListCtrl.cpp
+
 #include "stdafx.h"
 #include "LottoListCtrl.h"
+#include <math.h>
 
-CLottoListCtrl::CLottoListCtrl()
-{
-}
-
-CLottoListCtrl::~CLottoListCtrl()
-{
-}
+CLottoListCtrl::CLottoListCtrl() : m_animationTick(0) {}
+CLottoListCtrl::~CLottoListCtrl() {}
 
 BEGIN_MESSAGE_MAP(CLottoListCtrl, CListCtrl)
 	ON_NOTIFY_REFLECT(NM_CUSTOMDRAW, &CLottoListCtrl::OnCustomDraw)
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
+
+void CLottoListCtrl::PreSubclassWindow()
+{
+	CListCtrl::PreSubclassWindow();
+	SetTimer(1, 30, NULL);
+}
+
+void CLottoListCtrl::OnTimer(UINT_PTR nIDEvent)
+{
+	m_animationTick++;
+	Invalidate(FALSE);
+	CListCtrl::OnTimer(nIDEvent);
+}
+
+void CLottoListCtrl::SetData(const vector<LottoData>& data)
+{
+	m_data = data;
+	DeleteAllItems();
+	for (size_t i = 0; i < data.size(); ++i)
+	{
+		CString str;
+		str.Format(_T("%d"), (int)(i + 1));
+		InsertItem((int)i, str);
+		SetItemText((int)i, 1, _T(""));
+		SetItemText((int)i, 2, _T(""));
+	}
+	Invalidate();
+}
 
 void CLottoListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 {
@@ -24,70 +51,76 @@ void CLottoListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 	}
 	else if (pLVCD->nmcd.dwDrawStage == CDDS_ITEMPREPAINT)
 	{
-		*pResult = CDRF_NOTIFYPOSTPAINT;
-	}
-	else if (pLVCD->nmcd.dwDrawStage == CDDS_ITEMPOSTPAINT)
-	{
-		CRect rcItem;
-		GetItemRect((int)pLVCD->nmcd.dwItemSpec, &rcItem, LVIR_BOUNDS);
+		int idx = (int)pLVCD->nmcd.dwItemSpec;
+		if (idx < 0 || idx >= (int)m_data.size())
+			return;
 
-		Gdiplus::Graphics g(pLVCD->nmcd.hdc);
-		g.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+		CRect rcSubItem;
+		GetSubItemRect(idx, 1, LVIR_BOUNDS, rcSubItem);
 
-		int number = (int)pLVCD->nmcd.dwItemSpec + 1;
-		bool selected = GetItemState(pLVCD->nmcd.dwItemSpec, LVIS_SELECTED) & LVIS_SELECTED;
+		Graphics g(pLVCD->nmcd.hdc);
+		g.SetSmoothingMode(SmoothingModeAntiAlias);
 
-		DrawLottoBall(g, rcItem, number, selected);
+		bool selected = GetItemState(idx, LVIS_SELECTED) & LVIS_SELECTED;
+
+		DrawBalls(g, rcSubItem, m_data[idx], selected);
 
 		*pResult = CDRF_SKIPDEFAULT;
 	}
 }
 
-void CLottoListCtrl::DrawLottoBall(Gdiplus::Graphics& g, CRect rc, int number, bool selected)
+void CLottoListCtrl::DrawBalls(Graphics& g, CRect rc, const LottoData& lotto, bool selected)
 {
-	const int BALL_SIZE = 24;
-	CPoint center = rc.CenterPoint();
-	CRect ballRect(center.x - BALL_SIZE / 2, center.y - BALL_SIZE / 2, center.x + BALL_SIZE / 2, center.y + BALL_SIZE / 2);
+	const int BALL_SIZE = 26;
+	const int SPACING = 6;
+	int startX = rc.left + 5;
+	int centerY = rc.CenterPoint().y;
 
-	// 1. 그림자
-	Gdiplus::SolidBrush shadowBrush(Gdiplus::Color(60, 0, 0, 0));
-	CRect shadowRect = ballRect + CPoint(2, 2);
-	g.FillEllipse(&shadowBrush, Gdiplus::Rect(shadowRect.left, shadowRect.top, BALL_SIZE, BALL_SIZE));
-
-	// 2. 공 그라데이션
-	Gdiplus::Color color = GetBallColor(number);
-	Gdiplus::GraphicsPath path;
-	path.AddEllipse(ballRect.left, ballRect.top, BALL_SIZE, BALL_SIZE);
-
-	Gdiplus::PathGradientBrush gradient(&path);
-	gradient.SetCenterColor(Gdiplus::Color(255, min(color.GetR() + 60, 255), min(color.GetG() + 60, 255), min(color.GetB() + 60, 255)));
-	Gdiplus::Color surround[] = { color };
-	INT nCount = 1;
-	gradient.SetSurroundColors(surround, &nCount);
-
-	g.FillEllipse(&gradient, Gdiplus::Rect(ballRect.left, ballRect.top, BALL_SIZE, BALL_SIZE));
-
-	// 3. 테두리
-	Gdiplus::Pen pen(selected ? Gdiplus::Color(255, 255, 100, 100) : Gdiplus::Color(255, 0, 0, 0), selected ? 2.0f : 1.0f);
-	g.DrawEllipse(&pen, Gdiplus::Rect(ballRect.left, ballRect.top, BALL_SIZE, BALL_SIZE));
-
-	// 4. 텍스트
-	CString str;
-	str.Format(_T("%d"), number);
-	Gdiplus::Font font(DEFAULT_FONT, 10, Gdiplus::FontStyleBold);
+	Gdiplus::Pen pen(Color(255, 0, 0, 0));
+	Gdiplus::SolidBrush textBrush(Color(255, 0, 0, 0));
+	Gdiplus::FontFamily fontFamily(DEFAULT_FONT);
+	Gdiplus::Font font(&fontFamily, 120, FontStyleBold, UnitPixel);
 	Gdiplus::StringFormat sf;
-	sf.SetAlignment(Gdiplus::StringAlignmentCenter);
-	sf.SetLineAlignment(Gdiplus::StringAlignmentCenter);
+	sf.SetAlignment(StringAlignmentCenter);
+	sf.SetLineAlignment(StringAlignmentCenter);
 
-	Gdiplus::SolidBrush textBrush(selected ? Gdiplus::Color(255, 255, 255) : Gdiplus::Color(255, 0, 0, 0));
-	g.DrawString(str, -1, &font, Gdiplus::RectF((float)ballRect.left, (float)ballRect.top, (float)BALL_SIZE, (float)BALL_SIZE), &sf, &textBrush);
+	int glow = (int)(abs(sin(m_animationTick * 0.1)) * 30);
+
+	for (size_t i = 0; i < lotto.numbers.size(); ++i)
+	{
+		int number = lotto.numbers[i];
+		CRect ballRect(startX, centerY - BALL_SIZE / 2, startX + BALL_SIZE, centerY + BALL_SIZE / 2);
+
+		Color baseColor = GetBallColor(number);
+		Color glowColor = Color(255, min(baseColor.GetR() + glow, 255), min(baseColor.GetG() + glow, 255), min(baseColor.GetB() + glow, 255));
+		SolidBrush brush(glowColor);
+		g.FillEllipse(&brush, ballRect.left, ballRect.top, BALL_SIZE, BALL_SIZE);
+
+		g.DrawEllipse(&pen, ballRect.left, ballRect.top, BALL_SIZE, BALL_SIZE);
+
+		CString str;
+		str.Format(_T("%d"), number);
+		g.DrawString(str, -1, &font, RectF((float)ballRect.left, (float)ballRect.top, (float)BALL_SIZE, (float)BALL_SIZE), &sf, &textBrush);
+
+		startX += BALL_SIZE + SPACING;
+	}
+
+	// 보너스 공도 동그랗게
+	CRect bonusRect(startX, centerY - BALL_SIZE / 2, startX + BALL_SIZE, centerY + BALL_SIZE / 2);
+	SolidBrush bonusBrush(Color(255, 169, 169, 169));
+	g.FillEllipse(&bonusBrush, bonusRect.left, bonusRect.top, BALL_SIZE, BALL_SIZE);
+	g.DrawEllipse(&pen, bonusRect.left, bonusRect.top, BALL_SIZE, BALL_SIZE);
+
+	CString bonusStr;
+	bonusStr.Format(_T("%d"), lotto.bonus);
+	g.DrawString(bonusStr, -1, &font, RectF((float)bonusRect.left, (float)bonusRect.top, (float)BALL_SIZE, (float)BALL_SIZE), &sf, &textBrush);
 }
 
-Gdiplus::Color CLottoListCtrl::GetBallColor(int number) const
+Color CLottoListCtrl::GetBallColor(int number)
 {
-	if (number <= 10) return Gdiplus::Color(255, 255, 215, 0);    // 노랑
-	if (number <= 20) return Gdiplus::Color(255, 30, 144, 255);   // 파랑
-	if (number <= 30) return Gdiplus::Color(255, 220, 20, 60);    // 빨강
-	if (number <= 40) return Gdiplus::Color(255, 50, 205, 50);    // 초록
-	return Gdiplus::Color(255, 169, 169, 169);                    // 회색
+	if (number <= 10) return Color(255, 255, 215, 0);
+	if (number <= 20) return Color(255, 30, 144, 255);
+	if (number <= 30) return Color(255, 220, 20, 60);
+	if (number <= 40) return Color(255, 50, 205, 50);
+	return Color(255, 169, 169, 169);
 }
