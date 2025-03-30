@@ -85,6 +85,14 @@ void CLottoNumberDlg::OnSize(UINT nType, int cx, int cy)
 
 	if (::IsWindow(m_btnExtract.GetSafeHwnd()))
 		m_btnExtract.MoveWindow(cx - 90, 10, 80, 25);
+
+		
+	//m_wndRandomList.MoveWindow(10, 10, splitX - 15, cy - 20);
+	int splitX = cx / 2;
+	if (m_pResultCtrl && ::IsWindow(m_pResultCtrl->GetSafeHwnd()))
+		m_pResultCtrl->MoveWindow(splitX + 5, 10, cx - splitX - 15, cy - 20);
+
+	//m_rcSplitBar.SetRect(splitX - 1, 10, splitX + 1, cy - 10);
 }
 
 void CLottoNumberDlg::OnDestroy()
