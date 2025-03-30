@@ -10,6 +10,7 @@ BEGIN_MESSAGE_MAP(CLottoNumberDlg, CDialogEx)
 	ON_WM_DESTROY()
 	ON_BN_CLICKED(1002, &CLottoNumberDlg::OnBnClickedRemoveAll)
 	ON_BN_CLICKED(1003, &CLottoNumberDlg::OnBnClickedExtract)
+	ON_NOTIFY(LVN_ITEMCHANGED, 1001, &CLottoNumberDlg::OnSelChangeRandomList)
 END_MESSAGE_MAP()
 
 CLottoNumberDlg::CLottoNumberDlg(CWnd* pParent)
@@ -60,7 +61,7 @@ void CLottoNumberDlg::InitResultList()
 
 	m_pResultCtrl->Create(WS_CHILD | WS_VISIBLE | LVS_REPORT | LVS_SINGLESEL, rcDummy, this, 1002);
 	m_pResultCtrl->SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER);
-	m_pResultCtrl->InitializeColumns();
+	//m_pResultCtrl->InitializeColumns();
 
 	//m_pResultCtrl->InsertColumn(0, _T("Numbers"), LVCFMT_LEFT, 200);
 	//m_pResultCtrl->InsertColumn(1, _T("Bonus"), LVCFMT_LEFT, 40);
@@ -141,6 +142,16 @@ void CLottoNumberDlg::OnBnClickedExtract()
 	int nItem = m_pExtractCtrl->GetItemCount();
 	m_pExtractCtrl->InsertLottoRow(nItem, mainNums, bonusNum);
 }
+
+void CLottoNumberDlg::OnSelChangeRandomList(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	int nSelected = m_pExtractCtrl->GetNextItem(-1, LVNI_SELECTED);
+	if (nSelected != -1)
+		UpdateResultList(nSelected);
+
+	*pResult = 0;
+}
+
 
 void CLottoNumberDlg::UpdateResultList(int nSelectIndex)
 {

@@ -27,5 +27,7 @@ protected:
 	afx_msg void OnBnClickedRemoveAll();
 	afx_msg void OnBnClickedExtract();
 
+	afx_msg void OnSelChangeRandomList(NMHDR* pNMHDR, LRESULT* pResult);
+
 	DECLARE_MESSAGE_MAP()
 };
