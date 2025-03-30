@@ -9,7 +9,7 @@ public:
 	virtual ~CLottoNumberDlg();
 
 protected:
-	CLottoListCtrl*		m_pLottoCtrl;
+	CLottoListCtrl*		m_pExtractCtrl;
 	
 	CMFCButton			m_btnExtract;
 	CMFCButton			m_btnRemoveAll;

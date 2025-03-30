@@ -14,7 +14,7 @@ END_MESSAGE_MAP()
 
 CLottoNumberDlg::CLottoNumberDlg(CWnd* pParent)
 	: CDialogEx(IDD_DIALOG_EMPTY, pParent)
-	, m_pLottoCtrl(nullptr)
+	, m_pExtractCtrl(nullptr)
 {
 }
 
@@ -26,15 +26,15 @@ BOOL CLottoNumberDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	m_pLottoCtrl = new CLottoListCtrl();
+	m_pExtractCtrl = new CLottoListCtrl();
 	CRect rcDummy(0, 0, 100, 100);
-	m_pLottoCtrl->Create(WS_CHILD | WS_VISIBLE | LVS_REPORT | LVS_SINGLESEL, rcDummy, this, 1001);
-	m_pLottoCtrl->SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER);
-	m_pLottoCtrl->InitializeColumns();
+	m_pExtractCtrl->Create(WS_CHILD | WS_VISIBLE | LVS_REPORT | LVS_SINGLESEL, rcDummy, this, 1001);
+	m_pExtractCtrl->SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER);
+	m_pExtractCtrl->InitializeColumns();
 
 	//m_pLottoCtrl->InsertColumn(0, _T("No."), LVCFMT_LEFT, 50);
-	m_pLottoCtrl->InsertColumn(0, _T("Numbers"), LVCFMT_LEFT, 200);
-	m_pLottoCtrl->InsertColumn(1, _T("Bonus"), LVCFMT_LEFT, 40);
+	m_pExtractCtrl->InsertColumn(0, _T("Numbers"), LVCFMT_LEFT, 200);
+	m_pExtractCtrl->InsertColumn(1, _T("Bonus"), LVCFMT_LEFT, 40);
 
 	m_btnRemoveAll.Create(_T("Remove All"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(0, 0, 80, 30), this, 1002);
 	m_btnRemoveAll.SetFaceColor(RGB(255, 255, 255));
@@ -49,8 +49,8 @@ void CLottoNumberDlg::OnSize(UINT nType, int cx, int cy)
 {
 	CDialogEx::OnSize(nType, cx, cy);
 
-	if (m_pLottoCtrl && ::IsWindow(m_pLottoCtrl->GetSafeHwnd()))
-		m_pLottoCtrl->MoveWindow(10, 50, cx - 20, cy - 60);
+	if (m_pExtractCtrl && ::IsWindow(m_pExtractCtrl->GetSafeHwnd()))
+		m_pExtractCtrl->MoveWindow(10, 50, cx - 20, cy - 60);
 
 	if (::IsWindow(m_btnExtract.GetSafeHwnd()))
 		m_btnRemoveAll.MoveWindow(10, 10, 80, 25);
@@ -61,12 +61,13 @@ void CLottoNumberDlg::OnSize(UINT nType, int cx, int cy)
 
 void CLottoNumberDlg::OnDestroy()
 {
-	if (m_pLottoCtrl)
+	if (m_pExtractCtrl)
 	{
-		if (::IsWindow(m_pLottoCtrl->GetSafeHwnd()))
-			m_pLottoCtrl->DestroyWindow();
-		delete m_pLottoCtrl;
-		m_pLottoCtrl = nullptr;
+		if (::IsWindow(m_pExtractCtrl->GetSafeHwnd()))
+			m_pExtractCtrl->DestroyWindow();
+		
+		delete m_pExtractCtrl;
+		m_pExtractCtrl = nullptr;
 	}
 
 	CDialogEx::OnDestroy();
@@ -74,8 +75,8 @@ void CLottoNumberDlg::OnDestroy()
 
 void CLottoNumberDlg::OnBnClickedRemoveAll()
 {
-	if (m_pLottoCtrl)
-		m_pLottoCtrl->DeleteAllItems();
+	if (m_pExtractCtrl)
+		m_pExtractCtrl->DeleteAllItems();
 }
 
 void CLottoNumberDlg::OnBnClickedExtract()
@@ -101,6 +102,6 @@ void CLottoNumberDlg::OnBnClickedExtract()
 
 	bonusNum.Format(_T("%d"), numbers[6]);
 
-	int nItem = m_pLottoCtrl->GetItemCount();
-	m_pLottoCtrl->InsertLottoRow(nItem, mainNums, bonusNum);
+	int nItem = m_pExtractCtrl->GetItemCount();
+	m_pExtractCtrl->InsertLottoRow(nItem, mainNums, bonusNum);
 }
