@@ -27,6 +27,9 @@ BOOL CLottoNumberDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
+	InitExtractList();
+	InitResultList();
+
 	m_btnRemoveAll.Create(_T("Remove All"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(0, 0, 80, 30), this, 1003);
 	m_btnRemoveAll.SetFaceColor(RGB(255, 255, 255));
 
@@ -138,3 +141,20 @@ void CLottoNumberDlg::OnBnClickedExtract()
 	int nItem = m_pExtractCtrl->GetItemCount();
 	m_pExtractCtrl->InsertLottoRow(nItem, mainNums, bonusNum);
 }
+
+void CLottoNumberDlg::UpdateResultList(int nSelectIndex)
+{
+	m_pResultCtrl->DeleteAllItems();
+
+	// dummy test
+	for (int i = 0; i < 5; ++i)
+	{
+		CString str;
+		str.Format(_T("%d"), 1000 + i);
+		int nIdex = m_pResultCtrl->InsertItem(i, str);
+		m_pResultCtrl->SetItemText(nIdex, 1, _T("12 25 40"));
+		m_pResultCtrl->SetItemText(nIdex, 2, _T("1"));
+		m_pResultCtrl->SetItemText(nIdex, 3, _T("3rd"));
+	}
+}
+
