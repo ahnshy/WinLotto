@@ -17,11 +17,14 @@ void CLottoListCtrl::InitializeColumns()
 
 void CLottoListCtrl::InsertLottoRow(int index, const CString& numbersText, const CString& bonusText)
 {
-	CString gameStr;
-	gameStr.Format(_T("%d"), index + 1);
-	InsertItem(index, gameStr);
-	SetItemText(index, 1, numbersText);
-	SetItemText(index, 2, bonusText);
+	//CString gameStr;
+	//gameStr.Format(_T("%d"), index + 1);
+	//InsertItem(index, gameStr);
+	//SetItemText(index, 1, numbersText);
+	//SetItemText(index, 2, bonusText);
+	InsertItem(index, _T(""));
+	SetItemText(index, 0, numbersText);
+	SetItemText(index, 1, bonusText);
 }
 
 void CLottoListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
@@ -45,8 +48,10 @@ void CLottoListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 		bool hot = (GetHotItem() == index);
 
 		CRect rcNumbers, rcBonus, rcFull;
-		GetSubItemRect(index, 1, LVIR_BOUNDS, rcNumbers);
-		GetSubItemRect(index, 2, LVIR_BOUNDS, rcBonus);
+		//GetSubItemRect(index, 1, LVIR_BOUNDS, rcNumbers);
+		//GetSubItemRect(index, 2, LVIR_BOUNDS, rcBonus);
+		GetSubItemRect(index, 0, LVIR_BOUNDS, rcNumbers);
+		GetSubItemRect(index, 1, LVIR_BOUNDS, rcBonus);
 		GetItemRect(index, &rcFull, LVIR_BOUNDS);
 
 		if (selected)
@@ -56,8 +61,8 @@ void CLottoListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 			g.FillRectangle(&solidBrush, rcFull.left, rcFull.top, rcFull.Width(), rcFull.Height());
 		}
 
-		CString numbers = GetItemText(index, 1);
-		CString bonus = GetItemText(index, 2);
+		CString numbers = GetItemText(index, 0);
+		CString bonus = GetItemText(index, 1);
 
 		DrawBalls(g, rcNumbers, numbers, selected, hot);
 		DrawBonusBall(g, rcBonus, bonus, selected);
@@ -75,7 +80,7 @@ void CLottoListCtrl::DrawBalls(Gdiplus::Graphics& g, const CRect& rc, const CStr
 	int y = rc.CenterPoint().y;
 
 	int fontHeight = BALL_SIZE / 2;
-	Gdiplus::Font font(L"Arial", static_cast<Gdiplus::REAL>(fontHeight), Gdiplus::FontStyleBold, Gdiplus::UnitPixel);
+	Gdiplus::Font font(DEFAULT_FONT, static_cast<Gdiplus::REAL>(fontHeight), Gdiplus::FontStyleBold, Gdiplus::UnitPixel);
 	Gdiplus::StringFormat format;
 	format.SetAlignment(Gdiplus::StringAlignmentCenter);
 	format.SetLineAlignment(Gdiplus::StringAlignmentCenter);
