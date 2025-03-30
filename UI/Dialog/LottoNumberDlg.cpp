@@ -8,7 +8,8 @@
 BEGIN_MESSAGE_MAP(CLottoNumberDlg, CDialogEx)
 	ON_WM_SIZE()
 	ON_WM_DESTROY()
-	ON_BN_CLICKED(1002, &CLottoNumberDlg::OnBnClickedExtract) // 버튼 핸들러 연결
+	ON_BN_CLICKED(1002, &CLottoNumberDlg::OnBnClickedRemoveAll)
+	ON_BN_CLICKED(1003, &CLottoNumberDlg::OnBnClickedExtract)
 END_MESSAGE_MAP()
 
 CLottoNumberDlg::CLottoNumberDlg(CWnd* pParent)
@@ -35,14 +36,10 @@ BOOL CLottoNumberDlg::OnInitDialog()
 	m_pLottoCtrl->InsertColumn(1, _T("Numbers"), LVCFMT_LEFT, 400);
 	m_pLottoCtrl->InsertColumn(2, _T("Bonus"), LVCFMT_LEFT, 50);
 
+	m_btnRemoveAll.Create(_T("Remove All"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(0, 0, 80, 30), this, 1002);
+	m_btnRemoveAll.SetFaceColor(RGB(255, 255, 255));
 
-
-
-	//m_pLottoCtrl->InsertLottoRow(0, _T("11,16,19,21,27,31"), _T("30"));
-	//m_pLottoCtrl->InsertLottoRow(1, _T("2,6,11,16,25,31"), _T("3"));
-	//m_pLottoCtrl->InsertLottoRow(2, _T("5,7,8,12,28,33"), _T("7"));
-
-	m_btnExtract.Create(_T("Extract"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(0, 0, 80, 30), this, 1002);
+	m_btnExtract.Create(_T("Extract"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(0, 0, 80, 30), this, 1003);
 	m_btnExtract.SetFaceColor(RGB(255, 255, 255));
 
 	return TRUE;
@@ -53,15 +50,13 @@ void CLottoNumberDlg::OnSize(UINT nType, int cx, int cy)
 	CDialogEx::OnSize(nType, cx, cy);
 
 	if (m_pLottoCtrl && ::IsWindow(m_pLottoCtrl->GetSafeHwnd()))
-	{
 		m_pLottoCtrl->MoveWindow(10, 50, cx - 20, cy - 60);
-	}
 
-	// 버튼 오른쪽 상단 고정
 	if (::IsWindow(m_btnExtract.GetSafeHwnd()))
-	{
-		m_btnExtract.MoveWindow(cx - 90, 10, 80, 30);
-	}
+		m_btnRemoveAll.MoveWindow(10, 10, 80, 25);
+
+	if (::IsWindow(m_btnExtract.GetSafeHwnd()))
+		m_btnExtract.MoveWindow(cx - 90, 10, 80, 25);
 }
 
 void CLottoNumberDlg::OnDestroy()
@@ -75,6 +70,12 @@ void CLottoNumberDlg::OnDestroy()
 	}
 
 	CDialogEx::OnDestroy();
+}
+
+void CLottoNumberDlg::OnBnClickedRemoveAll()
+{
+	if (m_pLottoCtrl)
+		m_pLottoCtrl->DeleteAllItems();
 }
 
 void CLottoNumberDlg::OnBnClickedExtract()
