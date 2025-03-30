@@ -27,24 +27,47 @@ BOOL CLottoNumberDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
+	m_btnRemoveAll.Create(_T("Remove All"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(0, 0, 80, 30), this, 1003);
+	m_btnRemoveAll.SetFaceColor(RGB(255, 255, 255));
+
+	m_btnExtract.Create(_T("Extract"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(0, 0, 80, 30), this, 1004);
+	m_btnExtract.SetFaceColor(RGB(255, 255, 255));
+
+	return TRUE;
+}
+
+void CLottoNumberDlg::InitExtractList()
+{
 	m_pExtractCtrl = new CLottoListCtrl();
 	CRect rcDummy(0, 0, 100, 100);
+
 	m_pExtractCtrl->Create(WS_CHILD | WS_VISIBLE | LVS_REPORT | LVS_SINGLESEL, rcDummy, this, 1001);
 	m_pExtractCtrl->SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER);
 	m_pExtractCtrl->InitializeColumns();
 
 	//m_pLottoCtrl->InsertColumn(0, _T("No."), LVCFMT_LEFT, 50);
-	m_pExtractCtrl->InsertColumn(0, _T("Numbers"), LVCFMT_LEFT, 200);
-	m_pExtractCtrl->InsertColumn(1, _T("Bonus"), LVCFMT_LEFT, 40);
-
-	m_btnRemoveAll.Create(_T("Remove All"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(0, 0, 80, 30), this, 1002);
-	m_btnRemoveAll.SetFaceColor(RGB(255, 255, 255));
-
-	m_btnExtract.Create(_T("Extract"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(0, 0, 80, 30), this, 1003);
-	m_btnExtract.SetFaceColor(RGB(255, 255, 255));
-
-	return TRUE;
+	m_pExtractCtrl->InsertColumn(0, _T("Numbers"), LVCFMT_CENTER, 190);
+	m_pExtractCtrl->InsertColumn(1, _T("Bonus"), LVCFMT_CENTER, 40);
 }
+
+void CLottoNumberDlg::InitResultList()
+{
+	m_pResultCtrl = new CLottoListCtrl();
+	CRect rcDummy(0, 0, 100, 100);
+
+	m_pResultCtrl->Create(WS_CHILD | WS_VISIBLE | LVS_REPORT | LVS_SINGLESEL, rcDummy, this, 1002);
+	m_pResultCtrl->SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER);
+	m_pResultCtrl->InitializeColumns();
+
+	//m_pResultCtrl->InsertColumn(0, _T("Numbers"), LVCFMT_LEFT, 200);
+	//m_pResultCtrl->InsertColumn(1, _T("Bonus"), LVCFMT_LEFT, 40);
+
+	m_pResultCtrl->InsertColumn(0, _T("No."), LVCFMT_CENTER, 45);
+	m_pResultCtrl->InsertColumn(1, _T("Numbers"), LVCFMT_CENTER, 190);
+	m_pResultCtrl->InsertColumn(2, _T("Date"), LVCFMT_CENTER, 100);
+	m_pResultCtrl->InsertColumn(3, _T("Rank"), LVCFMT_CENTER, 35);
+}
+
 
 void CLottoNumberDlg::OnSize(UINT nType, int cx, int cy)
 {
@@ -69,6 +92,15 @@ void CLottoNumberDlg::OnDestroy()
 		
 		delete m_pExtractCtrl;
 		m_pExtractCtrl = nullptr;
+	}
+
+	if (m_pResultCtrl)
+	{
+		if (::IsWindow(m_pResultCtrl->GetSafeHwnd()))
+			m_pResultCtrl->DestroyWindow();
+
+		delete m_pResultCtrl;
+		m_pResultCtrl = nullptr;
 	}
 
 	CDialogEx::OnDestroy();

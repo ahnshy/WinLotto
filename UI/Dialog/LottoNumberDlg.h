@@ -15,6 +15,9 @@ protected:
 	CMFCButton			m_btnExtract;
 	CMFCButton			m_btnRemoveAll;
 
+	void InitResultList();
+	void InitExtractList();
+
 protected:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
