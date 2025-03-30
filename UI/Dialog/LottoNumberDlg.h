@@ -10,6 +10,7 @@ public:
 
 protected:
     CLottoListCtrl* m_pLottoCtrl;
+	//CFont			m_font;
 
 protected:
     virtual BOOL OnInitDialog();
