@@ -25,21 +25,6 @@ void CLottoListCtrl::OnTimer(UINT_PTR nIDEvent)
 	CListCtrl::OnTimer(nIDEvent);
 }
 
-void CLottoListCtrl::SetData(const vector<LottoData>& data)
-{
-	m_data = data;
-	DeleteAllItems();
-	for (size_t i = 0; i < data.size(); ++i)
-	{
-		CString str;
-		str.Format(_T("%d"), (int)(i + 1));
-		InsertItem((int)i, str);
-		SetItemText((int)i, 1, _T(""));
-		SetItemText((int)i, 2, _T(""));
-	}
-	Invalidate();
-}
-
 void CLottoListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	LPNMLVCUSTOMDRAW pLVCD = reinterpret_cast<LPNMLVCUSTOMDRAW>(pNMHDR);
@@ -52,50 +37,57 @@ void CLottoListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 	else if (pLVCD->nmcd.dwDrawStage == CDDS_ITEMPREPAINT)
 	{
 		int idx = (int)pLVCD->nmcd.dwItemSpec;
-		if (idx < 0 || idx >= (int)m_data.size())
+		if (idx < 0)
 			return;
 
 		CRect rcSubItem;
 		GetSubItemRect(idx, 1, LVIR_BOUNDS, rcSubItem);
 
+		CString numbersText = GetItemText(idx, 1);
+		CString bonusText = GetItemText(idx, 2);
+
 		Graphics g(pLVCD->nmcd.hdc);
 		g.SetSmoothingMode(SmoothingModeAntiAlias);
 
 		bool selected = GetItemState(idx, LVIS_SELECTED) & LVIS_SELECTED;
+		bool hot = (GetHotItem() == idx);
 
-		DrawBalls(g, rcSubItem, m_data[idx], selected);
+		DrawBalls(g, rcSubItem, selected, hot, numbersText, bonusText);
 
 		*pResult = CDRF_SKIPDEFAULT;
 	}
 }
 
-void CLottoListCtrl::DrawBalls(Graphics& g, CRect rc, const LottoData& lotto, bool selected)
+void CLottoListCtrl::DrawBalls(Graphics& g, CRect rc, bool selected, bool hot, const CString& numbersText, const CString& bonusText)
 {
 	const int BALL_SIZE = 26;
 	const int SPACING = 6;
 	int startX = rc.left + 5;
 	int centerY = rc.CenterPoint().y;
 
-	Gdiplus::Pen pen(Color(255, 0, 0, 0));
-	Gdiplus::SolidBrush textBrush(Color(255, 0, 0, 0));
-	Gdiplus::FontFamily fontFamily(DEFAULT_FONT);
-	Gdiplus::Font font(&fontFamily, 120, FontStyleBold, UnitPixel);
-	Gdiplus::StringFormat sf;
+	SolidBrush textBrush(Color(255, 0, 0, 0));
+	FontFamily fontFamily(DEFAULT_FONT);
+	Gdiplus::Font font(&fontFamily, 9.0f, FontStyleBold, UnitPixel);
+	StringFormat sf;
 	sf.SetAlignment(StringAlignmentCenter);
 	sf.SetLineAlignment(StringAlignmentCenter);
 
-	int glow = (int)(abs(sin(m_animationTick * 0.1)) * 30);
+	std::vector<int> numbers;
+	CString token;
+	int curPos = 0;
+	while ((token = numbersText.Tokenize(_T(","), curPos)) != "")
+		numbers.push_back(_ttoi(token));
 
-	for (size_t i = 0; i < lotto.numbers.size(); ++i)
+	for (size_t i = 0; i < numbers.size(); ++i)
 	{
-		int number = lotto.numbers[i];
+		int number = numbers[i];
 		CRect ballRect(startX, centerY - BALL_SIZE / 2, startX + BALL_SIZE, centerY + BALL_SIZE / 2);
 
 		Color baseColor = GetBallColor(number);
-		Color glowColor = Color(255, min(baseColor.GetR() + glow, 255), min(baseColor.GetG() + glow, 255), min(baseColor.GetB() + glow, 255));
-		SolidBrush brush(glowColor);
+		SolidBrush brush(baseColor);
 		g.FillEllipse(&brush, ballRect.left, ballRect.top, BALL_SIZE, BALL_SIZE);
 
+		Pen pen(Color(255, 0, 0, 0));
 		g.DrawEllipse(&pen, ballRect.left, ballRect.top, BALL_SIZE, BALL_SIZE);
 
 		CString str;
@@ -105,15 +97,26 @@ void CLottoListCtrl::DrawBalls(Graphics& g, CRect rc, const LottoData& lotto, bo
 		startX += BALL_SIZE + SPACING;
 	}
 
-	// 보너스 공도 동그랗게
+	// 보너스 공
+	//int nBonus = _ttoi(bonusText);
 	CRect bonusRect(startX, centerY - BALL_SIZE / 2, startX + BALL_SIZE, centerY + BALL_SIZE / 2);
 	SolidBrush bonusBrush(Color(255, 169, 169, 169));
 	g.FillEllipse(&bonusBrush, bonusRect.left, bonusRect.top, BALL_SIZE, BALL_SIZE);
+	Pen pen(Color(255, 0, 0, 0));
 	g.DrawEllipse(&pen, bonusRect.left, bonusRect.top, BALL_SIZE, BALL_SIZE);
 
 	CString bonusStr;
-	bonusStr.Format(_T("%d"), lotto.bonus);
+	bonusStr.Format(_T("%d"), _ttoi(bonusText));
 	g.DrawString(bonusStr, -1, &font, RectF((float)bonusRect.left, (float)bonusRect.top, (float)BALL_SIZE, (float)BALL_SIZE), &sf, &textBrush);
+
+	// Hover 시 하늘색 사각 테두리 강조 (라운드 대신 일반 사각형)
+	if (hot)
+	{
+		Pen hoverPen(Color(255, 173, 216, 230), 2.0f);
+		CRect rcHover = rc;
+		rcHover.InflateRect(-2, -2);
+		g.DrawRectangle(&hoverPen, rcHover.left, rcHover.top, rcHover.Width(), rcHover.Height());
+	}
 }
 
 Color CLottoListCtrl::GetBallColor(int number)

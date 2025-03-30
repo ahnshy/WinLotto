@@ -13,19 +13,10 @@ public:
 	CLottoListCtrl();
 	virtual ~CLottoListCtrl();
 
-	struct LottoData
-	{
-		vector<int> numbers;
-		int bonus;
-	};
-
-	void SetData(const vector<LottoData>& data);
-
 protected:
-	vector<LottoData> m_data;
 	ULONG_PTR m_animationTick;
 
-	void DrawBalls(Gdiplus::Graphics& g, CRect rc, const LottoData& lotto, bool selected);
+	void DrawBalls(Gdiplus::Graphics& g, CRect rc, bool selected, bool hot, const CString& numbersText, const CString& bonusText);
 	Color GetBallColor(int number);
 
 protected:
