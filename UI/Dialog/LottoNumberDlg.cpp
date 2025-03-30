@@ -15,6 +15,7 @@ END_MESSAGE_MAP()
 CLottoNumberDlg::CLottoNumberDlg(CWnd* pParent)
 	: CDialogEx(IDD_DIALOG_EMPTY, pParent)
 	, m_pExtractCtrl(nullptr)
+	, m_pResultCtrl(nullptr)
 {
 }
 
