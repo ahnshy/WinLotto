@@ -63,32 +63,18 @@ BOOL CLottoNumberDlg::OnInitDialog()
 	m_pLottoCtrl->InsertColumn(1, _T("Numbers"), LVCFMT_LEFT, 400);
 	m_pLottoCtrl->InsertColumn(2, _T("Bonus"), LVCFMT_LEFT, 50);
 
-	/*
-	for (int i = 0; i < 50; ++i)
-	{
-		CString numStr, valueStr;
-		numStr.Format(_T("%d"), i + 1);
-		valueStr.Format(_T("%d"), i + 1);
+	// 로또번호 + 보너스 번호 삽입
+	int nItem = m_pLottoCtrl->InsertItem(0, _T("1"));
+	m_pLottoCtrl->SetItemText(nItem, 1, _T("11,16,19,21,27,31"));
+	m_pLottoCtrl->SetItemText(nItem, 2, _T("30"));
 
-		int index = m_pLottoCtrl->InsertItem(i, numStr);
+	nItem = m_pLottoCtrl->InsertItem(1, _T("2"));
+	m_pLottoCtrl->SetItemText(nItem, 1, _T("2,6,11,16,25,31"));
+	m_pLottoCtrl->SetItemText(nItem, 2, _T("3"));
 
-		m_pLottoCtrl->SetItemText(index, 1, valueStr);
-	}
-
-	//m_pLottoCtrl->InsertColumn(0, _T("Numbers"), LVCFMT_LEFT, 50);
-	for (int i = 0; i < 50; ++i)
-	{
-		CString str;
-		str.Format(_T("%d"), i + 1);
-		m_pLottoCtrl->InsertItem(i, str);
-	}
-	*/
-
-	std::vector<CLottoListCtrl::LottoData> data = {
-		{ { 11, 16, 19, 21, 27, 31 }, 30 },
-		{ { 2, 6, 11, 16, 25, 31 }, 3 },
-	};
-	m_pLottoCtrl->SetData(data);
+	nItem = m_pLottoCtrl->InsertItem(2, _T("3"));
+	m_pLottoCtrl->SetItemText(nItem, 1, _T("5,7,8,12,28,33"));
+	m_pLottoCtrl->SetItemText(nItem, 2, _T("7"));
 
     return TRUE;
 }
