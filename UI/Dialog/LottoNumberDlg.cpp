@@ -32,9 +32,9 @@ BOOL CLottoNumberDlg::OnInitDialog()
 	m_pLottoCtrl->SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER);
 	m_pLottoCtrl->InitializeColumns();
 
-	m_pLottoCtrl->InsertColumn(0, _T("No."), LVCFMT_LEFT, 50);
-	m_pLottoCtrl->InsertColumn(1, _T("Numbers"), LVCFMT_LEFT, 400);
-	m_pLottoCtrl->InsertColumn(2, _T("Bonus"), LVCFMT_LEFT, 50);
+	//m_pLottoCtrl->InsertColumn(0, _T("No."), LVCFMT_LEFT, 50);
+	m_pLottoCtrl->InsertColumn(0, _T("Numbers"), LVCFMT_LEFT, 200);
+	m_pLottoCtrl->InsertColumn(1, _T("Bonus"), LVCFMT_LEFT, 40);
 
 	m_btnRemoveAll.Create(_T("Remove All"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(0, 0, 80, 30), this, 1002);
 	m_btnRemoveAll.SetFaceColor(RGB(255, 255, 255));
