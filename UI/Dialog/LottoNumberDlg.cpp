@@ -6,8 +6,13 @@
 #include "../../resource.h"
 
 BEGIN_MESSAGE_MAP(CLottoNumberDlg, CDialogEx)
+	ON_WM_PAINT()
 	ON_WM_SIZE()
+	ON_WM_LBUTTONDOWN()
+	ON_WM_MOUSEMOVE()
+	ON_WM_LBUTTONUP()
 	ON_WM_DESTROY()
+	ON_WM_SETCURSOR()
 	ON_BN_CLICKED(1003, &CLottoNumberDlg::OnBnClickedRemoveAll)
 	ON_BN_CLICKED(1004, &CLottoNumberDlg::OnBnClickedExtract)
 	ON_NOTIFY(LVN_ITEMCHANGED, 1001, &CLottoNumberDlg::OnSelChangeRandomList)
@@ -17,7 +22,10 @@ CLottoNumberDlg::CLottoNumberDlg(CWnd* pParent)
 	: CDialogEx(IDD_DIALOG_EMPTY, pParent)
 	, m_pExtractCtrl(nullptr)
 	, m_pResultCtrl(nullptr)
+	, m_bDragging(FALSE)
+	, m_nSplitPos(300)
 {
+	m_rcSplitBar.SetRectEmpty();
 }
 
 CLottoNumberDlg::~CLottoNumberDlg()
@@ -72,6 +80,19 @@ void CLottoNumberDlg::InitResultList()
 	m_pResultCtrl->InsertColumn(3, _T("Rank"), LVCFMT_CENTER, 35);
 }
 
+void CLottoNumberDlg::OnPaint()
+{
+	CPaintDC dc(this);
+
+	//CBrush brush(RGB(150, 150, 150));
+	//dc.FillRect(m_rcSplitBar, &brush);
+
+	CBrush brush(RGB(92, 92, 92));
+	dc.FillRect(m_rcSplitBar, &brush);
+
+	dc.Draw3dRect(m_rcSplitBar, RGB(120, 120, 120), RGB(220, 220, 220));
+}
+
 
 void CLottoNumberDlg::OnSize(UINT nType, int cx, int cy)
 {
@@ -83,15 +104,21 @@ void CLottoNumberDlg::OnSize(UINT nType, int cx, int cy)
 	if (::IsWindow(m_btnExtract.GetSafeHwnd()))
 		m_btnExtract.MoveWindow(cx - 90, 10, 80, 25);
 
-	int topMargin = 45;    // 버튼 아래 여백
-	int spacing = 5;       // 리스트 간 간격
-	int listWidth = (cx - 30) / 2; // 양쪽 리스트 너비
+	int topMargin = 45;
+	int splitBarWidth = 4;
+
+	if (m_nSplitPos < 100) m_nSplitPos = 100;
+	if (m_nSplitPos > cx - 100) m_nSplitPos = cx - 100;
+
+	m_rcSplitBar.SetRect(m_nSplitPos - splitBarWidth / 2, topMargin, m_nSplitPos + splitBarWidth / 2, cy - 10);
 
 	if (m_pExtractCtrl && ::IsWindow(m_pExtractCtrl->GetSafeHwnd()))
-		m_pExtractCtrl->MoveWindow(10, topMargin, listWidth, cy - topMargin - 10);
+		m_pExtractCtrl->MoveWindow(10, topMargin, m_nSplitPos - 12, cy - topMargin - 10);
 
 	if (m_pResultCtrl && ::IsWindow(m_pResultCtrl->GetSafeHwnd()))
-		m_pResultCtrl->MoveWindow(15 + listWidth, topMargin, listWidth, cy - topMargin - 10);
+		m_pResultCtrl->MoveWindow(m_nSplitPos + 4, topMargin, cx - m_nSplitPos - 14, cy - topMargin - 10);
+
+	Invalidate(FALSE);
 }
 
 void CLottoNumberDlg::OnDestroy()
@@ -176,3 +203,51 @@ void CLottoNumberDlg::UpdateResultList(int nSelectIndex)
 	}
 }
 
+BOOL CLottoNumberDlg::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
+{
+	CPoint pt;
+	GetCursorPos(&pt);
+	ScreenToClient(&pt);
+
+	if (m_rcSplitBar.PtInRect(pt))
+	{
+		::SetCursor(AfxGetApp()->LoadStandardCursor(IDC_SIZEWE));
+		return TRUE;
+	}
+	return CDialogEx::OnSetCursor(pWnd, nHitTest, message);
+}
+
+void CLottoNumberDlg::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	if (m_rcSplitBar.PtInRect(point))
+	{
+		m_bDragging = TRUE;
+		SetCapture();
+	}
+	CDialogEx::OnLButtonDown(nFlags, point);
+}
+
+void CLottoNumberDlg::OnMouseMove(UINT nFlags, CPoint point)
+{
+	if (m_bDragging)
+	{
+		CRect rc;
+		GetClientRect(&rc);
+		int cx = rc.Width();
+		m_nSplitPos = max(100, min(point.x, cx - 100));
+
+		Invalidate(FALSE);
+		OnSize(0, cx, rc.Height()); // 실시간 업데이트
+	}
+	CDialogEx::OnMouseMove(nFlags, point);
+}
+
+void CLottoNumberDlg::OnLButtonUp(UINT nFlags, CPoint point)
+{
+	if (m_bDragging)
+	{
+		m_bDragging = FALSE;
+		ReleaseCapture();
+	}
+	CDialogEx::OnLButtonUp(nFlags, point);
+}
