@@ -8,8 +8,8 @@
 BEGIN_MESSAGE_MAP(CLottoNumberDlg, CDialogEx)
 	ON_WM_SIZE()
 	ON_WM_DESTROY()
-	ON_BN_CLICKED(1002, &CLottoNumberDlg::OnBnClickedRemoveAll)
-	ON_BN_CLICKED(1003, &CLottoNumberDlg::OnBnClickedExtract)
+	ON_BN_CLICKED(1003, &CLottoNumberDlg::OnBnClickedRemoveAll)
+	ON_BN_CLICKED(1004, &CLottoNumberDlg::OnBnClickedExtract)
 	ON_NOTIFY(LVN_ITEMCHANGED, 1001, &CLottoNumberDlg::OnSelChangeRandomList)
 END_MESSAGE_MAP()
 
@@ -77,22 +77,21 @@ void CLottoNumberDlg::OnSize(UINT nType, int cx, int cy)
 {
 	CDialogEx::OnSize(nType, cx, cy);
 
-	if (m_pExtractCtrl && ::IsWindow(m_pExtractCtrl->GetSafeHwnd()))
-		m_pExtractCtrl->MoveWindow(10, 50, cx - 20, cy - 60);
-
-	if (::IsWindow(m_btnExtract.GetSafeHwnd()))
+	if (::IsWindow(m_btnRemoveAll.GetSafeHwnd()))
 		m_btnRemoveAll.MoveWindow(10, 10, 80, 25);
 
 	if (::IsWindow(m_btnExtract.GetSafeHwnd()))
 		m_btnExtract.MoveWindow(cx - 90, 10, 80, 25);
 
-		
-	//m_wndRandomList.MoveWindow(10, 10, splitX - 15, cy - 20);
-	int splitX = cx / 2;
-	if (m_pResultCtrl && ::IsWindow(m_pResultCtrl->GetSafeHwnd()))
-		m_pResultCtrl->MoveWindow(splitX + 5, 10, cx - splitX - 15, cy - 20);
+	int topMargin = 45;    // 버튼 아래 여백
+	int spacing = 5;       // 리스트 간 간격
+	int listWidth = (cx - 30) / 2; // 양쪽 리스트 너비
 
-	//m_rcSplitBar.SetRect(splitX - 1, 10, splitX + 1, cy - 10);
+	if (m_pExtractCtrl && ::IsWindow(m_pExtractCtrl->GetSafeHwnd()))
+		m_pExtractCtrl->MoveWindow(10, topMargin, listWidth, cy - topMargin - 10);
+
+	if (m_pResultCtrl && ::IsWindow(m_pResultCtrl->GetSafeHwnd()))
+		m_pResultCtrl->MoveWindow(15 + listWidth, topMargin, listWidth, cy - topMargin - 10);
 }
 
 void CLottoNumberDlg::OnDestroy()
