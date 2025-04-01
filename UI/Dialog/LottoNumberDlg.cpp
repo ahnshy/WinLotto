@@ -5,6 +5,8 @@
 #include "LottoNumberDlg.h"
 #include "../../resource.h"
 
+#include "../../Data/WinsNumberManager.h"
+
 BEGIN_MESSAGE_MAP(CLottoNumberDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_SIZE()
@@ -71,13 +73,16 @@ void CLottoNumberDlg::InitResultList()
 	m_pResultCtrl->SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER);
 	//m_pResultCtrl->InitializeColumns();
 
-	//m_pResultCtrl->InsertColumn(0, _T("Numbers"), LVCFMT_LEFT, 200);
-	//m_pResultCtrl->InsertColumn(1, _T("Bonus"), LVCFMT_LEFT, 40);
+	m_pResultCtrl->InsertColumn(0, _T("Round"), LVCFMT_CENTER, 60);
+	m_pResultCtrl->InsertColumn(1, _T("Numbers"), LVCFMT_CENTER, 180);
+	m_pResultCtrl->InsertColumn(2, _T("Bonus"), LVCFMT_CENTER, 40);
+	m_pResultCtrl->InsertColumn(3, _T("Date"), LVCFMT_CENTER, 100);
+	m_pResultCtrl->InsertColumn(4, _T("Rank"), LVCFMT_CENTER, 40);
 
-	m_pResultCtrl->InsertColumn(0, _T("No."), LVCFMT_CENTER, 45);
-	m_pResultCtrl->InsertColumn(1, _T("Numbers"), LVCFMT_CENTER, 190);
-	m_pResultCtrl->InsertColumn(2, _T("Date"), LVCFMT_CENTER, 100);
-	m_pResultCtrl->InsertColumn(3, _T("Rank"), LVCFMT_CENTER, 35);
+	//m_pResultCtrl->InsertColumn(0, _T("No."), LVCFMT_CENTER, 45);
+	//m_pResultCtrl->InsertColumn(1, _T("Numbers"), LVCFMT_CENTER, 190);
+	//m_pResultCtrl->InsertColumn(2, _T("Date"), LVCFMT_CENTER, 100);
+	//m_pResultCtrl->InsertColumn(3, _T("Rank"), LVCFMT_CENTER, 35);
 }
 
 void CLottoNumberDlg::OnPaint()
@@ -186,23 +191,6 @@ void CLottoNumberDlg::OnSelChangeRandomList(NMHDR* pNMHDR, LRESULT* pResult)
 	*pResult = 0;
 }
 
-
-void CLottoNumberDlg::UpdateResultList(int nSelectIndex)
-{
-	m_pResultCtrl->DeleteAllItems();
-
-	// dummy test
-	for (int i = 0; i < 5; ++i)
-	{
-		CString str;
-		str.Format(_T("%d"), 1000 + i);
-		int nIdex = m_pResultCtrl->InsertItem(i, str);
-		m_pResultCtrl->SetItemText(nIdex, 1, _T("12 25 40"));
-		m_pResultCtrl->SetItemText(nIdex, 2, _T("1"));
-		m_pResultCtrl->SetItemText(nIdex, 3, _T("3rd"));
-	}
-}
-
 BOOL CLottoNumberDlg::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 {
 	CPoint pt;
@@ -237,7 +225,7 @@ void CLottoNumberDlg::OnMouseMove(UINT nFlags, CPoint point)
 		m_nSplitPos = max(100, min(point.x, cx - 100));
 
 		Invalidate(FALSE);
-		OnSize(0, cx, rc.Height()); // 실시간 업데이트
+		OnSize(0, cx, rc.Height());
 	}
 	CDialogEx::OnMouseMove(nFlags, point);
 }
@@ -250,4 +238,76 @@ void CLottoNumberDlg::OnLButtonUp(UINT nFlags, CPoint point)
 		ReleaseCapture();
 	}
 	CDialogEx::OnLButtonUp(nFlags, point);
+}
+
+void CLottoNumberDlg::UpdateResultList(int nSelectIndex)
+{
+	if (!m_pResultCtrl || !m_pExtractCtrl) return;
+
+	m_pResultCtrl->DeleteAllItems();
+
+	CString strNumbers = m_pExtractCtrl->GetItemText(nSelectIndex, 0);
+	CString strBonus = m_pExtractCtrl->GetItemText(nSelectIndex, 1);
+
+	std::vector<int> selectedNums;
+	int curPos = 0;
+	CString token;
+	while (!(token = strNumbers.Tokenize(_T(","), curPos)).IsEmpty())
+		selectedNums.push_back(_ttoi(token));
+	int bonusNum = _ttoi(strBonus);
+
+	auto* pManager = CWinsNumberManager::GetInstance();
+	auto& mapRounds = pManager->GetRoundMap();
+
+	int nItem = 0;
+	for (const auto& roundPair : mapRounds)
+	{
+		auto* pItem = roundPair.second;
+		if (!pItem) continue;
+
+		std::vector<int> winNums;
+		for (int i = 0; i < 6; ++i)
+			winNums.push_back(pItem->GetWinNumbers(i));
+		int winBonus = pItem->GetWinNumbers(6);
+
+		// 매칭
+		int matchCount = 0;
+		bool bonusMatch = false;
+		for (const auto& num : selectedNums)
+		{
+			if (std::find(winNums.begin(), winNums.end(), num) != winNums.end())
+				++matchCount;
+		}
+		if (bonusNum == winBonus)
+			bonusMatch = true;
+
+		CString strRank = _T("-");
+		if (matchCount == 6) strRank = _T("1st");
+		else if (matchCount == 5 && bonusMatch) strRank = _T("2nd");
+		else if (matchCount == 5) strRank = _T("3rd");
+		else if (matchCount == 4) strRank = _T("4th");
+		else if (matchCount == 3) strRank = _T("5th");
+
+		CString strNumCSV;
+		for (size_t i = 0; i < winNums.size(); ++i)
+		{
+			strNumCSV.AppendFormat(_T("%d"), winNums[i]);
+			if (i != winNums.size() - 1) strNumCSV += _T(",");
+		}
+
+		if (strRank.CompareNoCase(_T("-")) != 0)
+		{
+			CString strBuffer;
+			int nIdx = m_pResultCtrl->InsertItem(nItem, strNumCSV);
+			strBuffer.Format(_T("%d"), winBonus);
+			m_pResultCtrl->SetItemText(nIdx, 0, strBuffer);
+
+			strBuffer.Format(_T("%d"), pItem->GetRound());
+			m_pResultCtrl->SetItemText(nIdx, 1, strBuffer);
+			m_pResultCtrl->SetItemText(nIdx, 2, pItem->GetDate());
+			m_pResultCtrl->SetItemText(nIdx, 3, strRank);
+		}
+
+		++nItem;
+	}
 }
