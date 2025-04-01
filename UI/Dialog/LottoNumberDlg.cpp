@@ -23,7 +23,7 @@ CLottoNumberDlg::CLottoNumberDlg(CWnd* pParent)
 	, m_pExtractCtrl(nullptr)
 	, m_pResultCtrl(nullptr)
 	, m_bDragging(FALSE)
-	, m_nSplitPos(300)
+	, m_nSplitPos(245)
 {
 	m_rcSplitBar.SetRectEmpty();
 }
