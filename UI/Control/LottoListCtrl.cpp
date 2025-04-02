@@ -41,44 +41,67 @@ void CLottoListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 	LPNMLVCUSTOMDRAW pLVCD = reinterpret_cast<LPNMLVCUSTOMDRAW>(pNMHDR);
 	*pResult = CDRF_DODEFAULT;
 
-	if (pLVCD->nmcd.dwDrawStage == CDDS_PREPAINT)
+	switch (pLVCD->nmcd.dwDrawStage)
 	{
+	case CDDS_PREPAINT:
 		*pResult = CDRF_NOTIFYITEMDRAW;
-	}
-	else if (pLVCD->nmcd.dwDrawStage == CDDS_ITEMPREPAINT)
+		break;
+
+	case CDDS_ITEMPREPAINT:
+		*pResult = CDRF_NOTIFYPOSTPAINT | CDRF_NOTIFYITEMDRAW | CDRF_NOTIFYSUBITEMDRAW;
+		break;
+
+	case (CDDS_ITEMPREPAINT | CDDS_SUBITEM) :
 	{
 		int index = static_cast<int>(pLVCD->nmcd.dwItemSpec);
+		int subItem = pLVCD->iSubItem;
+
+		if (subItem >= 2)
+		{
+			*pResult = CDRF_DODEFAULT;
+			return;
+		}
 
 		CDC* pDC = CDC::FromHandle(pLVCD->nmcd.hdc);
 		Gdiplus::Graphics g(pDC->GetSafeHdc());
 		g.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
 
-		bool selected = (GetItemState(index, LVIS_SELECTED) & LVIS_SELECTED) != 0;
-		bool hot = (GetHotItem() == index);
+		const bool selected = (GetItemState(index, LVIS_SELECTED) & LVIS_SELECTED) != 0;
+		const bool hot = (GetHotItem() == index);
 
-		CRect rcNumbers, rcBonus, rcFull;
-		//GetSubItemRect(index, 1, LVIR_BOUNDS, rcNumbers);
-		//GetSubItemRect(index, 2, LVIR_BOUNDS, rcBonus);
-		GetSubItemRect(index, 0, LVIR_BOUNDS, rcNumbers);
-		GetSubItemRect(index, 1, LVIR_BOUNDS, rcBonus);
-		GetItemRect(index, &rcFull, LVIR_BOUNDS);
+		CRect rc;
+		GetSubItemRect(index, subItem, LVIR_BOUNDS, rc);
 
 		if (selected)
 		{
+			CRect rcFull;
+			GetItemRect(index, &rcFull, LVIR_BOUNDS);
 			rcFull.InflateRect(-1, -1);
 			Gdiplus::SolidBrush solidBrush(Gdiplus::Color(128, 204, 232, 255));
 			g.FillRectangle(&solidBrush, rcFull.left, rcFull.top, rcFull.Width(), rcFull.Height());
 		}
 
-		CString numbers = GetItemText(index, 0);
-		CString bonus = GetItemText(index, 1);
-
-		DrawBalls(g, rcNumbers, numbers, selected, hot);
-		DrawBonusBall(g, rcBonus, bonus, selected);
+		if (subItem == 0)
+		{
+			const CString numbers = GetItemText(index, 0);
+			DrawBalls(g, rc, numbers, selected, hot);
+		}
+		else if (subItem == 1)
+		{
+			const CString bonus = GetItemText(index, 1);
+			DrawBonusBall(g, rc, bonus, selected);
+		}
 
 		*pResult = CDRF_SKIPDEFAULT;
+		break;
+	}
+
+	default:
+		*pResult = CDRF_DODEFAULT;
+		break;
 	}
 }
+
 
 void CLottoListCtrl::DrawBalls(Gdiplus::Graphics& g, const CRect& rc, const CString& numbersText, bool selected, bool hot)
 {
