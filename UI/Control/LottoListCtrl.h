@@ -10,7 +10,9 @@ public:
 	virtual ~CLottoListCtrl();
 
 	void InitializeColumns();
-	void InsertLottoRow(int index, const CString& numbersText, const CString& bonusText);
+
+	void InsertLottoRow(int nIndex, const CString& strWinsNumber, const CString& strBonus);
+	void InsertLottoRow(int nIndex, const CString& strWinsNumber, const CString& strBonus, const CString& strRank, const CString& strDate);
 
 protected:
 	void DrawBalls(Gdiplus::Graphics& g, const CRect& rc, const CString& numbersText, bool selected, bool hot);
