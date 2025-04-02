@@ -71,13 +71,13 @@ void CLottoNumberDlg::InitResultList()
 
 	m_pResultCtrl->Create(WS_CHILD | WS_VISIBLE | LVS_REPORT | LVS_SINGLESEL, rcDummy, this, 1002);
 	m_pResultCtrl->SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER);
-	//m_pResultCtrl->InitializeColumns();
+	m_pResultCtrl->InitializeColumns();
 
-	m_pResultCtrl->InsertColumn(0, _T("Round"), LVCFMT_CENTER, 60);
-	m_pResultCtrl->InsertColumn(1, _T("Numbers"), LVCFMT_CENTER, 180);
-	m_pResultCtrl->InsertColumn(2, _T("Bonus"), LVCFMT_CENTER, 40);
+	//m_pResultCtrl->InsertColumn(0, _T("Round"), LVCFMT_CENTER, 60);
+	m_pResultCtrl->InsertColumn(0, _T("Numbers"), LVCFMT_CENTER, 180);
+	m_pResultCtrl->InsertColumn(1, _T("Bonus"), LVCFMT_CENTER, 40);
+	m_pResultCtrl->InsertColumn(2, _T("Rank"), LVCFMT_CENTER, 40);
 	m_pResultCtrl->InsertColumn(3, _T("Date"), LVCFMT_CENTER, 100);
-	m_pResultCtrl->InsertColumn(4, _T("Rank"), LVCFMT_CENTER, 40);
 
 	//m_pResultCtrl->InsertColumn(0, _T("No."), LVCFMT_CENTER, 45);
 	//m_pResultCtrl->InsertColumn(1, _T("Numbers"), LVCFMT_CENTER, 190);
@@ -297,15 +297,22 @@ void CLottoNumberDlg::UpdateResultList(int nSelectIndex)
 
 		if (!strRank.IsEmpty())
 		{
-			CString strBuffer;
-			int nIdx = m_pResultCtrl->InsertItem(nItem, strNumCSV);
-			strBuffer.Format(_T("%d"), winBonus);
-			m_pResultCtrl->SetItemText(nIdx, 0, strBuffer);
 
-			strBuffer.Format(_T("%d"), pItem->GetRound());
-			m_pResultCtrl->SetItemText(nIdx, 1, strBuffer);
-			m_pResultCtrl->SetItemText(nIdx, 2, pItem->GetDate());
-			m_pResultCtrl->SetItemText(nIdx, 3, strRank);
+			int nItem = m_pResultCtrl->GetItemCount();
+			CString strBuffer = pItem->GetDate(), strBonus;
+			strBonus.Format(_T("%d"), winBonus);
+			
+			m_pResultCtrl->InsertLottoRow(nItem, strNumCSV, strBonus, strRank, strBuffer);
+
+			//CString strBuffer;
+			//int nIdx = m_pResultCtrl->InsertItem(nItem, strNumCSV);
+			//strBuffer.Format(_T("%d"), winBonus);
+			//m_pResultCtrl->SetItemText(nIdx, 0, strBuffer);
+
+			//strBuffer.Format(_T("%d"), pItem->GetRound());
+			//m_pResultCtrl->SetItemText(nIdx, 1, strBuffer);
+			//m_pResultCtrl->SetItemText(nIdx, 2, pItem->GetDate());
+			//m_pResultCtrl->SetItemText(nIdx, 3, strRank);
 		}
 
 		++nItem;
