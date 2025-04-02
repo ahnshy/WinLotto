@@ -15,16 +15,25 @@ void CLottoListCtrl::InitializeColumns()
 	SetImageList(&imageList, LVSIL_SMALL);
 }
 
-void CLottoListCtrl::InsertLottoRow(int index, const CString& numbersText, const CString& bonusText)
+void CLottoListCtrl::InsertLottoRow(int nIndex, const CString& strWinsNumber, const CString& strBonus)
 {
 	//CString gameStr;
 	//gameStr.Format(_T("%d"), index + 1);
 	//InsertItem(index, gameStr);
 	//SetItemText(index, 1, numbersText);
 	//SetItemText(index, 2, bonusText);
-	InsertItem(index, _T(""));
-	SetItemText(index, 0, numbersText);
-	SetItemText(index, 1, bonusText);
+	InsertItem(nIndex, _T(""));
+	SetItemText(nIndex, 0, strWinsNumber);
+	SetItemText(nIndex, 1, strBonus);
+}
+
+void CLottoListCtrl::InsertLottoRow(int nIndex, const CString& strWinsNumber, const CString& strBonus, const CString& strRank, const CString& strDate)
+{
+	InsertItem(nIndex, _T(""));
+	SetItemText(nIndex, 0, strWinsNumber);
+	SetItemText(nIndex, 1, strBonus);
+	SetItemText(nIndex, 2, strRank);
+	SetItemText(nIndex, 3, strDate);
 }
 
 void CLottoListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
