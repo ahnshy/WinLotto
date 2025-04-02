@@ -281,7 +281,7 @@ void CLottoNumberDlg::UpdateResultList(int nSelectIndex)
 		if (bonusNum == winBonus)
 			bonusMatch = true;
 
-		CString strRank = _T("-");
+		CString strRank = _T("");
 		if (matchCount == 6) strRank = _T("1st");
 		else if (matchCount == 5 && bonusMatch) strRank = _T("2nd");
 		else if (matchCount == 5) strRank = _T("3rd");
@@ -295,7 +295,7 @@ void CLottoNumberDlg::UpdateResultList(int nSelectIndex)
 			if (i != winNums.size() - 1) strNumCSV += _T(",");
 		}
 
-		if (strRank.CompareNoCase(_T("-")) != 0)
+		if (!strRank.IsEmpty())
 		{
 			CString strBuffer;
 			int nIdx = m_pResultCtrl->InsertItem(nItem, strNumCSV);
