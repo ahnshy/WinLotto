@@ -246,7 +246,6 @@ void CLottoNumberDlg::UpdateResultList(int nSelectIndex)
 
 	m_pResultCtrl->DeleteAllItems();
 
-	// 현재 선택된 번호 읽기
 	CString strNumbers = m_pExtractCtrl->GetItemText(nSelectIndex, 0);
 	CString strBonus = m_pExtractCtrl->GetItemText(nSelectIndex, 1);
 
@@ -272,15 +271,12 @@ void CLottoNumberDlg::UpdateResultList(int nSelectIndex)
 			winNums.push_back(pItem->GetWinNumbers(i));
 		const int winBonus = pItem->GetWinNumbers(6);
 
-		// ---------- [★ 핵심] ---------- //
-		// 맞은 번호만 골라내기
 		std::vector<int> matchedNums;
 		for (const auto& num : selectedNums)
 		{
 			if (std::find(winNums.begin(), winNums.end(), num) != winNums.end())
 				matchedNums.push_back(num);
 		}
-		// ----------------------------- //
 
 		const bool bonusMatch = (bonusNum == winBonus);
 
@@ -291,8 +287,6 @@ void CLottoNumberDlg::UpdateResultList(int nSelectIndex)
 		else if (matchedNums.size() == 4) strRank = _T("4th");
 		else if (matchedNums.size() == 3) strRank = _T("5th");
 
-		// ---------- [★ 핵심] ---------- //
-		// 맞은 번호만 CSV로 만들기
 		CString strMatchedCSV;
 		for (size_t i = 0; i < matchedNums.size(); ++i)
 		{
@@ -300,7 +294,6 @@ void CLottoNumberDlg::UpdateResultList(int nSelectIndex)
 			if (i != matchedNums.size() - 1)
 				strMatchedCSV += _T(",");
 		}
-		// ----------------------------- //
 
 		if (!strRank.IsEmpty())
 		{
@@ -308,91 +301,7 @@ void CLottoNumberDlg::UpdateResultList(int nSelectIndex)
 			CString strDate = pItem->GetDate();
 			CString strBonusText;
 			strBonusText.Format(_T("%d"), winBonus);
-
-			// 여기서 맞은 번호만 전달
 			m_pResultCtrl->InsertLottoRow(nItem, strMatchedCSV, strBonusText, strRank, strDate);
 		}
 	}
 }
-
-
-/*
-void CLottoNumberDlg::UpdateResultList(int nSelectIndex)
-{
-	if (!m_pResultCtrl || !m_pExtractCtrl) return;
-
-	m_pResultCtrl->DeleteAllItems();
-
-	CString strNumbers = m_pExtractCtrl->GetItemText(nSelectIndex, 0);
-	CString strBonus = m_pExtractCtrl->GetItemText(nSelectIndex, 1);
-
-	std::vector<int> selectedNums;
-	int curPos = 0;
-	CString token;
-	while (!(token = strNumbers.Tokenize(_T(","), curPos)).IsEmpty())
-		selectedNums.push_back(_ttoi(token));
-	int bonusNum = _ttoi(strBonus);
-
-	auto* pManager = CWinsNumberManager::GetInstance();
-	auto& mapRounds = pManager->GetRoundMap();
-
-	int nItem = 0;
-	for (const auto& roundPair : mapRounds)
-	{
-		auto* pItem = roundPair.second;
-		if (!pItem) continue;
-
-		std::vector<int> winNums;
-		for (int i = 0; i < 6; ++i)
-			winNums.push_back(pItem->GetWinNumbers(i));
-		int winBonus = pItem->GetWinNumbers(6);
-
-		// 매칭
-		int matchCount = 0;
-		bool bonusMatch = false;
-		for (const auto& num : selectedNums)
-		{
-			if (std::find(winNums.begin(), winNums.end(), num) != winNums.end())
-				++matchCount;
-		}
-		if (bonusNum == winBonus)
-			bonusMatch = true;
-
-		CString strRank = _T("");
-		if (matchCount == 6) strRank = _T("1st");
-		else if (matchCount == 5 && bonusMatch) strRank = _T("2nd");
-		else if (matchCount == 5) strRank = _T("3rd");
-		else if (matchCount == 4) strRank = _T("4th");
-		else if (matchCount == 3) strRank = _T("5th");
-
-		CString strNumCSV;
-		for (size_t i = 0; i < winNums.size(); ++i)
-		{
-			strNumCSV.AppendFormat(_T("%d"), winNums[i]);
-			if (i != winNums.size() - 1) strNumCSV += _T(",");
-		}
-
-		if (!strRank.IsEmpty())
-		{
-
-			int nItem = m_pResultCtrl->GetItemCount();
-			CString strBuffer = pItem->GetDate(), strBonus;
-			strBonus.Format(_T("%d"), winBonus);
-			
-			m_pResultCtrl->InsertLottoRow(nItem, strNumCSV, strBonus, strRank, strBuffer);
-
-			//CString strBuffer;
-			//int nIdx = m_pResultCtrl->InsertItem(nItem, strNumCSV);
-			//strBuffer.Format(_T("%d"), winBonus);
-			//m_pResultCtrl->SetItemText(nIdx, 0, strBuffer);
-
-			//strBuffer.Format(_T("%d"), pItem->GetRound());
-			//m_pResultCtrl->SetItemText(nIdx, 1, strBuffer);
-			//m_pResultCtrl->SetItemText(nIdx, 2, pItem->GetDate());
-			//m_pResultCtrl->SetItemText(nIdx, 3, strRank);
-		}
-
-		++nItem;
-	}
-}
-*/
