@@ -10,7 +10,7 @@ END_MESSAGE_MAP()
 
 void CLottoListCtrl::InitializeColumns()
 {
-	static CImageList imageList;
+	CImageList imageList;
 	imageList.Create(1, 36, ILC_COLOR32, 1, 1);
 	SetImageList(&imageList, LVSIL_SMALL);
 }
