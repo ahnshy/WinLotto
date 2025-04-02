@@ -143,9 +143,9 @@ void CLottoListCtrl::DrawBonusBall(Gdiplus::Graphics& g, const CRect& rc, const 
 
 Gdiplus::Color CLottoListCtrl::GetBallColor(int number)
 {
-	if (number <= 10) return Gdiplus::Color(255, 255, 215, 0);
-	if (number <= 20) return Gdiplus::Color(255, 30, 144, 255);
-	if (number <= 30) return Gdiplus::Color(255, 220, 20, 60);
-	if (number <= 40) return Gdiplus::Color(255, 50, 205, 50);
-	return Gdiplus::Color(255, 169, 169, 169);
+	if (number < 10) return Gdiplus::Color(255, 251, 196, 0);
+	if (number < 20) return Gdiplus::Color(255, 105, 200, 242);
+	if (number < 30) return Gdiplus::Color(255, 255, 114, 114);
+	if (number < 40) return Gdiplus::Color(255, 170, 170, 170);
+	return Gdiplus::Color(255, 176, 216, 64);
 }
