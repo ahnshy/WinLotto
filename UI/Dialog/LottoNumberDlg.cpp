@@ -246,6 +246,83 @@ void CLottoNumberDlg::UpdateResultList(int nSelectIndex)
 
 	m_pResultCtrl->DeleteAllItems();
 
+	// 현재 선택된 번호 읽기
+	CString strNumbers = m_pExtractCtrl->GetItemText(nSelectIndex, 0);
+	CString strBonus = m_pExtractCtrl->GetItemText(nSelectIndex, 1);
+
+	std::vector<int> selectedNums;
+	{
+		int curPos = 0;
+		CString token;
+		while (!(token = strNumbers.Tokenize(_T(","), curPos)).IsEmpty())
+			selectedNums.push_back(_ttoi(token));
+	}
+	const int bonusNum = _ttoi(strBonus);
+
+	auto* pManager = CWinsNumberManager::GetInstance();
+	auto& mapRounds = pManager->GetRoundMap();
+
+	for (const auto& roundPair : mapRounds)
+	{
+		auto* pItem = roundPair.second;
+		if (!pItem) continue;
+
+		std::vector<int> winNums;
+		for (int i = 0; i < 6; ++i)
+			winNums.push_back(pItem->GetWinNumbers(i));
+		const int winBonus = pItem->GetWinNumbers(6);
+
+		// ---------- [★ 핵심] ---------- //
+		// 맞은 번호만 골라내기
+		std::vector<int> matchedNums;
+		for (const auto& num : selectedNums)
+		{
+			if (std::find(winNums.begin(), winNums.end(), num) != winNums.end())
+				matchedNums.push_back(num);
+		}
+		// ----------------------------- //
+
+		const bool bonusMatch = (bonusNum == winBonus);
+
+		CString strRank;
+		if (matchedNums.size() == 6) strRank = _T("1st");
+		else if (matchedNums.size() == 5 && bonusMatch) strRank = _T("2nd");
+		else if (matchedNums.size() == 5) strRank = _T("3rd");
+		else if (matchedNums.size() == 4) strRank = _T("4th");
+		else if (matchedNums.size() == 3) strRank = _T("5th");
+
+		// ---------- [★ 핵심] ---------- //
+		// 맞은 번호만 CSV로 만들기
+		CString strMatchedCSV;
+		for (size_t i = 0; i < matchedNums.size(); ++i)
+		{
+			strMatchedCSV.AppendFormat(_T("%d"), matchedNums[i]);
+			if (i != matchedNums.size() - 1)
+				strMatchedCSV += _T(",");
+		}
+		// ----------------------------- //
+
+		if (!strRank.IsEmpty())
+		{
+			const int nItem = m_pResultCtrl->GetItemCount();
+			CString strDate = pItem->GetDate();
+			CString strBonusText;
+			strBonusText.Format(_T("%d"), winBonus);
+
+			// 여기서 맞은 번호만 전달
+			m_pResultCtrl->InsertLottoRow(nItem, strMatchedCSV, strBonusText, strRank, strDate);
+		}
+	}
+}
+
+
+/*
+void CLottoNumberDlg::UpdateResultList(int nSelectIndex)
+{
+	if (!m_pResultCtrl || !m_pExtractCtrl) return;
+
+	m_pResultCtrl->DeleteAllItems();
+
 	CString strNumbers = m_pExtractCtrl->GetItemText(nSelectIndex, 0);
 	CString strBonus = m_pExtractCtrl->GetItemText(nSelectIndex, 1);
 
@@ -318,3 +395,4 @@ void CLottoNumberDlg::UpdateResultList(int nSelectIndex)
 		++nItem;
 	}
 }
+*/
