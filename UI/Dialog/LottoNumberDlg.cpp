@@ -25,7 +25,7 @@ CLottoNumberDlg::CLottoNumberDlg(CWnd* pParent)
 	, m_pExtractCtrl(nullptr)
 	, m_pResultCtrl(nullptr)
 	, m_bDragging(FALSE)
-	, m_nSplitPos(245)
+	, m_nSplitPos(187)
 {
 	m_rcSplitBar.SetRectEmpty();
 }
@@ -60,8 +60,8 @@ void CLottoNumberDlg::InitExtractList()
 	m_pExtractCtrl->InitializeColumns();
 
 	//m_pLottoCtrl->InsertColumn(0, _T("No."), LVCFMT_LEFT, 50);
-	m_pExtractCtrl->InsertColumn(0, _T("Numbers"), LVCFMT_CENTER, 190);
-	m_pExtractCtrl->InsertColumn(1, _T("Bonus"), LVCFMT_CENTER, 40);
+	m_pExtractCtrl->InsertColumn(0, _T("Numbers"), LVCFMT_CENTER, 150);
+	m_pExtractCtrl->InsertColumn(1, _T("Bonus"), LVCFMT_CENTER, 30);
 }
 
 void CLottoNumberDlg::InitResultList()
@@ -73,11 +73,11 @@ void CLottoNumberDlg::InitResultList()
 	m_pResultCtrl->SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER);
 	m_pResultCtrl->InitializeColumns();
 
-	//m_pResultCtrl->InsertColumn(0, _T("Round"), LVCFMT_CENTER, 60);
-	m_pResultCtrl->InsertColumn(0, _T("Numbers"), LVCFMT_CENTER, 180);
-	m_pResultCtrl->InsertColumn(1, _T("Bonus"), LVCFMT_CENTER, 40);
-	m_pResultCtrl->InsertColumn(2, _T("Rank"), LVCFMT_CENTER, 40);
-	m_pResultCtrl->InsertColumn(3, _T("Date"), LVCFMT_CENTER, 100);
+	m_pResultCtrl->InsertColumn(0, _T("Rank"), LVCFMT_CENTER, 30);
+	m_pResultCtrl->InsertColumn(1, _T("Round"), LVCFMT_RIGHT, 40);
+	m_pResultCtrl->InsertColumn(2, _T("Date"), LVCFMT_CENTER, 75);
+	m_pResultCtrl->InsertColumn(3, _T("Numbers"), LVCFMT_CENTER, 150);
+	m_pResultCtrl->InsertColumn(4, _T("Bonus"), LVCFMT_CENTER, 30);
 
 	//m_pResultCtrl->InsertColumn(0, _T("No."), LVCFMT_CENTER, 45);
 	//m_pResultCtrl->InsertColumn(1, _T("Numbers"), LVCFMT_CENTER, 190);
@@ -118,13 +118,26 @@ void CLottoNumberDlg::OnSize(UINT nType, int cx, int cy)
 
 	m_rcSplitBar.SetRect(m_nSplitPos - splitBarWidth / 2, topMargin, m_nSplitPos + splitBarWidth / 2, cy - 10);
 
+	int leftMargin = 3;
+	int rightMargin = 3;
+	int gapBetween = 2;
+
 	if (m_pExtractCtrl && ::IsWindow(m_pExtractCtrl->GetSafeHwnd()))
-		m_pExtractCtrl->MoveWindow(10, topMargin, m_nSplitPos - 12, cy - topMargin - 10);
+		m_pExtractCtrl->MoveWindow(leftMargin, topMargin, m_nSplitPos - gapBetween - leftMargin, cy - topMargin - 10);
 
 	if (m_pResultCtrl && ::IsWindow(m_pResultCtrl->GetSafeHwnd()))
-		m_pResultCtrl->MoveWindow(m_nSplitPos + 4, topMargin, cx - m_nSplitPos - 14, cy - topMargin - 10);
+		m_pResultCtrl->MoveWindow(m_nSplitPos + gapBetween, topMargin, cx - m_nSplitPos - rightMargin - gapBetween, cy - topMargin - 10);
 
-	Invalidate(FALSE);
+	//if (m_pExtractCtrl && ::IsWindow(m_pExtractCtrl->GetSafeHwnd()))
+	//	m_pExtractCtrl->MoveWindow(10, topMargin, m_nSplitPos - 12, cy - topMargin - 10);
+
+	//if (m_pResultCtrl && ::IsWindow(m_pResultCtrl->GetSafeHwnd()))
+	//	m_pResultCtrl->MoveWindow(m_nSplitPos + 4, topMargin, cx - m_nSplitPos - 14, cy - topMargin - 10);
+
+	CRect rt;
+	GetClientRect(&rt);
+	rt.top -= topMargin;
+	InvalidateRect(rt, FALSE);
 }
 
 void CLottoNumberDlg::OnDestroy()
@@ -296,13 +309,28 @@ void CLottoNumberDlg::UpdateResultList(int nSelectIndex)
 				strMatchedCSV += _T(",");
 		}
 
+		//if (!strRank.IsEmpty())
+		//{
+		//	const int nItem = m_pResultCtrl->GetItemCount();
+		//	CString strDate = pItem->GetDate();
+		//	CString strBonusText;
+		//	strBonusText.Format(_T("%d"), winBonus);
+		//	m_pResultCtrl->InsertLottoRow(nItem, strMatchedCSV, strBonusText, strRank, strDate);
+		//}
 		if (!strRank.IsEmpty())
 		{
 			const int nItem = m_pResultCtrl->GetItemCount();
 			CString strDate = pItem->GetDate();
 			CString strBonusText;
 			strBonusText.Format(_T("%d"), winBonus);
-			m_pResultCtrl->InsertLottoRow(nItem, strMatchedCSV, strBonusText, strRank, strDate);
+			CString strRound;
+			strRound.Format(_T("%d"), pItem->GetRound());
+
+			m_pResultCtrl->InsertItem(nItem, strRank); // 0: Rank
+			m_pResultCtrl->SetItemText(nItem, 1, strRound);       // 1: Round
+			m_pResultCtrl->SetItemText(nItem, 2, strDate);        // 2: Date
+			m_pResultCtrl->SetItemText(nItem, 3, strMatchedCSV);  // 3: Numbers
+			m_pResultCtrl->SetItemText(nItem, 4, strBonusText);   // 4: Bonus
 		}
 	}
 }
