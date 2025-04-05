@@ -36,6 +36,19 @@ void CLottoListCtrl::InsertLottoRow(int nIndex, const CString& strWinsNumber, co
 	SetItemText(nIndex, 3, strDate);
 }
 
+CString CLottoListCtrl::GetColumnName(int nColumn)
+{
+	TCHAR buf[256] = { 0 };
+	LVCOLUMN col;
+	col.mask = LVCF_TEXT;
+	col.pszText = buf;
+	col.cchTextMax = 256;
+
+	if (GetColumn(nColumn, &col))
+		return CString(col.pszText);
+	return _T("");
+}
+
 void CLottoListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	LPNMLVCUSTOMDRAW pLVCD = reinterpret_cast<LPNMLVCUSTOMDRAW>(pNMHDR);
@@ -56,49 +69,42 @@ void CLottoListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 		int index = static_cast<int>(pLVCD->nmcd.dwItemSpec);
 		int subItem = pLVCD->iSubItem;
 
-		if (subItem >= 2)
+		CString colName = GetColumnName(subItem);
+
+		if (colName.CompareNoCase(_T("Numbers")) == 0 ||
+			colName.CompareNoCase(_T("Bonus")) == 0)
 		{
-			*pResult = CDRF_DODEFAULT;
-			return;
+			CDC* pDC = CDC::FromHandle(pLVCD->nmcd.hdc);
+			Gdiplus::Graphics g(pDC->GetSafeHdc());
+			g.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+
+			const bool selected = (GetItemState(index, LVIS_SELECTED) & LVIS_SELECTED) != 0;
+			const bool hot = (GetHotItem() == index);
+
+			CRect rc;
+			GetSubItemRect(index, subItem, LVIR_BOUNDS, rc);
+
+			if (colName.CompareNoCase(_T("Numbers")) == 0)
+			{
+				CString numbers = GetItemText(index, subItem);
+				DrawBalls(g, rc, numbers, selected, hot);
+			}
+			else if (colName.CompareNoCase(_T("Bonus")) == 0)
+			{
+				CString bonus = GetItemText(index, subItem);
+				DrawBonusBall(g, rc, bonus, selected);
+			}
+
+			*pResult = CDRF_SKIPDEFAULT; // 우리가 다 그렸으니 기본 드로우 생략
 		}
-
-		CDC* pDC = CDC::FromHandle(pLVCD->nmcd.hdc);
-		Gdiplus::Graphics g(pDC->GetSafeHdc());
-		g.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
-
-		const bool selected = (GetItemState(index, LVIS_SELECTED) & LVIS_SELECTED) != 0;
-		const bool hot = (GetHotItem() == index);
-
-		CRect rc;
-		GetSubItemRect(index, subItem, LVIR_BOUNDS, rc);
-
-		if (selected)
+		else
 		{
-			CRect rcFull;
-			GetItemRect(index, &rcFull, LVIR_BOUNDS);
-			rcFull.InflateRect(-1, -1);
-			Gdiplus::SolidBrush solidBrush(Gdiplus::Color(128, 204, 232, 255));
-			g.FillRectangle(&solidBrush, rcFull.left, rcFull.top, rcFull.Width(), rcFull.Height());
+			*pResult = CDRF_DODEFAULT; // 기본 텍스트 드로우 실행
 		}
-
-		if (subItem == 0)
-		{
-			const CString numbers = GetItemText(index, 0);
-			DrawBalls(g, rc, numbers, selected, hot);
-		}
-		else if (subItem == 1)
-		{
-			const CString bonus = GetItemText(index, 1);
-			DrawBonusBall(g, rc, bonus, selected);
-		}
-
-		*pResult = CDRF_SKIPDEFAULT;
-		break;
 	}
+											break;
 
-	default:
-		*pResult = CDRF_DODEFAULT;
-		break;
+
 	}
 }
 
