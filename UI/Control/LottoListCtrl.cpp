@@ -56,90 +56,89 @@ void CLottoListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 
 	switch (pLVCD->nmcd.dwDrawStage)
 	{
-	case CDDS_PREPAINT:
-		*pResult = CDRF_NOTIFYITEMDRAW;
-		break;
+		case CDDS_PREPAINT:
+			*pResult = CDRF_NOTIFYITEMDRAW;
+			break;
 
-	case CDDS_ITEMPREPAINT:
-		*pResult = CDRF_NOTIFYPOSTPAINT | CDRF_NOTIFYITEMDRAW | CDRF_NOTIFYSUBITEMDRAW;
-		break;
+		case CDDS_ITEMPREPAINT:
+			*pResult = CDRF_NOTIFYPOSTPAINT | CDRF_NOTIFYITEMDRAW | CDRF_NOTIFYSUBITEMDRAW;
+			break;
 
-	case (CDDS_ITEMPREPAINT | CDDS_SUBITEM) :
-	{
-		int index = static_cast<int>(pLVCD->nmcd.dwItemSpec);
-		int subItem = pLVCD->iSubItem;
-
-		CString colName = GetColumnName(subItem);
-
-		if (colName.CompareNoCase(_T("Numbers")) == 0 ||
-			colName.CompareNoCase(_T("Bonus")) == 0)
+		case (CDDS_ITEMPREPAINT | CDDS_SUBITEM) :
 		{
-			CDC* pDC = CDC::FromHandle(pLVCD->nmcd.hdc);
-			Gdiplus::Graphics g(pDC->GetSafeHdc());
-			g.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+			int index = static_cast<int>(pLVCD->nmcd.dwItemSpec);
+			int subItem = pLVCD->iSubItem;
 
-			const bool selected = (GetItemState(index, LVIS_SELECTED) & LVIS_SELECTED) != 0;
-			const bool hot = (GetHotItem() == index);
+			CString colName = GetColumnName(subItem);
 
-			CRect rc;
-			GetSubItemRect(index, subItem, LVIR_BOUNDS, rc);
-
-			if (colName.CompareNoCase(_T("Numbers")) == 0)
+			if (colName.CompareNoCase(_T("Numbers")) == 0 ||
+				colName.CompareNoCase(_T("Bonus")) == 0)
 			{
-				CString numbers = GetItemText(index, subItem);
-				DrawBalls(g, rc, numbers, selected, hot);
+				CDC* pDC = CDC::FromHandle(pLVCD->nmcd.hdc);
+				Gdiplus::Graphics g(pDC->GetSafeHdc());
+				g.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+
+				const bool selected = (GetItemState(index, LVIS_SELECTED) & LVIS_SELECTED) != 0;
+				const bool hot = (GetHotItem() == index);
+
+				CRect rc;
+				GetSubItemRect(index, subItem, LVIR_BOUNDS, rc);
+
+				if (colName.CompareNoCase(_T("Numbers")) == 0)
+				{
+					CString numbers = GetItemText(index, subItem);
+					DrawBalls(g, rc, numbers, selected, hot);
+				}
+				else if (colName.CompareNoCase(_T("Bonus")) == 0)
+				{
+					CString bonus = GetItemText(index, subItem);
+					DrawBonusBall(g, rc, bonus, selected);
+				}
+
+				*pResult = CDRF_SKIPDEFAULT; // 우리가 다 그렸으니 기본 드로우 생략
 			}
-			else if (colName.CompareNoCase(_T("Bonus")) == 0)
+			else
 			{
-				CString bonus = GetItemText(index, subItem);
-				DrawBonusBall(g, rc, bonus, selected);
+				*pResult = CDRF_DODEFAULT; // 기본 텍스트 드로우 실행
 			}
-
-			*pResult = CDRF_SKIPDEFAULT; // 우리가 다 그렸으니 기본 드로우 생략
 		}
-		else
-		{
-			*pResult = CDRF_DODEFAULT; // 기본 텍스트 드로우 실행
-		}
-	}
-											break;
-
-
+		break;
 	}
 }
 
-
 void CLottoListCtrl::DrawBalls(Gdiplus::Graphics& g, const CRect& rc, const CString& numbersText, bool selected, bool hot)
 {
-	const int BALL_SIZE = 26;
-	const int SPACING = 6;
+	const int BALL_SIZE = 22;
+	const int SPACING = 2;
 
 	int x = rc.left + 5;
 	int y = rc.CenterPoint().y;
 
-	int fontHeight = BALL_SIZE / 2;
-	Gdiplus::Font font(DEFAULT_FONT, static_cast<Gdiplus::REAL>(fontHeight), Gdiplus::FontStyleBold, Gdiplus::UnitPixel);
+	int fontHeight = BALL_SIZE * 0.55;
+	Gdiplus::Font font(L"Segoe UI", static_cast<Gdiplus::REAL>(fontHeight), Gdiplus::FontStyleBold, Gdiplus::UnitPixel);
 	Gdiplus::StringFormat format;
 	format.SetAlignment(Gdiplus::StringAlignmentCenter);
 	format.SetLineAlignment(Gdiplus::StringAlignmentCenter);
-	Gdiplus::SolidBrush textBrush(Gdiplus::Color(255, 0, 0, 0));
 
 	CString token;
 	int curPos = 0;
 	while (!(token = numbersText.Tokenize(_T(","), curPos)).IsEmpty())
 	{
 		int number = _ttoi(token);
-		Gdiplus::Color color = GetBallColor(number);
-		Gdiplus::SolidBrush brush(color);
+		Gdiplus::Color fillColor = GetBallColor(number);
+		Gdiplus::SolidBrush fillBrush(fillColor);
 
 		CRect r(x, y - BALL_SIZE / 2, x + BALL_SIZE, y + BALL_SIZE / 2);
-		g.FillEllipse(&brush, r.left, r.top, BALL_SIZE, BALL_SIZE);
-		Gdiplus::Pen pen(Gdiplus::Color(255, 0, 0, 0));
-		g.DrawEllipse(&pen, r.left, r.top, BALL_SIZE, BALL_SIZE);
+		g.FillEllipse(&fillBrush, r.left, r.top, BALL_SIZE, BALL_SIZE);
 
+		Gdiplus::SolidBrush textBrush(Gdiplus::Color(255, 240, 240, 240));
 		CString str;
 		str.Format(_T("%d"), number);
-		g.DrawString(str, -1, &font, Gdiplus::RectF((Gdiplus::REAL)r.left, (Gdiplus::REAL)r.top, (Gdiplus::REAL)BALL_SIZE, (Gdiplus::REAL)BALL_SIZE), &format, &textBrush);
+
+		g.DrawString(str, -1, &font,
+			Gdiplus::RectF((Gdiplus::REAL)r.left, (Gdiplus::REAL)r.top,
+			(Gdiplus::REAL)BALL_SIZE, (Gdiplus::REAL)BALL_SIZE),
+			&format, &textBrush);
 
 		x += BALL_SIZE + SPACING;
 	}
@@ -147,27 +146,30 @@ void CLottoListCtrl::DrawBalls(Gdiplus::Graphics& g, const CRect& rc, const CStr
 
 void CLottoListCtrl::DrawBonusBall(Gdiplus::Graphics& g, const CRect& rc, const CString& bonusText, bool selected)
 {
-	const int BALL_SIZE = 26;
-	int fontHeight = BALL_SIZE / 2;
+	const int BALL_SIZE = 22;
+	int fontHeight = BALL_SIZE * 0.55;
+
 	int x = rc.CenterPoint().x - BALL_SIZE / 2;
 	int y = rc.CenterPoint().y;
 
-	Gdiplus::Font font(DEFAULT_FONT, static_cast<Gdiplus::REAL>(fontHeight), Gdiplus::FontStyleBold, Gdiplus::UnitPixel);
+	Gdiplus::Font font(L"Segoe UI", static_cast<Gdiplus::REAL>(fontHeight), Gdiplus::FontStyleBold, Gdiplus::UnitPixel);
 	Gdiplus::StringFormat format;
 	format.SetAlignment(Gdiplus::StringAlignmentCenter);
 	format.SetLineAlignment(Gdiplus::StringAlignmentCenter);
 
 	int bonus = _ttoi(bonusText);
-	Gdiplus::SolidBrush bonusBrush(Gdiplus::Color(255, 169, 169, 169));
+	Gdiplus::SolidBrush fillBrush(Gdiplus::Color(255, 160, 160, 160));
+
 	CRect r(x, y - BALL_SIZE / 2, x + BALL_SIZE, y + BALL_SIZE / 2);
-	g.FillEllipse(&bonusBrush, r.left, r.top, BALL_SIZE, BALL_SIZE);
-	Gdiplus::Pen pen(Gdiplus::Color(255, 0, 0, 0));
-	g.DrawEllipse(&pen, r.left, r.top, BALL_SIZE, BALL_SIZE);
+	g.FillEllipse(&fillBrush, r.left, r.top, BALL_SIZE, BALL_SIZE);
 
 	CString str;
 	str.Format(_T("%d"), bonus);
-	Gdiplus::SolidBrush textBrush(Gdiplus::Color(255, 0, 0, 0));
-	g.DrawString(str, -1, &font, Gdiplus::RectF((Gdiplus::REAL)r.left, (Gdiplus::REAL)r.top, (Gdiplus::REAL)BALL_SIZE, (Gdiplus::REAL)BALL_SIZE), &format, &textBrush);
+	Gdiplus::SolidBrush textBrush(Gdiplus::Color(255, 240, 240, 240));
+	g.DrawString(str, -1, &font,
+		Gdiplus::RectF((Gdiplus::REAL)r.left, (Gdiplus::REAL)r.top,
+		(Gdiplus::REAL)BALL_SIZE, (Gdiplus::REAL)BALL_SIZE),
+		&format, &textBrush);
 }
 
 Gdiplus::Color CLottoListCtrl::GetBallColor(int number)
