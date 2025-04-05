@@ -71,6 +71,7 @@ void CLottoNumberDlg::InitResultList()
 	m_pResultCtrl->Create(WS_CHILD | WS_VISIBLE | LVS_REPORT | LVS_SINGLESEL, rcDummy, this, 1002);
 	m_pResultCtrl->SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER);
 	m_pResultCtrl->InitializeColumns();
+	m_pResultCtrl->SetDrawSelected(FALSE);
 
 	m_pResultCtrl->InsertColumn(0, _T("Rank"), LVCFMT_CENTER, 30);
 	m_pResultCtrl->InsertColumn(1, _T("Round"), LVCFMT_RIGHT, 40);
