@@ -59,7 +59,6 @@ void CLottoNumberDlg::InitExtractList()
 	m_pExtractCtrl->SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_DOUBLEBUFFER);
 	m_pExtractCtrl->InitializeColumns();
 
-	//m_pLottoCtrl->InsertColumn(0, _T("No."), LVCFMT_LEFT, 50);
 	m_pExtractCtrl->InsertColumn(0, _T("Numbers"), LVCFMT_CENTER, 150);
 	m_pExtractCtrl->InsertColumn(1, _T("Bonus"), LVCFMT_CENTER, 30);
 }
@@ -78,11 +77,6 @@ void CLottoNumberDlg::InitResultList()
 	m_pResultCtrl->InsertColumn(2, _T("Date"), LVCFMT_CENTER, 75);
 	m_pResultCtrl->InsertColumn(3, _T("Numbers"), LVCFMT_CENTER, 150);
 	m_pResultCtrl->InsertColumn(4, _T("Bonus"), LVCFMT_CENTER, 30);
-
-	//m_pResultCtrl->InsertColumn(0, _T("No."), LVCFMT_CENTER, 45);
-	//m_pResultCtrl->InsertColumn(1, _T("Numbers"), LVCFMT_CENTER, 190);
-	//m_pResultCtrl->InsertColumn(2, _T("Date"), LVCFMT_CENTER, 100);
-	//m_pResultCtrl->InsertColumn(3, _T("Rank"), LVCFMT_CENTER, 35);
 }
 
 void CLottoNumberDlg::OnPaint()
@@ -127,12 +121,6 @@ void CLottoNumberDlg::OnSize(UINT nType, int cx, int cy)
 
 	if (m_pResultCtrl && ::IsWindow(m_pResultCtrl->GetSafeHwnd()))
 		m_pResultCtrl->MoveWindow(m_nSplitPos + gapBetween, topMargin, cx - m_nSplitPos - rightMargin - gapBetween, cy - topMargin - 10);
-
-	//if (m_pExtractCtrl && ::IsWindow(m_pExtractCtrl->GetSafeHwnd()))
-	//	m_pExtractCtrl->MoveWindow(10, topMargin, m_nSplitPos - 12, cy - topMargin - 10);
-
-	//if (m_pResultCtrl && ::IsWindow(m_pResultCtrl->GetSafeHwnd()))
-	//	m_pResultCtrl->MoveWindow(m_nSplitPos + 4, topMargin, cx - m_nSplitPos - 14, cy - topMargin - 10);
 
 	CRect rt;
 	GetClientRect(&rt);
@@ -309,14 +297,6 @@ void CLottoNumberDlg::UpdateResultList(int nSelectIndex)
 				strMatchedCSV += _T(",");
 		}
 
-		//if (!strRank.IsEmpty())
-		//{
-		//	const int nItem = m_pResultCtrl->GetItemCount();
-		//	CString strDate = pItem->GetDate();
-		//	CString strBonusText;
-		//	strBonusText.Format(_T("%d"), winBonus);
-		//	m_pResultCtrl->InsertLottoRow(nItem, strMatchedCSV, strBonusText, strRank, strDate);
-		//}
 		if (!strRank.IsEmpty())
 		{
 			const int nItem = m_pResultCtrl->GetItemCount();
@@ -326,11 +306,11 @@ void CLottoNumberDlg::UpdateResultList(int nSelectIndex)
 			CString strRound;
 			strRound.Format(_T("%d"), pItem->GetRound());
 
-			m_pResultCtrl->InsertItem(nItem, strRank); // 0: Rank
-			m_pResultCtrl->SetItemText(nItem, 1, strRound);       // 1: Round
-			m_pResultCtrl->SetItemText(nItem, 2, strDate);        // 2: Date
-			m_pResultCtrl->SetItemText(nItem, 3, strMatchedCSV);  // 3: Numbers
-			m_pResultCtrl->SetItemText(nItem, 4, strBonusText);   // 4: Bonus
+			m_pResultCtrl->InsertItem(nItem, strRank);
+			m_pResultCtrl->SetItemText(nItem, 1, strRound);
+			m_pResultCtrl->SetItemText(nItem, 2, strDate);
+			m_pResultCtrl->SetItemText(nItem, 3, strMatchedCSV);
+			m_pResultCtrl->SetItemText(nItem, 4, strBonusText);
 		}
 	}
 }
