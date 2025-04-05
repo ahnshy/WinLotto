@@ -89,13 +89,14 @@ void CLottoNumberDlg::OnPaint()
 {
 	CPaintDC dc(this);
 
-	//CBrush brush(RGB(150, 150, 150));
-	//dc.FillRect(m_rcSplitBar, &brush);
+	COLORREF bgBarColor = RGB(46, 64, 94);
+	CBrush bgBrush(bgBarColor);
+	dc.FillRect(m_rcSplitBar, &bgBrush);
 
-	CBrush brush(RGB(92, 92, 92));
-	dc.FillRect(m_rcSplitBar, &brush);
+	int midX = (m_rcSplitBar.left + m_rcSplitBar.right) / 2;
+	dc.FillSolidRect(midX - 1, m_rcSplitBar.top, 2, m_rcSplitBar.Height(), bgBarColor);
 
-	dc.Draw3dRect(m_rcSplitBar, RGB(120, 120, 120), RGB(220, 220, 220));
+	//dc.DrawEdge(&m_rcSplitBar, EDGE_ETCHED, BF_RECT);
 }
 
 
