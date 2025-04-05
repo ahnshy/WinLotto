@@ -19,6 +19,8 @@ protected:
 	BOOL				m_bDragging;
 	int					m_nSplitPos;
 
+	CFont				m_fontButton;
+
 	void InitResultList();
 	void InitExtractList();
 
