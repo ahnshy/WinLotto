@@ -156,6 +156,9 @@ void CLottoNumberDlg::OnBnClickedRemoveAll()
 {
 	if (m_pExtractCtrl)
 		m_pExtractCtrl->DeleteAllItems();
+
+	if (m_pResultCtrl)
+		m_pResultCtrl->DeleteAllItems();
 }
 
 void CLottoNumberDlg::OnBnClickedExtract()
