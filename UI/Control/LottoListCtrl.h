@@ -11,6 +11,7 @@ public:
 
 	void InitializeColumns();
 
+	void SetDrawSelected(BOOL bDraw)	 { m_bIsDrawSelected = bDraw; }
 	void InsertLottoRow(int nIndex, const CString& strWinsNumber, const CString& strBonus);
 	void InsertLottoRow(int nIndex, const CString& strWinsNumber, const CString& strBonus, const CString& strRank, const CString& strDate);
 
@@ -22,4 +23,7 @@ protected:
 
 	afx_msg void OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult);
 	DECLARE_MESSAGE_MAP()
+
+private:
+	BOOL	m_bIsDrawSelected;
 };

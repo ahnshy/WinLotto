@@ -1,8 +1,14 @@
 #include "stdafx.h"
 #include "LottoListCtrl.h"
 
-CLottoListCtrl::CLottoListCtrl() {}
-CLottoListCtrl::~CLottoListCtrl() {}
+CLottoListCtrl::CLottoListCtrl()
+{
+	m_bIsDrawSelected = TRUE;
+}
+CLottoListCtrl::~CLottoListCtrl()
+{
+
+}
 
 BEGIN_MESSAGE_MAP(CLottoListCtrl, CListCtrl)
 	ON_NOTIFY_REFLECT(NM_CUSTOMDRAW, &CLottoListCtrl::OnCustomDraw)
@@ -69,17 +75,28 @@ void CLottoListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 			int index = static_cast<int>(pLVCD->nmcd.dwItemSpec);
 			int subItem = pLVCD->iSubItem;
 
-			CString colName = GetColumnName(subItem);
+			CDC* pDC = CDC::FromHandle(pLVCD->nmcd.hdc);
+			Gdiplus::Graphics g(pDC->GetSafeHdc());
+			g.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
 
+			const bool bIsSelected = (GetItemState(index, LVIS_SELECTED) & LVIS_SELECTED) != 0;
+			const bool bIsHot = (GetHotItem() == index);
+
+			CString colName = GetColumnName(subItem);
 			if (colName.CompareNoCase(_T("Numbers")) == 0 ||
 				colName.CompareNoCase(_T("Bonus")) == 0)
 			{
-				CDC* pDC = CDC::FromHandle(pLVCD->nmcd.hdc);
-				Gdiplus::Graphics g(pDC->GetSafeHdc());
-				g.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+				if (m_bIsDrawSelected && bIsSelected)
+				{
+					CRect rcFull;
+					GetItemRect(index, &rcFull, LVIR_BOUNDS);
+					rcFull.DeflateRect(1, 1);
 
-				const bool selected = (GetItemState(index, LVIS_SELECTED) & LVIS_SELECTED) != 0;
-				const bool hot = (GetHotItem() == index);
+					Gdiplus::Pen outlinePen(Gdiplus::Color(255, 46, 64, 94), 1.0f);
+					Gdiplus::SolidBrush boundBrush(Gdiplus::Color(60, 204, 232, 255));
+					g.FillRectangle(&boundBrush, rcFull.left, rcFull.top, rcFull.Width(), rcFull.Height());
+					g.DrawRectangle(&outlinePen, rcFull.left, rcFull.top, rcFull.Width(), rcFull.Height());
+				}
 
 				CRect rc;
 				GetSubItemRect(index, subItem, LVIR_BOUNDS, rc);
@@ -87,12 +104,12 @@ void CLottoListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 				if (colName.CompareNoCase(_T("Numbers")) == 0)
 				{
 					CString numbers = GetItemText(index, subItem);
-					DrawBalls(g, rc, numbers, selected, hot);
+					DrawBalls(g, rc, numbers, bIsSelected, bIsHot);
 				}
 				else if (colName.CompareNoCase(_T("Bonus")) == 0)
 				{
 					CString bonus = GetItemText(index, subItem);
-					DrawBonusBall(g, rc, bonus, selected);
+					DrawBonusBall(g, rc, bonus, bIsSelected);
 				}
 
 				*pResult = CDRF_SKIPDEFAULT;
