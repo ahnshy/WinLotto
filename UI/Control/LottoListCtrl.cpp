@@ -95,11 +95,11 @@ void CLottoListCtrl::OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 					DrawBonusBall(g, rc, bonus, selected);
 				}
 
-				*pResult = CDRF_SKIPDEFAULT; // 우리가 다 그렸으니 기본 드로우 생략
+				*pResult = CDRF_SKIPDEFAULT;
 			}
 			else
 			{
-				*pResult = CDRF_DODEFAULT; // 기본 텍스트 드로우 실행
+				*pResult = CDRF_DODEFAULT;
 			}
 		}
 		break;
@@ -114,7 +114,7 @@ void CLottoListCtrl::DrawBalls(Gdiplus::Graphics& g, const CRect& rc, const CStr
 	int x = rc.left + 5;
 	int y = rc.CenterPoint().y;
 
-	int fontHeight = BALL_SIZE * 0.55;
+	int fontHeight = (int)(BALL_SIZE * 0.55);
 	Gdiplus::Font font(L"Segoe UI", static_cast<Gdiplus::REAL>(fontHeight), Gdiplus::FontStyleBold, Gdiplus::UnitPixel);
 	Gdiplus::StringFormat format;
 	format.SetAlignment(Gdiplus::StringAlignmentCenter);
@@ -147,7 +147,7 @@ void CLottoListCtrl::DrawBalls(Gdiplus::Graphics& g, const CRect& rc, const CStr
 void CLottoListCtrl::DrawBonusBall(Gdiplus::Graphics& g, const CRect& rc, const CString& bonusText, bool selected)
 {
 	const int BALL_SIZE = 22;
-	int fontHeight = BALL_SIZE * 0.55;
+	int fontHeight = (int)(BALL_SIZE * 0.55);
 
 	int x = rc.CenterPoint().x - BALL_SIZE / 2;
 	int y = rc.CenterPoint().y;
