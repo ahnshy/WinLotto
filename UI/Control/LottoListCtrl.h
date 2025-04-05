@@ -17,6 +17,7 @@ public:
 protected:
 	void DrawBalls(Gdiplus::Graphics& g, const CRect& rc, const CString& numbersText, bool selected, bool hot);
 	void DrawBonusBall(Gdiplus::Graphics& g, const CRect& rc, const CString& bonusText, bool selected);
+	CString GetColumnName(int nColumn);
 	Gdiplus::Color GetBallColor(int number);
 
 	afx_msg void OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult);
