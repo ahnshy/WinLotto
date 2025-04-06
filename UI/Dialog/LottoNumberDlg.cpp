@@ -43,24 +43,34 @@ BOOL CLottoNumberDlg::OnInitDialog()
 	InitExtractList();
 	InitResultList();
 
-	// https://msdn.microsoft.com/ko-kr/library/bb983153.aspx
-	// https://technet.microsoft.com/pl-pl/library/y0k9f0a4(v=vs.90).aspx
-
-	m_btnRemoveAll.Create(_T("Remove All"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(0, 0, 80, 30), this, 1003);
-	m_btnRemoveAll.SetFaceColor(RGB(255, 255, 255));
-
-	m_btnExtract.Create(_T("Extract"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(0, 0, 80, 30), this, 1004);
-	m_btnExtract.SetFaceColor(RGB(255, 255, 255));
-
 	VERIFY(m_fontButton.CreateFont(-12, 0, 0, 0, FW_HEAVY, FALSE, FALSE, 0, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, DEFAULT_FONT));
 
 	CString strText;
+	// https://msdn.microsoft.com/ko-kr/library/bb983153.aspx
+	// https://technet.microsoft.com/pl-pl/library/y0k9f0a4(v=vs.90).aspx
+
+	m_btnRemoveAll.Create(_T("Clear"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(0, 0, 80, 30), this, 1003);
+	m_btnRemoveAll.m_nFlatStyle = (CMFCButton::FlatStyle)(CMFCButton::BUTTONSTYLE_FLAT | CMFCButton::BUTTONSTYLE_NOBORDERS);
+	m_btnRemoveAll.SetFaceColor(RGB(46, 64, 94), TRUE);
+
+	m_btnRemoveAll.SetFont(&m_fontButton);
+	m_btnRemoveAll.SetTextColor(RGB(255, 255, 255));
+	m_btnRemoveAll.SetTextHotColor(RGB(255, 114, 114));
+
+	m_btnRemoveAll.m_bTransparent = FALSE;
+	m_btnRemoveAll.EnableWindowsTheming(FALSE);
+	m_btnRemoveAll.m_bDrawFocus = FALSE;
+	m_btnRemoveAll.m_nAlignStyle = CMFCButton::ALIGN_CENTER;
+	m_btnRemoveAll.SetMouseCursorHand();
+	
+
+	m_btnExtract.Create(_T("Extract"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(0, 0, 80, 30), this, 1004);
 	m_btnExtract.m_nFlatStyle = (CMFCButton::FlatStyle)(CMFCButton::BUTTONSTYLE_FLAT | CMFCButton::BUTTONSTYLE_NOBORDERS);
 	m_btnExtract.SetFaceColor(RGB(46, 64, 94), TRUE);
 
 	m_btnExtract.SetFont(&m_fontButton);
 	m_btnExtract.SetTextColor(RGB(255, 255, 255));
-	m_btnExtract.SetTextHotColor(RGB(204, 232, 255));
+	m_btnExtract.SetTextHotColor(RGB(105, 200, 242));
 
 	m_btnExtract.m_bTransparent = FALSE;
 	m_btnExtract.EnableWindowsTheming(FALSE);
