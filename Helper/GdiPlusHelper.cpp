@@ -64,15 +64,15 @@ void CGdiPlusHelper::MeasureFontSize()
 	format.SetAlignment(StringAlignmentCenter);
 	RectF boundRect;
 
-	for (INT32 nSize = 1 ; nSize <= 72 ; nSize++)
+	for (REAL rSize = 1 ; rSize <= 72 ; rSize++)
 	{
-		m_pTextFont = new Gdiplus::Font(DEFAULT_FONT, nSize);
+		m_pTextFont = new Gdiplus::Font(DEFAULT_FONT, rSize);
 		if (!m_pTextFont)
 			continue;
 
 		// Measure the string.
 		g.MeasureString(szStr, (INT32)_tcslen(szStr), m_pTextFont, layoutRect, &format, &boundRect);
-		m_mapSize.insert(make_pair(nSize, boundRect));
+		m_mapSize.insert(make_pair(rSize, boundRect));
 
 		delete m_pTextFont;
 		m_pTextFont = NULL;
@@ -291,10 +291,8 @@ INT32 CGdiPlusHelper::BufferBitblt(HDC hDC, CRect& rcTarget)
 
 INT32 CGdiPlusHelper::BufferDrawGradientBackGound(CRect& rcRect, COLORREF colorBackGround, Color colorHighLight, INT32 nFeather)
 {
-	//Graphics graphics(hDC);
 	if (m_pBufferBitmap == NULL)
 		m_pBufferBitmap = new Bitmap(rcRect.Width(), rcRect.Height());
-	//Bitmap mBitmap(rcRect.Width(), rcRect.Height());
 
 	Graphics mGraphics(m_pBufferBitmap);
 	mGraphics.SetSmoothingMode(SmoothingModeAntiAlias);
@@ -385,6 +383,33 @@ INT32 CGdiPlusHelper::BufferDrawBall(RectF& rcRect, COLORREF colorBall, CString 
 		SolidBrush  solidBrush(Color(255, 0, 0, 0));
 		graphics.DrawString(strText, strText.GetLength(), m_pTextFont, rcRect, &format, &solidBrush);
 	}
+
+	return 0;
+}
+
+INT32 CGdiPlusHelper::BufferDrawContainer(CRect& rcRect, PointF center, float radius)
+{
+	if (m_pBufferBitmap == NULL)
+		m_pBufferBitmap = new Bitmap(rcRect.Width(), rcRect.Height());
+
+	Graphics graphics(m_pBufferBitmap);
+	graphics.SetSmoothingMode(SmoothingModeAntiAlias);
+
+	GraphicsPath path;
+	path.AddEllipse(center.X - radius, center.Y - radius, radius * 2, radius * 2);
+
+	PathGradientBrush pgb(&path);
+	Color centerColor(255, 220, 220, 220);
+	Color surroundColor(255, 80, 80, 80);
+	pgb.SetCenterColor(centerColor);
+	Color surroundColors[1] = { surroundColor };
+	INT nEdgeWidth = 1;
+	pgb.SetSurroundColors(surroundColors, &nEdgeWidth);
+
+	graphics.FillPath(&pgb, &path);
+
+	Pen pen(Color(255, 150, 150, 150), 2);
+	graphics.DrawPath(&pen, &path);
 
 	return 0;
 }
