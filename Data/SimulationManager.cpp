@@ -95,8 +95,8 @@ INT32 CSimulationManager::Initialize(CRect& rc)
 
 INT32 CSimulationManager::SetBallDeployment(CRect rc, INT32 nMargin)
 {
+	/*
 	double fDiameter = (sqrt(double(rc.Width() * rc.Height()))) * 0.06;
-	//double fMargin = fDiameter;
 
 	srand(time(NULL));
 	rc.DeflateRect(nMargin, nMargin, nMargin, nMargin);
@@ -109,10 +109,34 @@ INT32 CSimulationManager::SetBallDeployment(CRect rc, INT32 nMargin)
 	}
 	
 	return 0;
+	*/
+	double fDiameter = (sqrt(double(rc.Width() * rc.Height()))) * 0.06;
+	float centerX = rc.Width() / 2.0f;
+	float centerY = rc.Height() / 2.0f;
+	float containerRadius = min(rc.Width(), rc.Height()) / 2.0f - nMargin;
+
+	srand((unsigned)time(NULL));
+	rc.DeflateRect(nMargin, nMargin, nMargin, nMargin);
+	for (MapBalls::iterator itor = m_mapSimulationWinBalls.begin(); itor != m_mapSimulationWinBalls.end(); ++itor)
+	{
+		float theta = (rand() / (float)RAND_MAX) * 2 * 3.14159265f;
+		float r = sqrt(rand() / (float)RAND_MAX) * (containerRadius - fDiameter / 2);
+		float posX = centerX + r * cos(theta) - fDiameter / 2;
+		float posY = centerY + r * sin(theta) - fDiameter / 2;
+		RectF rcDeploy(posX, posY, fDiameter, fDiameter);
+		itor->second->SetRect(rcDeploy);
+
+		float vx = ((rand() / (float)RAND_MAX) * 8.0f - 4.0f);
+		float vy = ((rand() / (float)RAND_MAX) * 8.0f - 4.0f);
+		itor->second->SetVelocity(PointF(vx, vy));
+	}
+
+	return 0;
 }
 
 INT32 CSimulationManager::AdjustBallPos(CRect rc)
 {
+	/*
 	double fDiameter = (sqrt(double(rc.Width() * rc.Height()))) * 0.06;
 
 	RectF rcBall;
@@ -122,23 +146,23 @@ INT32 CSimulationManager::AdjustBallPos(CRect rc)
 		if (rcBall.X < 0)
 		{
 			rcBall.X = rcBall.Width;
-			itor->second->GetDirection().cx = abs(itor->second->GetDirection().cx);
+			itor->second->GetVelocity().cx = abs(itor->second->GetVelocity().cx);
 		}
 		else if (rcBall.X + rcBall.Width > rc.Width())
 		{
 			rcBall.X = rc.Width() - rcBall.Width*2;
-			itor->second->GetDirection().cx = -abs(itor->second->GetDirection().cx);
+			itor->second->GetVelocity().cx = -abs(itor->second->GetVelocity().cx);
 		}
 
 		if (rcBall.Y < 0)
 		{
 			rcBall.Y = rcBall.Height;
-			itor->second->GetDirection().cy = -abs(itor->second->GetDirection().cy);
+			itor->second->GetVelocity().cy = -abs(itor->second->GetVelocity().cy);
 		}
 		else if (rcBall.Y + rcBall.Height > rc.Height())
 		{
 			rcBall.Y = rc.Height() - rcBall.Height*2;
-			itor->second->GetDirection().cy = abs(itor->second->GetDirection().cy);
+			itor->second->GetVelocity().cy = abs(itor->second->GetVelocity().cy);
 		}
 
 		//rcBall.X += itor->second->GetDirection().cx;
@@ -146,6 +170,7 @@ INT32 CSimulationManager::AdjustBallPos(CRect rc)
 
 		itor->second->SetRect(rcBall);
 	}
+	*/
 
 	return 0;
 }
