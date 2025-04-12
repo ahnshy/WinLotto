@@ -19,17 +19,17 @@ public:
 	void			SetEmpty();
 
 	// Getter
-	RectF&			GetRect()					{ return m_rc; }
-	COLORREF		GetColor()					{ return m_color; }
-	CSize&			GetDirection()				{ return m_sizeDirection; }
+	RectF&			GetRect()					{ return m_rc;			}
+	COLORREF		GetColor()					{ return m_color;		}
+	PointF&			GetVelocity()				{ return m_fVelocity;	}
 
 	// Setter
-	void			SetRect(RectF rc)			{ m_rc = rc; }
-	void			SetColor(COLORREF c)		{ m_color = c; }
-	void			SetDirection(CSize size)	{ m_sizeDirection = size; }
+	void			SetRect(RectF rc)			{ m_rc = rc;			}
+	void			SetColor(COLORREF c)		{ m_color = c;			}
+	void			SetVelocity(PointF v)		{ m_fVelocity = v;		}
 
 private:
 	RectF			m_rc;
 	COLORREF		m_color;
-	CSize			m_sizeDirection;
+	PointF			m_fVelocity;
 };
