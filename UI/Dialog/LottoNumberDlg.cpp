@@ -63,7 +63,6 @@ BOOL CLottoNumberDlg::OnInitDialog()
 	m_btnRemoveAll.m_nAlignStyle = CMFCButton::ALIGN_CENTER;
 	m_btnRemoveAll.SetMouseCursorHand();
 	
-
 	m_btnExtract.Create(_T("Extract"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(0, 0, 80, 30), this, 1004);
 	m_btnExtract.m_nFlatStyle = (CMFCButton::FlatStyle)(CMFCButton::BUTTONSTYLE_FLAT | CMFCButton::BUTTONSTYLE_NOBORDERS);
 	m_btnExtract.SetFaceColor(RGB(46, 64, 94), TRUE);
