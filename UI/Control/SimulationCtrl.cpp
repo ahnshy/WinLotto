@@ -80,43 +80,6 @@ BOOL CSimulationCtrl::OnInitDialog()
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CSimulationCtrl::OnTimer(UINT nIDEvent) 
-{
-	if (nIDEvent==1000)
-	{
-		CSimulationManager *pManager = CSimulationManager::GetInstance();
-		if (!pManager)
-			return;
-
-		CRect rc;
-		GetSimulationWndRect(rc);
-
-		CString strText;
-		double fDiameter = (sqrt(double(rc.Width() * rc.Height()))) * 0.06;
-		double fMargin = fDiameter;
-
-		RectF rcBall;
-		MapBalls m = pManager->GetBalls();
-		for (MapBalls::iterator itor = m.begin(); itor != m.end(); ++itor)
-		{
-			rcBall = itor->second->GetRect();
-			if (rcBall.X + rcBall.Width >= rc.Width() || (rcBall.X <= 0))
-				itor->second->GetDirection().cx = -itor->second->GetDirection().cx;
-
-			if (rcBall.Y + rcBall.Height >= rc.Height() || (rcBall.Y <= 0))
-				itor->second->GetDirection().cy = -itor->second->GetDirection().cy;
-
-			rcBall.X += itor->second->GetDirection().cx;
-			rcBall.Y += itor->second->GetDirection().cy;
-
-			itor->second->SetRect(rcBall);
-		}
-
-		InvalidateRect(NULL);
-	}
-	CDialogEx::OnTimer(nIDEvent);
-}
-
 void CSimulationCtrl::OnSize(UINT nType, int cx, int cy)
 {
 	CRect rc;
@@ -150,38 +113,33 @@ COLORREF CSimulationCtrl::GetRandomColor()
 
 void CSimulationCtrl::OnPaint()
 {
-
 	CPaintDC dc(this);
-	//GetClientRect(&rc);
-	//dc.FillSolidRect(&rc, RGB(255, 255, 255));
-
 	CRect rc;
-	GetSimulationWndRect(rc);
+	GetClientRect(&rc);
 
-	//  LOGIN DIALOG - Append Ahnshy
-#define		COLOR_PAGE_SIMULATION_DLG_BG_RGB						RGB(5, 36, 63)
-#define		COLOR_PAGE_SIMULATION_DLG_BG							Color(255, 5, 36, 63)
-#define		COLOR_PAGE_SIMULATION_DLG_BG_HIGHLIGHT_CIRCLE			Color(255, 20, 77, 126)
+	m_gdi.BufferDrawGradientBackGound(rc, COLOR_PAGE_SIMULATION_DLG_BG_RGB, COLOR_PAGE_SIMULATION_DLG_BG_HIGHLIGHT_CIRCLE, 8);
 
-	m_gdi.BufferDrawGradientBackGound(rc, COLOR_PAGE_SIMULATION_DLG_BG_RGB, COLOR_PAGE_SIMULATION_DLG_BG_HIGHLIGHT_CIRCLE, 10);
+	float centerX = rc.Width() / 2.0f;
+	float centerY = rc.Height() / 2.0f;
+	PointF containerCenter(centerX, centerY);
+	float baseRadius = min(rc.Width(), rc.Height()) / 2.0f - 10.0f;
+	float containerRadius = baseRadius * 0.5f;
 
+	m_gdi.BufferDrawContainer(rc, containerCenter, containerRadius);
 	CSimulationManager *pManager = CSimulationManager::GetInstance();
 	if (!pManager)
 		return;
 
-	//CRect rc;
-	//GetClientRect(&rc);
-
 	CString strText;
-	double fDiameter = (sqrt(double(rc.Width() * rc.Height()))) * 0.06;
-	double fMargin = fDiameter;
-
-	MapBalls m = pManager->GetBalls();
-	for (MapBalls::iterator itor = m.begin(); itor != m.end(); ++itor)
+	auto& balls = pManager->GetBalls();
+	for (auto& kv : balls)
 	{
-		strText.Format(_T("%d"), itor->first);
-		//itor->second.SetRect(RectF((((itor->first % 10)*fDiameter) +itor->first +fMargin), fMargin + (((itor->first / 10)) * fDiameter*2), fDiameter, fDiameter));
-		m_gdi.BufferDrawBall(itor->second->GetRect(), itor->second->GetColor(), strText, TRUE);
+		DWORD number = kv.first;
+		CBallItem* pBall = kv.second;
+		if (!pBall) continue;
+
+		strText.Format(_T("%d"), number);
+		m_gdi.BufferDrawBall(pBall->GetRect(), pBall->GetColor(), strText, TRUE);
 	}
 
 	m_gdi.BufferBitblt(dc.GetSafeHdc(), rc);
@@ -193,7 +151,7 @@ BOOL CSimulationCtrl::OnEraseBkgnd(CDC* pDC)
 	//GetClientRect(&rc);
 	//pDC->FillSolidRect(&rc, RGB(255, 255, 255));
 
-	return TRUE;
+	return TRUE; 
 	//return CDialog::OnEraseBkgnd(pDC);
 }
 
@@ -205,9 +163,68 @@ void CSimulationCtrl::OnDestroy()
 INT32 CSimulationCtrl::GetSimulationWndRect(CRect& rc)
 {
 	GetClientRect(&rc);
-	//rc.top += 50;
-	//rc.left += 30;
-
 	return 1;
 }
 
+void CSimulationCtrl::OnTimer(UINT nIDEvent)
+{
+	if (nIDEvent == 1000)
+	{
+		CSimulationManager* pManager = CSimulationManager::GetInstance();
+		if (!pManager) return;
+
+		CRect rc;
+		GetClientRect(&rc);
+
+		float baseRadius = min(rc.Width(), rc.Height()) / 2.f - 10.f;
+		float containerRadius = baseRadius * 0.5f;
+
+		float centerX = rc.Width() / 2.f;
+		float centerY = rc.Height() / 2.f;
+
+		auto& balls = pManager->GetBalls();
+		for (auto& kv : balls)
+		{
+			CBallItem* pBall = kv.second;
+			if (!pBall) continue;
+
+			RectF ballRect = pBall->GetRect();
+			PointF vel = pBall->GetVelocity();
+
+			vel.Y += GRAVITY;
+			ballRect.X += vel.X;
+			ballRect.Y += vel.Y;
+
+			float radius = ballRect.Width / 2.f;
+			float cx = ballRect.X + radius;
+			float cy = ballRect.Y + radius;
+
+			float dx = cx - centerX;
+			float dy = cy - centerY;
+			float dist = sqrtf(dx * dx + dy * dy);
+
+			if (dist + radius > containerRadius)
+			{
+				float nx = dx / dist;
+				float ny = dy / dist;
+
+				float overlap = (dist + radius) - containerRadius;
+				cx -= nx * overlap;
+				cy -= ny * overlap;
+				ballRect.X = cx - radius;
+				ballRect.Y = cy - radius;
+
+				float dot = vel.X * nx + vel.Y * ny;
+				vel.X -= 2.f * dot * nx;
+				vel.Y -= 2.f * dot * ny;
+
+				vel.X *= DAMPING;
+				vel.Y *= DAMPING;
+			}
+			pBall->SetRect(ballRect);
+			pBall->SetVelocity(vel);
+		}
+		Invalidate(FALSE);
+	}
+	CDialogEx::OnTimer(nIDEvent);
+}
