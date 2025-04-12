@@ -4,6 +4,10 @@
 using namespace std;
 using namespace Gdiplus;
 
+#define		COLOR_PAGE_SIMULATION_DLG_BG_RGB						RGB(5, 36, 63)
+//#define		COLOR_PAGE_SIMULATION_DLG_BG							Color(255, 5, 36, 63)
+#define		COLOR_PAGE_SIMULATION_DLG_BG_HIGHLIGHT_CIRCLE			Color(255, 20, 77, 126)
+
 typedef map<INT32, RectF>				MapSize;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -35,6 +39,7 @@ public:
 
 
 	// Gdi+ Double Buffering Method
+	INT32					BufferDrawContainer(CRect& rcRect, Gdiplus::PointF center, float radius);
 	INT32					BufferDrawGradientBackGound(CRect& rcRect, COLORREF colorBackGround, Color colorHighLight, INT32 nFeather);
 	INT32					BufferDrawBall(RectF& rcRect, COLORREF colorBall, CString strText, BOOL bFlat);
 	INT32					BufferBitblt(HDC hDC, CRect& rcTarget);
