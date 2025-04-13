@@ -95,21 +95,6 @@ INT32 CSimulationManager::Initialize(CRect& rc)
 
 INT32 CSimulationManager::SetBallDeployment(CRect rc, INT32 nMargin)
 {
-	/*
-	double fDiameter = (sqrt(double(rc.Width() * rc.Height()))) * 0.06;
-
-	srand(time(NULL));
-	rc.DeflateRect(nMargin, nMargin, nMargin, nMargin);
-	for (MapBalls::iterator itor = m_mapSimulationWinBalls.begin() ; itor != m_mapSimulationWinBalls.end() ; ++itor)
-	{
-		RectF rcDeploy(rand()%rc.Width(), rand()%rc.Height(), fDiameter, fDiameter);
-		itor->second->SetRect(rcDeploy);
-		itor->second->GetDirection().cx = (rand()%7)+1;
-		itor->second->GetDirection().cy = (rand()%7)+1;
-	}
-	
-	return 0;
-	*/
 	double fDiameter = (sqrt(double(rc.Width() * rc.Height()))) * 0.06;
 	float centerX = rc.Width() / 2.0f;
 	float centerY = rc.Height() / 2.0f;
@@ -119,20 +104,51 @@ INT32 CSimulationManager::SetBallDeployment(CRect rc, INT32 nMargin)
 	rc.DeflateRect(nMargin, nMargin, nMargin, nMargin);
 	for (MapBalls::iterator itor = m_mapSimulationWinBalls.begin(); itor != m_mapSimulationWinBalls.end(); ++itor)
 	{
-		float theta = (rand() / (float)RAND_MAX) * 2 * 3.14159265f;
-		float r = sqrt(rand() / (float)RAND_MAX) * (containerRadius - fDiameter / 2);
-		float posX = centerX + r * cos(theta) - fDiameter / 2;
-		float posY = centerY + r * sin(theta) - fDiameter / 2;
-		RectF rcDeploy(posX, posY, fDiameter, fDiameter);
+		bool bValid = false;
+		int retry = 0;
+		RectF rcDeploy;
+		float posX, posY;
+
+		while (!bValid && retry++ < 1000)
+		{
+			float theta = (rand() / (float)RAND_MAX) * 2 * 3.14159265f;
+			float r = sqrt(rand() / (float)RAND_MAX) * (containerRadius - fDiameter / 2 - 2);
+			posX = centerX + r * cos(theta) - fDiameter / 2;
+			posY = centerY + r * sin(theta) - fDiameter / 2;
+			rcDeploy = RectF(posX, posY, fDiameter, fDiameter);
+
+			PointF c1(posX + fDiameter / 2.f, posY + fDiameter / 2.f);
+			bValid = true;
+
+			for (MapBalls::iterator check = m_mapSimulationWinBalls.begin(); check != itor; ++check)
+			{
+				RectF rcOther = check->second->GetRect();
+				PointF c2(rcOther.X + rcOther.Width / 2.f, rcOther.Y + rcOther.Height / 2.f);
+
+				float dx = c2.X - c1.X;
+				float dy = c2.Y - c1.Y;
+				float dist = sqrt(dx * dx + dy * dy);
+
+				if (dist < fDiameter + 2.f)
+				{
+					bValid = false;
+					break;
+				}
+			}
+		}
+
 		itor->second->SetRect(rcDeploy);
 
-		float vx = ((rand() / (float)RAND_MAX) * 8.0f - 4.0f);
-		float vy = ((rand() / (float)RAND_MAX) * 8.0f - 4.0f);
+		float vx = ((rand() / (float)RAND_MAX) * 10.0f - 5.0f);
+		float vy = ((rand() / (float)RAND_MAX) * 10.0f - 5.0f);
+
 		itor->second->SetVelocity(PointF(vx, vy));
+		itor->second->SetSleeping(false);
 	}
 
 	return 0;
 }
+
 
 INT32 CSimulationManager::AdjustBallPos(CRect rc)
 {
