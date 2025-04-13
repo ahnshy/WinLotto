@@ -26,13 +26,17 @@ public:
 	MapBalls&					GetBalls()			{		return m_mapSimulationWinBalls;		}
 	
 	void						SetEmpty();
+	//void						SetBallDeployment(const CRect& rcClient, int numBalls);
 	INT32						SetBallDeployment(CRect rc, INT32 nMargin);
+	COLORREF					GetBallColor(int number);
 
 	INT32						AdjustBallPos(CRect rc);
 
 protected:
 	MapBalls					m_mapRemainBalls;
 	MapBalls					m_mapSimulationWinBalls;
+
+	std::map<int, CBallItem*> m_mapBalls;
 
 	static const INT32			m_nMaxBalls;
 
