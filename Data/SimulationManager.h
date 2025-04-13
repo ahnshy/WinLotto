@@ -35,8 +35,9 @@ public:
 protected:
 	MapBalls					m_mapRemainBalls;
 	MapBalls					m_mapSimulationWinBalls;
+	float						m_fBallSizeRatio;
 
-	std::map<int, CBallItem*> m_mapBalls;
+	std::map<int, CBallItem*>	m_mapBalls;
 
 	static const INT32			m_nMaxBalls;
 
