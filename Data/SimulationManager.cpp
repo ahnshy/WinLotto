@@ -42,6 +42,7 @@ void CSimulationManager::DestroyInstance()
 // CSimulationManager
 CSimulationManager::CSimulationManager(void)
 {
+	m_fBallSizeRatio = 0.042;
 	SetEmpty();
 
 	if (m_pSimulationManager != NULL)
@@ -68,7 +69,7 @@ INT32 CSimulationManager::Initialize(CRect& rc)
 {
 	SetEmpty();
 
-	double fDiameter = (sqrt(double(rc.Width() * rc.Height()))) * 0.06;
+	double fDiameter = (sqrt(double(rc.Width() * rc.Height()))) * m_fBallSizeRatio;
 	double fMargin = fDiameter;
 
 	for (INT32 nNumber = 1 ; nNumber <= CSimulationManager::m_nMaxBalls ; nNumber++)
@@ -95,7 +96,7 @@ INT32 CSimulationManager::Initialize(CRect& rc)
 
 INT32 CSimulationManager::SetBallDeployment(CRect rc, INT32 nMargin)
 {
-	double fDiameter = (sqrt(double(rc.Width() * rc.Height()))) * 0.06;
+	double fDiameter = (sqrt(double(rc.Width() * rc.Height()))) * m_fBallSizeRatio;
 	float centerX = rc.Width() / 2.0f;
 	float centerY = rc.Height() / 2.0f;
 	float containerRadius = min(rc.Width(), rc.Height()) / 2.0f - nMargin;
@@ -153,7 +154,7 @@ INT32 CSimulationManager::SetBallDeployment(CRect rc, INT32 nMargin)
 INT32 CSimulationManager::AdjustBallPos(CRect rc)
 {
 	/*
-	double fDiameter = (sqrt(double(rc.Width() * rc.Height()))) * 0.06;
+	double fDiameter = (sqrt(double(rc.Width() * rc.Height()))) * m_fBallSizeRatio;
 
 	RectF rcBall;
 	for (MapBalls::iterator itor = m_mapSimulationWinBalls.begin() ; itor != m_mapSimulationWinBalls.end() ; ++itor)
