@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////////////////////////////////
+﻿/////////////////////////////////////////////////////////////////////////////
 // SimulationCtrl.cpp : implementation file
 //
 
@@ -34,6 +34,7 @@ CSimulationCtrl::CSimulationCtrl() : CDialogEx(CSimulationCtrl::IDD)
 
 CSimulationCtrl::~CSimulationCtrl()
 {
+	m_fCircleRatio = 0.9f;
 }
 
 void CSimulationCtrl::DoDataExchange(CDataExchange* pDX)
@@ -123,7 +124,7 @@ void CSimulationCtrl::OnPaint()
 	float centerY = rc.Height() / 2.0f;
 	PointF containerCenter(centerX, centerY);
 	float baseRadius = min(rc.Width(), rc.Height()) / 2.0f - 10.0f;
-	float containerRadius = baseRadius * 0.5f;
+	float containerRadius = baseRadius * 0.9f;
 
 	m_gdi.BufferDrawContainer(rc, containerCenter, containerRadius);
 	CSimulationManager *pManager = CSimulationManager::GetInstance();
@@ -177,54 +178,141 @@ void CSimulationCtrl::OnTimer(UINT nIDEvent)
 		GetClientRect(&rc);
 
 		float baseRadius = min(rc.Width(), rc.Height()) / 2.f - 10.f;
-		float containerRadius = baseRadius * 0.5f;
-
-		float centerX = rc.Width() / 2.f;
-		float centerY = rc.Height() / 2.f;
+		float containerRadius = baseRadius * 0.9f;
+		PointF center((float)rc.Width() / 2.f, (float)rc.Height() / 2.f);
 
 		auto& balls = pManager->GetBalls();
+
+		// 1. 공별 개별 처리
 		for (auto& kv : balls)
 		{
 			CBallItem* pBall = kv.second;
 			if (!pBall) continue;
 
-			RectF ballRect = pBall->GetRect();
-			PointF vel = pBall->GetVelocity();
+			// Sleep된 공은 건너뜀
+			if (pBall->IsSleeping())
+				continue;
 
-			vel.Y += GRAVITY;
-			ballRect.X += vel.X;
-			ballRect.Y += vel.Y;
+			RectF r = pBall->GetRect();
+			PointF v = pBall->GetVelocity();
 
-			float radius = ballRect.Width / 2.f;
-			float cx = ballRect.X + radius;
-			float cy = ballRect.Y + radius;
+			// 중력 및 마찰 적용
+			v.Y += 0.25f;
+			v.X *= 0.99f;
+			v.Y *= 0.99f;
 
-			float dx = cx - centerX;
-			float dy = cy - centerY;
+			// 이동
+			r.X += v.X;
+			r.Y += v.Y;
+
+			// 느리면 Sleep 처리
+			if (fabs(v.X) < 0.05f && fabs(v.Y) < 0.05f)
+			{
+				if (fabs(v.X) + fabs(v.Y) < 0.08f)
+				{
+					v.X = 0.f;
+					v.Y = 0.f;
+					pBall->SetSleeping(true);  // ✅ Sleep 처리
+				}
+			}
+
+			// 원 경계 충돌
+			PointF c(r.X + r.Width / 2.f, r.Y + r.Height / 2.f);
+			float dx = c.X - center.X;
+			float dy = c.Y - center.Y;
 			float dist = sqrtf(dx * dx + dy * dy);
+			float radius = r.Width / 2.f;
 
-			if (dist + radius > containerRadius)
+			if (dist + radius >= containerRadius)
 			{
 				float nx = dx / dist;
 				float ny = dy / dist;
+				float overlap = (dist + radius - containerRadius) + 0.5f;
 
-				float overlap = (dist + radius) - containerRadius;
-				cx -= nx * overlap;
-				cy -= ny * overlap;
-				ballRect.X = cx - radius;
-				ballRect.Y = cy - radius;
+				c.X -= nx * overlap;
+				c.Y -= ny * overlap;
+				r.X = c.X - radius;
+				r.Y = c.Y - radius;
 
-				float dot = vel.X * nx + vel.Y * ny;
-				vel.X -= 2.f * dot * nx;
-				vel.Y -= 2.f * dot * ny;
+				float dot = v.X * nx + v.Y * ny;
+				v.X -= 2.f * dot * nx;
+				v.Y -= 2.f * dot * ny;
 
-				vel.X *= DAMPING;
-				vel.Y *= DAMPING;
+				v.X *= 0.8f;
+				v.Y *= 0.8f;
+
+				// 느리면 Sleep 처리
+				if (fabs(v.X) < 0.05f && fabs(v.Y) < 0.05f)
+				{
+					v.X = 0.f;
+					v.Y = 0.f;
+					pBall->SetSleeping(true);
+				}
 			}
-			pBall->SetRect(ballRect);
-			pBall->SetVelocity(vel);
+
+			pBall->SetRect(r);
+			pBall->SetVelocity(v);
 		}
+
+		// 2. 공-공 충돌 처리
+		const float restitution = 0.9f;
+		for (auto it1 = balls.begin(); it1 != balls.end(); ++it1)
+		{
+			for (auto it2 = std::next(it1); it2 != balls.end(); ++it2)
+			{
+				CBallItem* b1 = it1->second;
+				CBallItem* b2 = it2->second;
+				if (!b1 || !b2) continue;
+
+				RectF r1 = b1->GetRect();
+				RectF r2 = b2->GetRect();
+
+				PointF c1(r1.X + r1.Width / 2.f, r1.Y + r1.Height / 2.f);
+				PointF c2(r2.X + r2.Width / 2.f, r2.Y + r2.Height / 2.f);
+
+				float dx = c2.X - c1.X;
+				float dy = c2.Y - c1.Y;
+				float dist = sqrtf(dx * dx + dy * dy);
+				float minDist = r1.Width / 2.f + r2.Width / 2.f;
+
+				if (dist < minDist && dist > 0.001f)
+				{
+					float nx = dx / dist;
+					float ny = dy / dist;
+					float overlap = (minDist - dist) / 2.f;
+
+					// 위치 보정
+					r1.X -= nx * overlap;
+					r1.Y -= ny * overlap;
+					r2.X += nx * overlap;
+					r2.Y += ny * overlap;
+
+					PointF v1 = b1->GetVelocity();
+					PointF v2 = b2->GetVelocity();
+
+					float v1n = v1.X * nx + v1.Y * ny;
+					float v2n = v2.X * nx + v2.Y * ny;
+					float p = (2.f * (v1n - v2n)) / 2.f;
+
+					v1.X -= p * nx * restitution;
+					v1.Y -= p * ny * restitution;
+					v2.X += p * nx * restitution;
+					v2.Y += p * ny * restitution;
+
+					b1->SetRect(r1);
+					b2->SetRect(r2);
+					b1->SetVelocity(v1);
+					b2->SetVelocity(v2);
+
+					// 충돌했으니 둘 다 깨움
+					b1->SetSleeping(false);
+					b2->SetSleeping(false);
+				}
+			}
+		}
+
 		Invalidate(FALSE);
 	}
+
 	CDialogEx::OnTimer(nIDEvent);
 }
