@@ -6,8 +6,8 @@
 #include "../../resource.h"
 #include "../../Helper/GdiPlusHelper.h"
 
-static const float GRAVITY = 0.5f;   // 중력 가속도
-static const float DAMPING = 0.9f;   // 충돌 후 감쇠 계수
+static const float GRAVITY = 0.25f;
+static const float DAMPING = 0.8f;
 
 /////////////////////////////////////////////////////////////////////////////
 // CSimulationCtrl
@@ -40,7 +40,8 @@ public:
 	INT32 GetSimulationWndRect(CRect& rc);
 
 private:
-	CGdiPlusHelper m_gdi;
+	CGdiPlusHelper	m_gdi;
+	float			m_fCircleRatio;
 
 // Implementation
 protected:
