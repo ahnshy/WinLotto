@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 
 #include "GdiPlusHelper.h"
 
@@ -387,6 +387,24 @@ INT32 CGdiPlusHelper::BufferDrawBall(RectF& rcRect, COLORREF colorBall, CString 
 	return 0;
 }
 
+std::vector<PointF> CGdiPlusHelper::GetArcPoints(PointF center, float radius, float startDeg, float sweepDeg, int nPoints)
+{
+	std::vector<PointF> points;
+	points.reserve(nPoints);
+
+	for (int i = 0; i < nPoints; ++i)
+	{
+		float t = static_cast<float>(i) / (nPoints - 1);
+		float angleDeg = startDeg + sweepDeg * t;
+		float angleRad = angleDeg * (float)(M_PI / 180.0);
+
+		float x = center.X + radius * cosf(angleRad);
+		float y = center.Y + radius * sinf(angleRad);
+		points.push_back(PointF(x, y));
+	}
+	return points;
+}
+
 INT32 CGdiPlusHelper::BufferDrawContainer(CRect& rcRect, PointF center, float radius)
 {
 	if (m_pBufferBitmap == NULL)
@@ -395,21 +413,85 @@ INT32 CGdiPlusHelper::BufferDrawContainer(CRect& rcRect, PointF center, float ra
 	Graphics graphics(m_pBufferBitmap);
 	graphics.SetSmoothingMode(SmoothingModeAntiAlias);
 
-	GraphicsPath path;
-	path.AddEllipse(center.X - radius, center.Y - radius, radius * 2, radius * 2);
+	GraphicsPath containerPath;
+	containerPath.AddEllipse(center.X - radius, center.Y - radius, radius * 2, radius * 2);
 
-	PathGradientBrush pgb(&path);
-	Color centerColor(255, 220, 220, 220);
-	Color surroundColor(255, 80, 80, 80);
-	pgb.SetCenterColor(centerColor);
-	Color surroundColors[1] = { surroundColor };
-	INT nEdgeWidth = 1;
-	pgb.SetSurroundColors(surroundColors, &nEdgeWidth);
+	PathGradientBrush brushContainer(&containerPath);
+	brushContainer.SetCenterColor(Color(255, 220, 220, 220));
+	Color surroundColors[1] = { Color(255, 80, 80, 80) };
+	INT nEdgeCnt = 1;
+	brushContainer.SetSurroundColors(surroundColors, &nEdgeCnt);
 
-	graphics.FillPath(&pgb, &path);
+	graphics.FillPath(&brushContainer, &containerPath);
 
-	Pen pen(Color(255, 150, 150, 150), 2);
-	graphics.DrawPath(&pen, &path);
+	Pen penContainer(Color(255, 150, 150, 150), 2);
+	graphics.DrawPath(&penContainer, &containerPath);
+
+	float offset = 30.0f;
+	float trackRadius = radius + offset;
+	float startAngle1 = 270.0f;
+	float sweepAngle1 = 180.0f;
+	int   nArcPoints1 = 50;
+
+	std::vector<PointF> arc1 = GetArcPoints(center, trackRadius, startAngle1, sweepAngle1, nArcPoints1);
+	GraphicsPath arcPath1;
+	if (!arc1.empty())
+		arcPath1.AddLines(&arc1[0], static_cast<INT>(arc1.size()));
+
+	Pen trackPen(Color(255, 220, 220, 220), 2);
+	trackPen.SetLineJoin(LineJoinRound);
+	graphics.DrawPath(&trackPen, &arcPath1);
+
+	PointF extStart;
+	if (!arc1.empty())
+		extStart = arc1.back();
+	else
+		extStart = PointF(center.X + trackRadius * cosf(5.0f * static_cast<float>(M_PI / 180.0f)),
+		center.Y + trackRadius * sinf(5.0f * static_cast<float>(M_PI / 180.0f)));
+
+	GraphicsPath extensionPath;
+	extensionPath.StartFigure();
+
+	float extendAngle = 177.0f;
+	float extendLength = (rcRect.Width())/3;
+	float radExtend = extendAngle * static_cast<float>(M_PI / 180.0);
+	PointF extEnd(extStart.X + extendLength * cosf(radExtend), extStart.Y + extendLength * sinf(radExtend));
+	extensionPath.AddLine(extStart, extEnd);
+
+	extendAngle = 9.0f;
+	extendLength = rcRect.Width()/2.4;
+	radExtend = extendAngle * static_cast<float>(M_PI / 180.0);
+	PointF extEnd2(extStart.X + extendLength * cosf(radExtend), extStart.Y + extendLength * sinf(radExtend));
+	extensionPath.AddLine(extEnd, extEnd2);
+
+	graphics.DrawPath(&trackPen, &extensionPath);
+	float parallelOffset = -30.0f;
+
+	float parallelArcRadius = trackRadius + parallelOffset; // = (radius + offset) - 30.0f
+	std::vector<PointF> parallelArc = GetArcPoints(center, parallelArcRadius, startAngle1, sweepAngle1, nArcPoints1);
+	GraphicsPath parallelPath;
+	if (!parallelArc.empty())
+		parallelPath.AddLines(&parallelArc[0], static_cast<INT>(parallelArc.size()));
+
+	float radSegA = 177.0f * static_cast<float>(M_PI / 180.0f);
+	PointF normalA(-sinf(radSegA), cosf(radSegA));
+	PointF extStart_parallel(extStart.X + parallelOffset * normalA.X, extStart.Y - parallelOffset * normalA.Y);
+	PointF extEnd_parallel(extEnd.X + parallelOffset * normalA.X + parallelOffset, extEnd.Y - parallelOffset * normalA.Y);
+	 
+	float radSegB = 9.0f * static_cast<float>(M_PI / 180.0f);
+	PointF normalB(-sinf(radSegB), cosf(radSegB));
+	PointF extEnd2_parallel(extEnd2.X + parallelOffset * normalB.X, extEnd2.Y - parallelOffset * normalB.Y);
+
+	parallelPath.StartFigure();
+	parallelPath.AddLine(extStart_parallel, extEnd_parallel);
+
+	PointF extEnd3;
+	extEnd3 = extEnd;
+	extEnd3.Y += offset;
+	extEnd3.X -= offset*2;
+	parallelPath.AddLine(extEnd3, extEnd2_parallel);
+
+	graphics.DrawPath(&trackPen, &parallelPath);
 
 	return 0;
 }
