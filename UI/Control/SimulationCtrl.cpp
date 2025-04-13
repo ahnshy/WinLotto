@@ -182,41 +182,30 @@ void CSimulationCtrl::OnTimer(UINT nIDEvent)
 		PointF center((float)rc.Width() / 2.f, (float)rc.Height() / 2.f);
 
 		auto& balls = pManager->GetBalls();
-
-		// 1. 공별 개별 처리
 		for (auto& kv : balls)
 		{
 			CBallItem* pBall = kv.second;
-			if (!pBall) continue;
-
-			// Sleep된 공은 건너뜀
-			if (pBall->IsSleeping())
-				continue;
+			if (!pBall || pBall->IsSleeping()) continue;
 
 			RectF r = pBall->GetRect();
 			PointF v = pBall->GetVelocity();
 
-			// 중력 및 마찰 적용
 			v.Y += 0.25f;
 			v.X *= 0.99f;
 			v.Y *= 0.99f;
-
-			// 이동
 			r.X += v.X;
 			r.Y += v.Y;
 
-			// 느리면 Sleep 처리
 			if (fabs(v.X) < 0.05f && fabs(v.Y) < 0.05f)
 			{
 				if (fabs(v.X) + fabs(v.Y) < 0.08f)
 				{
 					v.X = 0.f;
 					v.Y = 0.f;
-					pBall->SetSleeping(true);  // ✅ Sleep 처리
+					pBall->SetSleeping(true);
 				}
 			}
 
-			// 원 경계 충돌
 			PointF c(r.X + r.Width / 2.f, r.Y + r.Height / 2.f);
 			float dx = c.X - center.X;
 			float dy = c.Y - center.Y;
@@ -241,7 +230,6 @@ void CSimulationCtrl::OnTimer(UINT nIDEvent)
 				v.X *= 0.8f;
 				v.Y *= 0.8f;
 
-				// 느리면 Sleep 처리
 				if (fabs(v.X) < 0.05f && fabs(v.Y) < 0.05f)
 				{
 					v.X = 0.f;
@@ -254,7 +242,6 @@ void CSimulationCtrl::OnTimer(UINT nIDEvent)
 			pBall->SetVelocity(v);
 		}
 
-		// 2. 공-공 충돌 처리
 		const float restitution = 0.9f;
 		for (auto it1 = balls.begin(); it1 != balls.end(); ++it1)
 		{
@@ -281,7 +268,6 @@ void CSimulationCtrl::OnTimer(UINT nIDEvent)
 					float ny = dy / dist;
 					float overlap = (minDist - dist) / 2.f;
 
-					// 위치 보정
 					r1.X -= nx * overlap;
 					r1.Y -= ny * overlap;
 					r2.X += nx * overlap;
@@ -303,8 +289,6 @@ void CSimulationCtrl::OnTimer(UINT nIDEvent)
 					b2->SetRect(r2);
 					b1->SetVelocity(v1);
 					b2->SetVelocity(v2);
-
-					// 충돌했으니 둘 다 깨움
 					b1->SetSleeping(false);
 					b2->SetSleeping(false);
 				}
