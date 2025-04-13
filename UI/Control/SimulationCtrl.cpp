@@ -23,7 +23,7 @@ IMPLEMENT_DYNCREATE(CSimulationCtrl, CDialogEx)
 
 CSimulationCtrl::CSimulationCtrl() : CDialogEx(CSimulationCtrl::IDD)
 {
-	m_fCircleRatio = 0.8f;
+	m_fCircleRatio		= 0.6f;
 }
 
 CSimulationCtrl::~CSimulationCtrl()
