@@ -18,8 +18,12 @@ public:
 
 	void			SetEmpty();
 
+	void SetSleeping(bool b)					{ m_bSleeping = b;		}
+	bool IsSleeping() const						{ return m_bSleeping;	}
+
 	// Getter
 	RectF&			GetRect()					{ return m_rc;			}
+	const RectF&	GetRect() const				{ return m_rc;			}
 	COLORREF		GetColor()					{ return m_color;		}
 	PointF&			GetVelocity()				{ return m_fVelocity;	}
 
@@ -32,4 +36,5 @@ private:
 	RectF			m_rc;
 	COLORREF		m_color;
 	PointF			m_fVelocity;
+	bool			m_bSleeping;
 };
