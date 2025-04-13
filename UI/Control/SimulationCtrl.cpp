@@ -23,18 +23,11 @@ IMPLEMENT_DYNCREATE(CSimulationCtrl, CDialogEx)
 
 CSimulationCtrl::CSimulationCtrl() : CDialogEx(CSimulationCtrl::IDD)
 {
-	//{{AFX_DATA_INIT(CSimulationCtrl)
-	//}}AFX_DATA_INIT
-
-  //m_psp.dwFlags &= (~PSP_HASHELP);
-  //m_psp.dwFlags |= PSP_USEHICON;
-  //HICON hIconTab = AfxGetApp()->LoadIcon( IDI_NOTE );
-  //m_psp.hIcon = hIconTab;
+	m_fCircleRatio = 0.8f;
 }
 
 CSimulationCtrl::~CSimulationCtrl()
 {
-	m_fCircleRatio = 0.9f;
 }
 
 void CSimulationCtrl::DoDataExchange(CDataExchange* pDX)
@@ -124,9 +117,9 @@ void CSimulationCtrl::OnPaint()
 	float centerY = rc.Height() / 2.0f;
 	PointF containerCenter(centerX, centerY);
 	float baseRadius = min(rc.Width(), rc.Height()) / 2.0f - 10.0f;
-	float containerRadius = baseRadius * 0.9f;
-
+	float containerRadius = baseRadius * m_fCircleRatio;
 	m_gdi.BufferDrawContainer(rc, containerCenter, containerRadius);
+
 	CSimulationManager *pManager = CSimulationManager::GetInstance();
 	if (!pManager)
 		return;
@@ -178,7 +171,7 @@ void CSimulationCtrl::OnTimer(UINT nIDEvent)
 		GetClientRect(&rc);
 
 		float baseRadius = min(rc.Width(), rc.Height()) / 2.f - 10.f;
-		float containerRadius = baseRadius * 0.9f;
+		float containerRadius = baseRadius * m_fCircleRatio;
 		PointF center((float)rc.Width() / 2.f, (float)rc.Height() / 2.f);
 
 		auto& balls = pManager->GetBalls();
