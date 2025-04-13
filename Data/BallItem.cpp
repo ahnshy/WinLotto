@@ -28,4 +28,5 @@ void CBallItem::SetEmpty()
 {
 	m_rc.X = m_rc.Y = m_rc.Width = m_rc.Height = 0;
 	m_fVelocity = PointF(0.0f, 0.0f);
+	m_bSleeping = false;
 }
