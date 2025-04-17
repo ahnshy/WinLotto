@@ -3,6 +3,8 @@
 //
 
 #pragma once
+#include <afxbutton.h>
+
 #include "../../resource.h"
 #include "../../Helper/GdiPlusHelper.h"
 
@@ -42,6 +44,10 @@ public:
 private:
 	CGdiPlusHelper	m_gdi;
 	float			m_fCircleRatio;
+
+	CFont			m_fontButton;
+	CMFCButton		m_btnInitialize;
+	CMFCButton		m_btnExtract;
 
 // Implementation
 protected:
