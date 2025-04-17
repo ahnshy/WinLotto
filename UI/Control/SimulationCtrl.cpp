@@ -45,6 +45,8 @@ BEGIN_MESSAGE_MAP(CSimulationCtrl, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_SIZE()
 	ON_WM_ERASEBKGND()
+	ON_BN_CLICKED(1001, &CSimulationCtrl::OnBnClickedInitialize)
+	ON_BN_CLICKED(1002, &CSimulationCtrl::OnBnClickedExtract)
 	ON_WM_DESTROY()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
@@ -58,15 +60,7 @@ BOOL CSimulationCtrl::OnInitDialog()
 	
 	m_gdi.Init();
 
-	CRect rc;
-	GetClientRect(&rc);
-
-	CSimulationManager *pManager = CSimulationManager::GetInstance();
-	if (pManager)
-	{
-		pManager->Initialize(rc);
-		pManager->SetBallDeployment(rc, 20);
-	}
+	InitializeDeploy();
 
 	const int btnWidth = 80;
 	const int btnHeight = 30;
@@ -338,3 +332,29 @@ void CSimulationCtrl::OnTimer(UINT nIDEvent)
 
 	CDialogEx::OnTimer(nIDEvent);
 }
+
+void CSimulationCtrl::OnBnClickedInitialize()
+{
+	InitializeDeploy();
+}
+
+void CSimulationCtrl::OnBnClickedExtract()
+{
+	InitializeDeploy();
+}
+
+INT32 CSimulationCtrl::InitializeDeploy()
+{
+	CRect rc;
+	GetClientRect(&rc);
+
+	CSimulationManager *pManager = CSimulationManager::GetInstance();
+	if (pManager)
+	{
+		pManager->Initialize(rc);
+		pManager->SetBallDeployment(rc, 10);
+	}
+
+	return 1;
+}
+
