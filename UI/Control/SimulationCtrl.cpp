@@ -68,6 +68,45 @@ BOOL CSimulationCtrl::OnInitDialog()
 		pManager->SetBallDeployment(rc, 20);
 	}
 
+	const int btnWidth = 80;
+	const int btnHeight = 30;
+	const int btnMargin = 10;
+
+	VERIFY(m_fontButton.CreateFont(-12, 0, 0, 0, FW_HEAVY, FALSE, FALSE, 0, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, DEFAULT_FONT));
+
+	{
+		m_btnInitialize.Create(_T("Initialize"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(0, 0, 80, 30), this, 1001);
+		m_btnInitialize.m_nFlatStyle = (CMFCButton::FlatStyle)(CMFCButton::BUTTONSTYLE_FLAT | CMFCButton::BUTTONSTYLE_NOBORDERS);
+		m_btnInitialize.SetFaceColor(RGB(46, 64, 94), TRUE);
+
+		m_btnInitialize.SetFont(&m_fontButton);
+		m_btnInitialize.SetTextColor(RGB(255, 255, 255));
+		m_btnInitialize.SetTextHotColor(RGB(255, 114, 114));
+
+		m_btnInitialize.m_bTransparent = FALSE;
+		m_btnInitialize.EnableWindowsTheming(FALSE);
+		m_btnInitialize.m_bDrawFocus = FALSE;
+		m_btnInitialize.m_nAlignStyle = CMFCButton::ALIGN_CENTER;
+		m_btnInitialize.SetMouseCursorHand();
+	}
+
+	{
+		m_btnExtract.Create(_T("Extract"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(0, 0, 80, 30), this, 1002);
+		m_btnExtract.m_nFlatStyle = (CMFCButton::FlatStyle)(CMFCButton::BUTTONSTYLE_FLAT | CMFCButton::BUTTONSTYLE_NOBORDERS);
+		m_btnExtract.SetFaceColor(RGB(46, 64, 94), TRUE);
+
+		m_btnExtract.SetFont(&m_fontButton);
+		m_btnExtract.SetTextColor(RGB(255, 255, 255));
+		m_btnExtract.SetTextHotColor(RGB(105, 200, 242));
+
+		m_btnExtract.m_bTransparent = FALSE;
+		m_btnExtract.EnableWindowsTheming(FALSE);
+		m_btnExtract.m_bDrawFocus = FALSE;
+		m_btnExtract.m_nAlignStyle = CMFCButton::ALIGN_CENTER;
+		m_btnExtract.SetMouseCursorHand();
+	}
+
+
 	::SetTimer(GetSafeHwnd(), 1000, 30, NULL);
 	
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -78,6 +117,12 @@ void CSimulationCtrl::OnSize(UINT nType, int cx, int cy)
 {
 	CRect rc;
 	GetClientRect(rc);
+
+	if (::IsWindow(m_btnInitialize.GetSafeHwnd()))
+		m_btnInitialize.MoveWindow(cx - 180, 10, 80, 25);
+
+	if (::IsWindow(m_btnExtract.GetSafeHwnd()))
+		m_btnExtract.MoveWindow(cx - 90, 10, 80, 25);
 
 	CSimulationManager *pManager = CSimulationManager::GetInstance();
 	if (pManager)
