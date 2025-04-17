@@ -38,8 +38,9 @@ public:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-	COLORREF GetRandomColor();
-	INT32 GetSimulationWndRect(CRect& rc);
+	COLORREF	GetRandomColor();
+	INT32		GetSimulationWndRect(CRect& rc);
+	INT32		InitializeDeploy();
 
 private:
 	CGdiPlusHelper	m_gdi;
@@ -59,6 +60,8 @@ protected:
 	afx_msg HBRUSH	OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 	afx_msg void	OnPaint();
 	afx_msg BOOL	OnEraseBkgnd(CDC* pDC);
+	afx_msg void	OnBnClickedInitialize();
+	afx_msg void	OnBnClickedExtract();
 	afx_msg void	OnDestroy();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
